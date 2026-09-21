@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { api, fechaCorta, hora, imagenProtegida, soles } from '@/lib/api';
+import { EnviarWhatsapp } from './EnviarWhatsapp';
 
 /**
  * Renovaciones pagadas por Yape desde el portal. Recepcion abre la captura,
@@ -14,6 +15,7 @@ export function RenovacionesPendientes() {
   const [imagen, setImagen] = useState('');
   const [ocupado, setOcupado] = useState(false);
   const [aviso, setAviso] = useState('');
+  const [pagoAprobado, setPagoAprobado] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   const cargar = useCallback(async () => {
@@ -56,6 +58,7 @@ export function RenovacionesPendientes() {
         `Renovacion de ${viendo.socio.nombreCompleto} aprobada: del ${fechaCorta(r.inicio)} al ${fechaCorta(r.vence)}.` +
           (r.errorComprobante ? ` Ojo: ${r.errorComprobante}` : ''),
       );
+      setPagoAprobado(r.paymentId ?? null);
       cerrar();
       cargar();
     } catch (e: any) {
@@ -73,6 +76,7 @@ export function RenovacionesPendientes() {
     try {
       await api(`/renewals/${viendo.id}/reject`, { metodo: 'POST', cuerpo: { motivo } });
       setAviso(`Renovacion de ${viendo.socio.nombreCompleto} rechazada.`);
+      setPagoAprobado(null);
       cerrar();
       cargar();
     } catch (e: any) {
@@ -91,6 +95,7 @@ export function RenovacionesPendientes() {
         {lista.length > 0 && <span className="ml-2 text-acento">{lista.length}</span>}
       </h2>
       {aviso && <p className="aviso-ok">{aviso}</p>}
+      {pagoAprobado && <EnviarWhatsapp paymentId={pagoAprobado} texto="Avisarle por WhatsApp" />}
       {lista.map((r) => (
         <button
           key={r.id}

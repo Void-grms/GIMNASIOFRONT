@@ -12,6 +12,21 @@ const REGIMENES = [
   { valor: 'general', texto: 'Regimen General — IGV 18%, boleta y factura' },
 ];
 
+/** Lo que el sistema reemplaza en el mensaje de WhatsApp del cobro. */
+const VARIABLES_MENSAJE = [
+  ['{nombre}', 'primer nombre'],
+  ['{gimnasio}', 'nombre comercial'],
+  ['{plan}', 'plan pagado'],
+  ['{inicio}', 'desde'],
+  ['{vence}', 'hasta'],
+  ['{dias}', 'dias del plan'],
+  ['{monto}', 'monto'],
+  ['{metodo}', 'yape, efectivo...'],
+  ['{comprobante}', 'boleta B001-...'],
+  ['{enlace}', 'link a la boleta'],
+  ['{portal}', 'link al portal'],
+];
+
 export default function Ajustes() {
   const [datos, setDatos] = useState<any>(null);
   const [respaldos, setRespaldos] = useState<any[]>([]);
@@ -255,6 +270,45 @@ export default function Ajustes() {
         >
           Guardar
         </button>
+      </section>
+
+      <section className="tarjeta space-y-4">
+        <h2 className="text-lg font-semibold">Mensaje de WhatsApp al cobrar</h2>
+        <p className="text-sm text-zinc-500">
+          Despues de cobrar una membresia aparece el boton &quot;Enviar por WhatsApp&quot;. El sistema
+          elige solo el texto: bienvenida si es su primera membresia, agradecimiento si renueva.
+          Recepcion puede retocarlo antes de enviarlo.
+        </p>
+        <div className="flex flex-wrap gap-1.5 text-xs">
+          {VARIABLES_MENSAJE.map(([v, texto]) => (
+            <span key={v} className="rounded-lg border border-borde px-2 py-1 text-zinc-400" title={texto}>
+              <span className="font-mono text-acento">{v}</span> {texto}
+            </span>
+          ))}
+        </div>
+        {[
+          ['mensajeCobroNuevo', 'Socio nuevo (primera membresia)'],
+          ['mensajeCobroRenovacion', 'Renovacion'],
+        ].map(([campo, titulo]) => (
+          <div key={campo}>
+            <label className="etiqueta" htmlFor={campo}>{titulo}</label>
+            <textarea
+              id={campo}
+              className="campo min-h-[10rem] resize-y font-mono text-sm leading-relaxed"
+              maxLength={1000}
+              value={datos[campo] || ''}
+              onChange={(e) => set(campo, e.target.value)}
+            />
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button className="boton py-2" onClick={() => guardar({ [campo]: datos[campo] || '' })}>
+                Guardar
+              </button>
+              <button className="boton-suave py-2" onClick={() => guardar({ [campo]: '' })}>
+                Restaurar el texto original
+              </button>
+            </div>
+          </div>
+        ))}
       </section>
 
       <section className="tarjeta space-y-4">

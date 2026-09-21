@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { api, fechaCorta, soles } from '@/lib/api';
+import { EnviarWhatsapp } from './EnviarWhatsapp';
 
 const METODOS = ['efectivo', 'yape', 'plin', 'tarjeta', 'transferencia'];
 
@@ -44,6 +45,7 @@ export function FormularioCobro({
   const [acepta, setAcepta] = useState(false);
 
   const [emitido, setEmitido] = useState<any>(null);
+  const [pagoId, setPagoId] = useState<string | null>(null);
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
   const [cobrando, setCobrando] = useState(false);
@@ -103,6 +105,7 @@ export function FormularioCobro({
       });
       setAviso(`Cobrado. Vigencia del ${fechaCorta(r.inicio)} al ${fechaCorta(r.vence)}.`);
       setEmitido(r.comprobante);
+      setPagoId(r.paymentId ?? null);
       if (r.errorComprobante) {
         setError(`El pago quedo registrado, pero el comprobante no se emitio: ${r.errorComprobante}`);
       }
@@ -292,6 +295,15 @@ export function FormularioCobro({
           >
             Ver e imprimir
           </Link>
+        </div>
+      )}
+
+      {pagoId && (
+        <div className="space-y-2 rounded-xl border border-[#25D366]/30 bg-[#25D366]/[0.06] p-3">
+          <p className="text-sm text-zinc-300">
+            Mandale su {emitido ? 'boleta' : 'constancia de pago'} y la fecha de vencimiento por WhatsApp.
+          </p>
+          <EnviarWhatsapp paymentId={pagoId} />
         </div>
       )}
 

@@ -30,7 +30,19 @@ export default function Recepcion() {
   /** Movimientos ya mostrados; null hasta la primera carga para no revivir los viejos. */
   const vistos = useRef<Set<string> | null>(null);
 
-  const enfocar = useCallback(() => inputRef.current?.focus(), []);
+  // Devuelve el foco al campo del lector, salvo que alguien este escribiendo
+  // en otro campo o dentro de un dialogo (el mensaje de WhatsApp, por ejemplo).
+  const enfocar = useCallback(() => {
+    const activo = document.activeElement as HTMLElement | null;
+    if (
+      activo &&
+      activo !== inputRef.current &&
+      (activo.closest('[role="dialog"]') || /^(INPUT|TEXTAREA|SELECT)$/.test(activo.tagName))
+    ) {
+      return;
+    }
+    inputRef.current?.focus();
+  }, []);
 
   const refrescar = useCallback(async () => {
     try {

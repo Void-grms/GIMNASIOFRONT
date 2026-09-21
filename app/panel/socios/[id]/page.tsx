@@ -6,6 +6,7 @@ import { api, descargar, fechaCorta, hora, soles } from '@/lib/api';
 import { TarjetaSocio } from '@/components/TarjetaSocio';
 import { CapturaFoto } from '@/components/CapturaFoto';
 import { FormularioCobro } from '@/components/FormularioCobro';
+import { EnviarWhatsapp } from '@/components/EnviarWhatsapp';
 import { Esqueleto } from '@/components/Esqueleto';
 
 export default function FichaSocio() {
@@ -111,8 +112,13 @@ export default function FichaSocio() {
                       {fechaCorta(m.fechaInicio)} — {fechaCorta(m.fechaFin)}
                     </p>
                   </div>
-                  <span className={m.estado === 'anulada' ? 'text-vencido' : 'text-zinc-300'}>
-                    {soles(m.precioPagado)}
+                  <span className="flex flex-col items-end gap-1.5">
+                    <span className={m.estado === 'anulada' ? 'text-vencido' : 'text-zinc-300'}>
+                      {soles(m.precioPagado)}
+                    </span>
+                    {m.estado !== 'anulada' && m.payments?.[0]?.id && (
+                      <EnviarWhatsapp paymentId={m.payments[0].id} texto="WhatsApp" compacto />
+                    )}
                   </span>
                 </li>
               ))}
