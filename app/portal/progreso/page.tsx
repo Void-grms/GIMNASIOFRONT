@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api, fechaCorta, leerToken, sesionActual } from '@/lib/api';
@@ -10,6 +10,9 @@ import { ConfirmarSalida } from '@/components/ConfirmarSalida';
 import {
   IconoCardio, MapaCuerpo, NOMBRE_GRUPO, SECCIONES, ZONA_CARDIO,
 } from '@/components/MapaCuerpo';
+import { SelectorEjercicio } from '@/components/entreno/SelectorEjercicio';
+import { SemanaEntreno } from '@/components/entreno/SemanaEntreno';
+import { Descanso } from '@/components/entreno/Descanso';
 
 const hoyTexto = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
 
@@ -26,7 +29,7 @@ function leerZonas(): string[] {
 
 export default function MiProgreso() {
   const router = useRouter();
-  const [pestana, setPestana] = useState<'entreno' | 'peso'>('entreno');
+  const [pestana, setPestana] = useState<'entreno' | 'semana' | 'peso'>('entreno');
   const [recienLlegado, setRecienLlegado] = useState(false);
   const [presencia, setPresencia] = useState<{ dentro: boolean; desde: string | null } | null>(null);
   const [confirmandoSalida, setConfirmandoSalida] = useState(false);
@@ -71,7 +74,8 @@ export default function MiProgreso() {
 
       <div className="flex gap-1 rounded-xl border border-borde p-1">
         {[
-          ['entreno', 'Entrenamiento'],
+          ['entreno', 'Entrenar'],
+          ['semana', 'Mi semana'],
           ['peso', 'Mi peso'],
         ].map(([valor, texto]) => (
           <button
@@ -86,7 +90,7 @@ export default function MiProgreso() {
         ))}
       </div>
 
-      {pestana === 'entreno' ? <Entrenamiento /> : <PesoCorporal />}
+      {pestana === 'entreno' ? <Entrenamiento /> : pestana === 'semana' ? <SemanaEntreno /> : <PesoCorporal />}
 
       {presencia?.dentro && (
         <section className="tarjeta flex items-center justify-between gap-3">
@@ -362,34 +366,39 @@ function Entrenamiento() {
 
   const [exerciseId, setExerciseId] = useState('');
   const [series, setSeries] = useState([{ repeticiones: 10, pesoKg: 20 }]);
+  const [ultima, setUltima] = useState<any>(null);
+  const [guardando, setGuardando] = useState(false);
+  const [record, setRecord] = useState<any>(null);
+  const [descansoDesde, setDescansoDesde] = useState<number | null>(null);
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
 
   const [rutina, setRutina] = useState<any>(null);
+  /** Series que manda la rutina: ganan sobre "la ultima vez" al cambiar de ejercicio. */
+  const seriesDeRutina = useRef<{ repeticiones: number; pesoKg: number }[] | null>(null);
+  const [planHoy, setPlanHoy] = useState<any>(null);
 
-  // La rutina guiada (si el socio la pidio) preselecciona las zonas del dia,
-  // pero solo si hoy todavia no eligio nada: lo que el socio toca manda.
+  // Las zonas del dia se preseleccionan solas, pero solo si hoy el socio aun no
+  // eligio nada: primero la rutina del entrenador (si la pidio), si no, su
+  // propio plan semanal. Lo que el socio toca despues manda.
   useEffect(() => {
     const elegidas = leerZonas();
     setZonas(elegidas);
-    api('/portal/routine', { sesion: 'socio' })
-      .then((r: any) => {
-        setRutina(r);
-        if (r.estado === 'activa' && r.hoy?.grupos?.length && elegidas.length === 0) {
-          cambiarZonas(r.hoy.grupos);
-        }
-      })
-      .catch(() => setRutina(null));
+    Promise.all([
+      api('/portal/routine', { sesion: 'socio' }).catch(() => null),
+      api('/portal/week-plan', { sesion: 'socio' }).catch(() => null),
+    ]).then(([r, plan]: any) => {
+      setRutina(r);
+      const dia = new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Lima' });
+      const n = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(dia) + 1;
+      const hoy = plan?.find((d: any) => d.diaSemana === n);
+      if (hoy?.grupos?.length) setPlanHoy(hoy);
+      if (elegidas.length) return;
+      if (r?.estado === 'activa' && r.hoy?.grupos?.length) cambiarZonas(r.hoy.grupos);
+      else if (hoy?.grupos?.length) cambiarZonas(hoy.grupos);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  /** Tocar un ejercicio de la rutina lo deja listo en el formulario. */
-  function usarDeRutina(e: any) {
-    setExerciseId(e.exerciseId);
-    const reps = parseInt(String(e.repeticiones), 10) || 10;
-    setSeries(Array.from({ length: e.series }, () => ({ repeticiones: reps, pesoKg: series[0]?.pesoKg ?? 20 })));
-    document.getElementById('anotar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
 
   function cambiarZonas(nuevas: string[]) {
     setZonas(nuevas);
@@ -400,23 +409,6 @@ function Entrenamiento() {
     }
   }
 
-  // Con zonas elegidas, el selector solo muestra sus ejercicios.
-  const visibles = useMemo(
-    () => (zonas.length ? ejercicios.filter((x) => zonas.includes(x.grupo)) : ejercicios),
-    [ejercicios, zonas],
-  );
-  const porGrupo = useMemo(() => {
-    const mapa = new Map<string, any[]>();
-    for (const x of visibles) mapa.set(x.grupo, [...(mapa.get(x.grupo) || []), x]);
-    return Array.from(mapa.entries());
-  }, [visibles]);
-
-  useEffect(() => {
-    if (visibles.length && !visibles.some((x) => x.id === exerciseId)) setExerciseId(visibles[0].id);
-  }, [visibles, exerciseId]);
-
-  const esCardio = ejercicios.find((x) => x.id === exerciseId)?.grupo === 'cardio';
-
   const cargar = useCallback(async () => {
     const [cat, propios, hist]: any = await Promise.all([
       api('/portal/exercises', { sesion: 'socio' }),
@@ -426,13 +418,38 @@ function Entrenamiento() {
     setEjercicios(cat);
     setMios(propios);
     setHistorial(hist);
-    if (!verProgresoDe && propios[0]) setVerProgresoDe(propios[0].id);
-  }, [verProgresoDe]);
+    setVerProgresoDe((v) => v || propios[0]?.id || '');
+  }, []);
 
   useEffect(() => {
     cargar().catch((e) => setError(e.message));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cargar]);
+
+  // Al abrir, el ejercicio sugerido es el primero de las zonas del dia.
+  useEffect(() => {
+    if (exerciseId || !ejercicios.length) return;
+    const sugerido = ejercicios.find((e) => !zonas.length || zonas.includes(e.grupo));
+    if (sugerido) setExerciseId(sugerido.id);
+  }, [ejercicios, zonas, exerciseId]);
+
+  // "La ultima vez" del ejercicio elegido, y el formulario arranca con esos valores.
+  useEffect(() => {
+    if (!exerciseId) return;
+    setUltima(null);
+    api(`/portal/exercises/${exerciseId}/last`, { sesion: 'socio' })
+      .then((u: any) => {
+        setUltima(u);
+        if (seriesDeRutina.current) {
+          // La rutina fija series y reps; el peso sale de la ultima vez si la hay.
+          const peso = u.series?.[0]?.pesoKg ?? 20;
+          setSeries(seriesDeRutina.current.map((x) => ({ ...x, pesoKg: peso })));
+          seriesDeRutina.current = null;
+        } else if (u.series?.length) {
+          setSeries(u.series.map((s: any) => ({ ...s })));
+        }
+      })
+      .catch(() => setUltima(null));
+  }, [exerciseId]);
 
   useEffect(() => {
     if (!verProgresoDe) return;
@@ -441,18 +458,47 @@ function Entrenamiento() {
       .catch(() => setProgreso(null));
   }, [verProgresoDe, historial]);
 
+  const elegido = ejercicios.find((x) => x.id === exerciseId);
+  const esCardio = elegido?.grupo === 'cardio';
+
+  /** Tocar un ejercicio de la rutina lo deja listo en el formulario. */
+  function usarDeRutina(e: any) {
+    const reps = parseInt(String(e.repeticiones), 10) || 10;
+    const nuevas = Array.from({ length: e.series }, () => ({ repeticiones: reps, pesoKg: series[0]?.pesoKg ?? 20 }));
+    if (e.exerciseId === exerciseId) setSeries(nuevas);
+    else {
+      seriesDeRutina.current = nuevas;
+      setExerciseId(e.exerciseId);
+    }
+    document.getElementById('anotar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   async function guardar(e: React.FormEvent) {
     e.preventDefault();
     setError('');
     setAviso('');
+    setRecord(null);
+    setGuardando(true);
     try {
-      await api('/portal/workouts', {
+      const r: any = await api('/portal/workouts', {
         metodo: 'POST',
         sesion: 'socio',
         cuerpo: { exerciseId, series },
       });
-      setAviso('Anotado. Sigue asi.');
-      setSeries([{ repeticiones: 10, pesoKg: 20 }]);
+      if (r.record) setRecord(r);
+      else setAviso(`${r.series} serie(s) de ${r.ejercicio} anotadas.`);
+      setDescansoDesde(Date.now());
+      cargar();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setGuardando(false);
+    }
+  }
+
+  async function borrarSerie(id: string) {
+    try {
+      await api(`/portal/workouts/${id}`, { metodo: 'DELETE', sesion: 'socio' });
       cargar();
     } catch (err: any) {
       setError(err.message);
@@ -462,9 +508,17 @@ function Entrenamiento() {
   const cambiar = (i: number, campo: string, valor: number) =>
     setSeries(series.map((s, j) => (i === j ? { ...s, [campo]: valor } : s)));
 
+  const hoy = historial.find((d) => d.dia === hoyTexto());
+  const porSemana = useMemo(() => agruparPorSemana(historial.filter((d) => d.dia !== hoyTexto())), [historial]);
+
   return (
     <div className="space-y-5">
       {rutina && <RutinaGuiada rutina={rutina} onCambio={setRutina} onUsar={usarDeRutina} />}
+      {planHoy && rutina?.estado !== 'activa' && (
+        <p className="rounded-xl border border-borde bg-white/[0.03] px-4 py-2.5 text-sm text-zinc-300">
+          Tu plan de hoy: <span className="font-bold text-acento">{planHoy.titulo || planHoy.grupos.map((g: string) => NOMBRE_GRUPO[g] ?? g).join(', ')}</span>
+        </p>
+      )}
 
       <ElegirZonas elegidas={zonas} onCambiar={cambiarZonas} historial={historial} />
 
@@ -473,85 +527,150 @@ function Entrenamiento() {
           <h2 className="font-semibold">Anotar lo de hoy</h2>
           {zonas.length > 0 && (
             <button type="button" className="text-xs text-zinc-500 hover:text-white" onClick={() => cambiarZonas([])}>
-              Ver todos
+              Ver todas las zonas
             </button>
           )}
         </div>
 
-        <div>
-          <label className="etiqueta">Ejercicio</label>
-          <select className="campo" value={exerciseId} onChange={(e) => setExerciseId(e.target.value)}>
-            {porGrupo.map(([grupo, lista]) => (
-              <optgroup key={grupo} label={NOMBRE_GRUPO[grupo] ?? grupo}>
-                {lista.map((x) => (
-                  <option key={x.id} value={x.id}>
-                    {x.nombre}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-        </div>
+        <SelectorEjercicio
+          ejercicios={ejercicios}
+          recientes={mios.map((m) => m.id)}
+          zonas={zonas}
+          valor={exerciseId}
+          onElegir={(e) => setExerciseId(e.id)}
+          onCambioCatalogo={() => cargar()}
+        />
+
+        {ultima && (
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-black/30 px-3 py-2 text-sm">
+            {ultima.dia ? (
+              <span className="min-w-0 text-zinc-400">
+                Ultima vez ({fechaCorta(ultima.dia)}):{' '}
+                <span className="text-zinc-200 cifra">
+                  {ultima.series.map((s: any) => `${s.repeticiones}×${s.pesoKg}`).join(' · ')}
+                </span>
+              </span>
+            ) : (
+              <span className="text-zinc-500">Primera vez con este ejercicio. ¡Anotalo!</span>
+            )}
+            {ultima.mejorPeso > 0 && !esCardio && (
+              <span className="shrink-0 text-xs text-zinc-500">
+                Mejor: <span className="font-bold text-acento cifra">{ultima.mejorPeso} kg</span>
+              </span>
+            )}
+          </div>
+        )}
 
         <div className="space-y-2">
+          <div className="grid grid-cols-[1.5rem_1fr_1fr_2.25rem] gap-2 px-0.5 text-xs text-zinc-500">
+            <span>#</span>
+            <span>{esCardio ? 'Minutos' : 'Reps'}</span>
+            <span>{esCardio ? 'Nivel' : 'Peso (kg)'}</span>
+            <span />
+          </div>
           {series.map((s, i) => (
-            <div key={i} className="flex items-end gap-2">
-              <span className="pb-3 text-sm text-zinc-500">{i + 1}</span>
-              <div className="flex-1">
-                <label className="etiqueta">{esCardio ? 'Minutos' : 'Repeticiones'}</label>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  className="campo"
-                  min={1}
-                  value={s.repeticiones}
-                  onChange={(e) => cambiar(i, 'repeticiones', Number(e.target.value))}
-                />
-              </div>
-              <div className="flex-1">
-                <label className="etiqueta">{esCardio ? 'Nivel / velocidad' : 'Peso (kg)'}</label>
-                <input
-                  type="number"
-                  inputMode="decimal"
-                  step="0.5"
-                  className="campo"
-                  min={0}
-                  value={s.pesoKg}
-                  onChange={(e) => cambiar(i, 'pesoKg', Number(e.target.value))}
-                />
-              </div>
-              {series.length > 1 && (
+            <div key={i} className="grid grid-cols-[1.5rem_1fr_1fr_2.25rem] items-center gap-2">
+              <span className="text-center text-sm font-bold text-zinc-500 cifra">{i + 1}</span>
+              <input
+                type="number"
+                inputMode="numeric"
+                aria-label={`Serie ${i + 1}: ${esCardio ? 'minutos' : 'repeticiones'}`}
+                className="campo px-3 py-2.5 text-center cifra"
+                min={1}
+                value={s.repeticiones}
+                onChange={(e) => cambiar(i, 'repeticiones', Number(e.target.value))}
+              />
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.5"
+                aria-label={`Serie ${i + 1}: ${esCardio ? 'nivel' : 'peso'}`}
+                className="campo px-3 py-2.5 text-center cifra"
+                min={0}
+                value={s.pesoKg}
+                onChange={(e) => cambiar(i, 'pesoKg', Number(e.target.value))}
+              />
+              {series.length > 1 ? (
                 <button
                   type="button"
-                  className="boton-suave mb-0.5 px-3"
+                  aria-label={`Quitar serie ${i + 1}`}
+                  className="h-9 rounded-lg text-zinc-500 hover:bg-white/[0.06] hover:text-vencido"
                   onClick={() => setSeries(series.filter((_, j) => j !== i))}
                 >
-                  −
+                  ✕
                 </button>
+              ) : (
+                <span />
               )}
             </div>
           ))}
           <button
             type="button"
-            className="boton-suave w-full"
-            onClick={() => setSeries([...series, series[series.length - 1]])}
+            className="boton-suave w-full py-2"
+            onClick={() => setSeries([...series, { ...series[series.length - 1] }])}
           >
-            Agregar serie
+            + Serie (copia la anterior)
           </button>
         </div>
 
+        {record && (
+          <div className="animate-entrar rounded-xl border border-acento/50 bg-acento/10 p-3 text-center">
+            <p className="text-lg font-black text-acento">🏆 ¡Nuevo record en {record.ejercicio}!</p>
+            <p className="text-sm text-zinc-300 cifra">
+              {record.mejorAnterior} kg → <span className="font-bold">{record.mejorNuevo} kg</span>
+            </p>
+          </div>
+        )}
         {aviso && <p className="aviso-ok">{aviso}</p>}
         {error && <p className="aviso-mal">{error}</p>}
 
-        <button className="boton w-full">Guardar</button>
+        <button className="boton w-full" disabled={!exerciseId || guardando}>
+          {guardando ? 'Guardando…' : 'Guardar series'}
+        </button>
+        <Descanso inicio={descansoDesde} />
       </form>
+
+      {hoy && (
+        <section className="tarjeta space-y-3">
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-semibold">Hoy</h2>
+            <span className="text-sm text-zinc-500 cifra">
+              {hoy.ejercicios.reduce((t: number, e: any) => t + e.series.length, 0)} series · {Math.round(hoy.volumen)} kg
+            </span>
+          </div>
+          <ul className="space-y-3">
+            {hoy.ejercicios.map((e: any) => (
+              <li key={e.exerciseId}>
+                <button type="button" className="text-left text-sm font-semibold text-zinc-200 hover:text-acento" onClick={() => setExerciseId(e.exerciseId)}>
+                  {e.ejercicio}
+                </button>
+                <div className="mt-1 flex flex-wrap gap-1.5">
+                  {e.series.map((s: any) => (
+                    <span key={s.id} className="inline-flex items-center gap-1 rounded-lg bg-black/40 py-1 pl-2 pr-1 text-xs text-zinc-300 cifra">
+                      {s.repeticiones}×{s.pesoKg}
+                      <button
+                        type="button"
+                        aria-label="Borrar esta serie"
+                        className="rounded px-1 text-zinc-600 hover:text-vencido"
+                        onClick={() => borrarSerie(s.id)}
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {mios.length > 0 && (
         <section className="tarjeta space-y-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-semibold">Como vas</h2>
             <select
-              className="campo w-auto py-1.5 text-sm"
+              className="campo w-auto max-w-[60%] py-1.5 text-sm"
               value={verProgresoDe}
               onChange={(e) => setVerProgresoDe(e.target.value)}
             >
@@ -571,24 +690,16 @@ function Entrenamiento() {
                   <p className="text-sm text-zinc-500">tu mejor marca</p>
                 </div>
                 <div className="rounded-xl bg-black/40 p-3">
-                  <p
-                    className={`text-2xl font-black ${
-                      progreso.mejora > 0 ? 'text-vigente' : 'text-zinc-300'
-                    }`}
-                  >
+                  <p className={`text-2xl font-black ${progreso.mejora > 0 ? 'text-vigente' : 'text-zinc-300'}`}>
                     {progreso.mejora > 0 ? '+' : ''}
                     {progreso.mejora}%
                   </p>
                   <p className="text-sm text-zinc-500">desde que empezaste</p>
                 </div>
               </div>
-
               <GraficoLinea
                 titulo={`Mejor peso por dia — ${progreso.ejercicio}`}
-                puntos={progreso.puntos.map((p: any) => ({
-                  etiqueta: fechaCorta(p.dia),
-                  valor: p.mejorPeso,
-                }))}
+                puntos={progreso.puntos.map((p: any) => ({ etiqueta: fechaCorta(p.dia), valor: p.mejorPeso }))}
               />
             </>
           ) : (
@@ -597,34 +708,66 @@ function Entrenamiento() {
         </section>
       )}
 
-      <section>
-        <h2 className="rotulo mb-2">
-          Ultimas sesiones
-        </h2>
-        <div className="space-y-3">
-          {historial.length === 0 && (
-            <div className="tarjeta text-sm text-zinc-500">Todavia no anotaste nada.</div>
-          )}
-          {historial.map((d) => (
-            <div key={d.dia} className="tarjeta">
-              <div className="flex items-baseline justify-between">
-                <p className="font-medium">{fechaCorta(d.dia)}</p>
-                <p className="text-sm text-zinc-500">{Math.round(d.volumen)} kg de volumen</p>
-              </div>
-              <ul className="mt-2 space-y-1 text-sm text-zinc-400">
-                {d.ejercicios.map((e: any) => (
-                  <li key={e.exerciseId}>
-                    <span className="text-zinc-200">{e.ejercicio}</span>{' '}
-                    {e.series.map((s: any) => `${s.repeticiones}x${s.pesoKg}`).join(' · ')}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+      <section className="space-y-3">
+        <h2 className="rotulo">Historial por semana</h2>
+        {porSemana.length === 0 && !hoy && (
+          <div className="tarjeta text-sm text-zinc-500">Todavia no anotaste nada.</div>
+        )}
+        {porSemana.map((s) => (
+          <details key={s.lunes} className="tarjeta group p-0" open={s === porSemana[0]}>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
+              <span>
+                <span className="block font-semibold">Semana del {fechaCorta(s.lunes)}</span>
+                <span className="block text-xs text-zinc-500 cifra">
+                  {s.dias.length} dia(s) · {s.series} series · {Math.round(s.volumen)} kg
+                </span>
+              </span>
+              <span className="text-zinc-500 transition group-open:rotate-180">⌄</span>
+            </summary>
+            <ul className="divide-y divide-borde border-t border-borde">
+              {s.dias.map((d: any) => (
+                <li key={d.dia} className="p-4">
+                  <div className="flex items-baseline justify-between">
+                    <p className="text-sm font-medium capitalize">
+                      {new Date(d.dia + 'T12:00:00Z').toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', timeZone: 'UTC' })}
+                    </p>
+                    <p className="text-xs text-zinc-500">
+                      {Array.from(new Set(d.ejercicios.map((e: any) => NOMBRE_GRUPO[e.grupo] ?? e.grupo))).join(' · ')}
+                    </p>
+                  </div>
+                  <ul className="mt-1.5 space-y-0.5 text-sm text-zinc-400">
+                    {d.ejercicios.map((e: any) => (
+                      <li key={e.exerciseId}>
+                        <span className="text-zinc-200">{e.ejercicio}</span>{' '}
+                        <span className="cifra">{e.series.map((x: any) => `${x.repeticiones}×${x.pesoKg}`).join(' · ')}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ))}
       </section>
     </div>
   );
+}
+
+/** Agrupa los dias del historial en semanas de lunes a domingo. */
+function agruparPorSemana(dias: any[]) {
+  const semanas = new Map<string, { lunes: string; dias: any[]; series: number; volumen: number }>();
+  for (const d of dias) {
+    const f = new Date(d.dia + 'T00:00:00Z');
+    const wd = f.getUTCDay();
+    f.setUTCDate(f.getUTCDate() + (wd === 0 ? -6 : 1 - wd));
+    const lunes = f.toISOString().slice(0, 10);
+    const s = semanas.get(lunes) ?? { lunes, dias: [], series: 0, volumen: 0 };
+    s.dias.push(d);
+    s.series += d.ejercicios.reduce((t: number, e: any) => t + e.series.length, 0);
+    s.volumen += d.volumen;
+    semanas.set(lunes, s);
+  }
+  return Array.from(semanas.values()).sort((a, b) => (a.lunes < b.lunes ? 1 : -1));
 }
 
 function PesoCorporal() {
