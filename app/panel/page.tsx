@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [riesgo, setRiesgo] = useState<any[]>([]);
   const [cohortes, setCohortes] = useState<any>(null);
   const [salud, setSalud] = useState<any>(null);
+  const [ranking, setRanking] = useState<any>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -19,12 +20,14 @@ export default function Dashboard() {
       api('/dashboard/at-risk'),
       api('/dashboard/cohorts'),
       api('/system/health'),
+      api('/ranking').catch(() => null),
     ])
-      .then(([s, r, c, h]: any) => {
+      .then(([s, r, c, h, k]: any) => {
         setStats(s);
         setRiesgo(r);
         setCohortes(c);
         setSalud(h);
+        setRanking(k);
       })
       .catch((e) => setError(e.message));
   }, []);
@@ -80,8 +83,8 @@ export default function Dashboard() {
           ) : (
             <ul className="divide-y divide-borde">
               {stats.porVencer.map((s: any) => (
-                <li key={s.membresiaId} className="flex items-center justify-between gap-4 p-4">
-                  <div>
+                <li key={s.membresiaId} className="flex items-center justify-between gap-3 p-4">
+                  <div className="min-w-0">
                     <Link href={`/panel/socios/${s.memberId}`} className="font-medium hover:underline">
                       {s.nombre}
                     </Link>
@@ -121,8 +124,8 @@ export default function Dashboard() {
           ) : (
             <ul className="divide-y divide-borde">
               {riesgo.map((s) => (
-                <li key={s.memberId} className="flex items-center justify-between gap-4 p-4">
-                  <div>
+                <li key={s.memberId} className="flex items-center justify-between gap-3 p-4">
+                  <div className="min-w-0">
                     <Link href={`/panel/socios/${s.memberId}`} className="font-medium hover:underline">
                       {s.nombre}
                     </Link>
@@ -148,6 +151,39 @@ export default function Dashboard() {
           )}
         </div>
       </section>
+
+      {ranking && (
+        <section>
+          <h2 className="mb-1 text-lg font-semibold">Ranking de {ranking.mes}</h2>
+          <p className="mb-3 text-sm text-zinc-500">
+            Para felicitar en el mostrador. Los socios ven el suyo en el portal, con nombres cortos.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              ['Mas constantes', ranking.asistencia, 'dias'],
+              ['Mas records personales', ranking.records, 'records'],
+            ].map(([titulo, filas, unidad]: any) => (
+              <div key={titulo} className="tarjeta p-0">
+                <p className="border-b border-borde px-4 py-3 text-sm font-semibold">{titulo}</p>
+                <ol className="divide-y divide-borde">
+                  {filas.length === 0 && <li className="p-4 text-sm text-zinc-500">Todavia nadie este mes.</li>}
+                  {filas.slice(0, 5).map((f: any) => (
+                    <li key={f.id} className="flex items-center gap-3 px-4 py-2.5 text-sm">
+                      <span className="w-5 text-center font-black text-zinc-500 cifra">{f.puesto}</span>
+                      <Link href={`/panel/socios/${f.id}`} className="min-w-0 flex-1 truncate hover:underline">
+                        {f.nombre}
+                      </Link>
+                      <span className="shrink-0 font-bold cifra">
+                        {f.valor} <span className="font-normal text-zinc-500">{unidad}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section>
         <h2 className="mb-1 text-lg font-semibold">Retencion por cohorte</h2>

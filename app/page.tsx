@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Revelar } from '@/components/Revelar';
+import { AforoEnVivo, MenuLanding } from '@/components/Landing';
 
 const NOMBRE = process.env.NEXT_PUBLIC_GIMNASIO_NOMBRE || 'FORCES GYM';
 
@@ -81,6 +82,7 @@ export default function Landing() {
             <Link href="/portal" className="boton-suave">
               Soy socio
             </Link>
+            <MenuLanding />
           </nav>
         </div>
       </header>
@@ -106,10 +108,13 @@ export default function Landing() {
         />
 
         <div className="relative mx-auto max-w-6xl px-4 py-28 sm:py-36">
-          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-acento/25 bg-acento/[0.08] px-3.5 py-1.5 text-[12.5px] font-bold uppercase tracking-[0.16em] text-acento">
-            <span className="punto-vigente" />
-            Pacasmayo · La Libertad
-          </p>
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            <p className="inline-flex items-center gap-2 rounded-full border border-acento/25 bg-acento/[0.08] px-3.5 py-1.5 text-[12.5px] font-bold uppercase tracking-[0.16em] text-acento">
+              <span className="punto-vigente" />
+              Pacasmayo · La Libertad
+            </p>
+            <AforoEnVivo />
+          </div>
           <h1 className="max-w-3xl text-[clamp(2.6rem,6.2vw+0.9rem,5.25rem)] font-black leading-[0.97] tracking-[-0.035em]">
             Todo depende
             <br />

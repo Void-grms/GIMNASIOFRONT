@@ -129,6 +129,53 @@ export function sesionActual(tipo: Sesion = 'staff'): {
   }
 }
 
+/**
+ * Achica una imagen elegida del celular antes de subirla. Una foto de camara
+ * pesa 4-8 MB; reducida a 1400 px en JPEG queda en unos 200-400 KB y se sigue
+ * leyendo bien (el numero de operacion de un Yape, la etiqueta de un producto).
+ */
+export function reducirImagen(archivo: File, maxLado = 1400, calidad = 0.82): Promise<string> {
+  return new Promise((resolver, rechazar) => {
+    if (!archivo.type.startsWith('image/')) {
+      rechazar(new Error('El archivo no es una imagen'));
+      return;
+    }
+    const url = URL.createObjectURL(archivo);
+    const img = new Image();
+    img.onload = () => {
+      const escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+      const lienzo = document.createElement('canvas');
+      lienzo.width = Math.round(img.width * escala);
+      lienzo.height = Math.round(img.height * escala);
+      const ctx = lienzo.getContext('2d');
+      if (!ctx) {
+        URL.revokeObjectURL(url);
+        rechazar(new Error('No se pudo procesar la imagen'));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, lienzo.width, lienzo.height);
+      URL.revokeObjectURL(url);
+      resolver(lienzo.toDataURL('image/jpeg', calidad));
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      rechazar(new Error('No se pudo leer la imagen'));
+    };
+    img.src = url;
+  });
+}
+
+/** Imagen de un endpoint protegido como URL local (la captura del Yape). */
+export async function imagenProtegida(ruta: string, sesion: Sesion = 'staff'): Promise<string> {
+  const token = leerToken(sesion);
+  const res = await fetch(`${BASE}${ruta}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new ApiError(res.status, 'No se pudo cargar la imagen');
+  return URL.createObjectURL(await res.blob());
+}
+
 /** Iniciales para el avatar: "Patrick Isla" -> "PI". */
 export const iniciales = (nombre?: string) =>
   (nombre || '')

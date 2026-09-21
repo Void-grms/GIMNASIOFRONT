@@ -23,11 +23,17 @@ export default function MiCredencial() {
   const [error, setError] = useState('');
   const [esperando, setEsperando] = useState(false);
   const [confirmandoSalida, setConfirmandoSalida] = useState<string | null>(null);
+  const [renovacion, setRenovacion] = useState<any>(null);
   const dentroAntes = useRef<boolean | null>(null);
 
   const cargarPanel = useCallback(async () => {
     try {
-      setPanel(await api('/portal/me', { sesion: 'socio' }));
+      const [p, r]: any = await Promise.all([
+        api('/portal/me', { sesion: 'socio' }),
+        api('/portal/renewals/mine', { sesion: 'socio' }).catch(() => null),
+      ]);
+      setPanel(p);
+      setRenovacion(r);
     } catch (e: any) {
       setError(e.message);
     }
@@ -180,10 +186,19 @@ export default function MiCredencial() {
           </span>
         </div>
         {panel.vence && <p className="mt-1 text-sm text-zinc-500">Vence el {fechaCorta(panel.vence)}</p>}
-        {vencido && (
+        {vencido && renovacion?.estado !== 'pendiente' && (
           <p className="aviso-mal mt-3">
-            Renueva en recepcion para volver a entrar.
+            Tu membresia no esta vigente. Renueva aqui con Yape o en recepcion.
           </p>
+        )}
+        <EstadoRenovacion renovacion={renovacion} />
+        {renovacion?.estado !== 'pendiente' && (
+          <Link
+            href="/portal/renovar"
+            className={`mt-3 w-full ${vencido || panel.estado === 'por_vencer' ? 'boton' : 'boton-suave'}`}
+          >
+            Renovar con Yape
+          </Link>
         )}
       </div>
 
@@ -205,6 +220,12 @@ export default function MiCredencial() {
         <p className="-mt-2 text-center text-sm text-zinc-500">
           Estas dentro del gimnasio. Marca tu salida al irte.
         </p>
+      )}
+      {panel.casillero && (
+        <div className="flex items-center justify-between rounded-2xl border border-acento/30 bg-acento/[0.07] px-4 py-3">
+          <span className="text-sm text-zinc-300">Tu casillero</span>
+          <span className="text-2xl font-black text-acento cifra">N.° {panel.casillero}</span>
+        </div>
       )}
       {esperando && !panel.dentro && (
         <p className="-mt-2 flex items-center justify-center gap-2 text-center text-sm text-zinc-400">
@@ -235,17 +256,6 @@ export default function MiCredencial() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <Link href="/portal/progreso" className="boton-suave px-2">
-          Mi progreso
-        </Link>
-        <Link href="/portal/tienda" className="boton-suave px-2">
-          Tienda
-        </Link>
-        <Link href="/portal/perfil" className="boton-suave px-2">
-          Mi perfil
-        </Link>
-      </div>
 
       {panel.pagos.length > 0 && (
         <section>
@@ -266,5 +276,30 @@ export default function MiCredencial() {
         </section>
       )}
     </main>
+  );
+}
+
+/** Estado de la ultima renovacion pedida por el portal. Lo viejo no se muestra. */
+function EstadoRenovacion({ renovacion }: { renovacion: any }) {
+  if (!renovacion) return null;
+  if (renovacion.estado === 'pendiente') {
+    return (
+      <p className="aviso-ojo mt-3">
+        Recibimos tu pago de {soles(renovacion.monto)} ({renovacion.plan}). Recepcion lo esta
+        revisando; tu membresia se actualiza al aprobarlo.
+      </p>
+    );
+  }
+  const reciente =
+    renovacion.revisado && Date.now() - new Date(renovacion.revisado).getTime() < 5 * 86400000;
+  if (!reciente) return null;
+  if (renovacion.estado === 'aprobada') {
+    return <p className="aviso-ok mt-3">Tu renovacion ({renovacion.plan}) fue aprobada.</p>;
+  }
+  return (
+    <p className="aviso-mal mt-3">
+      No pudimos aprobar tu renovacion: {renovacion.motivoRechazo}. Puedes volver a enviarla o
+      acercarte a recepcion.
+    </p>
   );
 }

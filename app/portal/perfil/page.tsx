@@ -82,6 +82,30 @@ export default function MiPerfil() {
         </Link>
       </header>
 
+      <label className="tarjeta flex items-start gap-3 text-sm">
+        <input
+          type="checkbox"
+          className="mt-1"
+          checked={!!panel.ocultarEnRanking}
+          onChange={async (e) => {
+            const ocultar = e.target.checked;
+            setPanel({ ...panel, ocultarEnRanking: ocultar });
+            try {
+              await api('/portal/me', { metodo: 'PATCH', sesion: 'socio', cuerpo: { ocultarEnRanking: ocultar } });
+            } catch (err: any) {
+              setError(err.message);
+              cargar();
+            }
+          }}
+        />
+        <span>
+          <span className="block font-semibold text-zinc-200">Aparecer como anonimo en el ranking</span>
+          <span className="block text-zinc-500">
+            Tus retos siguen contando; solo se oculta tu nombre para los demas socios.
+          </span>
+        </span>
+      </label>
+
       <div className="tarjeta space-y-4">
         <div className="flex items-center gap-4">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-black/40">

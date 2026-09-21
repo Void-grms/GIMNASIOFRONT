@@ -39,6 +39,7 @@ const GRUPOS: { titulo: string; items: Item[] }[] = [
       { href: '/panel/recepcion', texto: 'Recepcion', icono: <I d="M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v5H4zM14 15h3v3h-3zM19 19h1.5v1.5H19z" /> },
       { href: '/panel/escaner', texto: 'Escaner', icono: <I d="M4 8V5a1 1 0 0 1 1-1h3M20 8V5a1 1 0 0 0-1-1h-3M4 16v3a1 1 0 0 0 1 1h3M20 16v3a1 1 0 0 1-1 1h-3M7 12h10" /> },
       { href: '/panel/socios', texto: 'Socios', icono: <I d="M9 4.6a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8zM2.5 20a6.5 6.5 0 0 1 13 0M16.5 5.2a3.4 3.4 0 0 1 0 5.6M18 20c0-2.1-.7-3.6-1.6-4.6" /> },
+      { href: '/panel/rutinas', texto: 'Rutinas', icono: <I d="M9 5h11M9 12h11M9 19h11M4 5h.01M4 12h.01M4 19h.01" /> },
       { href: '/panel/invitados', texto: 'Invitados', icono: <I d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3.6a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8zM19 8v6M22 11h-6" /> },
     ],
   },
@@ -207,6 +208,15 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-acento text-xs font-black text-black" aria-label={usuario?.nombre || 'Personal'}>
             {iniciales(usuario?.nombre)}
           </span>
+          <button
+            type="button"
+            onClick={() => setMenuMovil(true)}
+            aria-label="Abrir menu"
+            aria-expanded={menuMovil}
+            className="-mr-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-zinc-300 hover:bg-white/[0.06]"
+          >
+            <I d="M4 6h16M4 12h16M4 18h16" />
+          </button>
         </header>
         <div className="px-4 pb-28 pt-5 sm:px-7 md:pb-8 md:pt-7">
           <h1 className="mb-6 hidden text-2xl font-black tracking-tight md:block">{titulo}</h1>

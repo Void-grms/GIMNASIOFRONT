@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { api, hora, soles } from '@/lib/api';
+import { SelectorCasillero } from './Casilleros';
 
 const METODOS = ['efectivo', 'yape', 'plin', 'tarjeta', 'transferencia'];
 
@@ -19,6 +20,7 @@ export function PedidosPendientes({
 }) {
   const [pedidos, setPedidos] = useState<any[]>([]);
   const [metodo, setMetodo] = useState<Record<string, string>>({});
+  const [casillero, setCasillero] = useState<Record<string, number | null>>({});
   const [ocupado, setOcupado] = useState('');
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
@@ -44,10 +46,14 @@ export function PedidosPendientes({
     try {
       const r: any = await api(`/orders/${p.id}/deliver`, {
         metodo: 'POST',
-        cuerpo: { metodo: metodo[p.id] || 'efectivo' },
+        cuerpo: {
+          metodo: metodo[p.id] || 'efectivo',
+          ...(casillero[p.id] ? { casilleroNumero: casillero[p.id] } : {}),
+        },
       });
       setAviso(
         `Pedido #${p.codigo} cobrado (${soles(r.total)}) y entregado.` +
+          (r.casillero ? ` Entrega la llave del casillero ${r.casillero}.` : '') +
           (r.errorComprobante ? ` Ojo: ${r.errorComprobante}` : ''),
       );
       cargar();
@@ -103,6 +109,12 @@ export function PedidosPendientes({
             ))}
           </ul>
           {p.nota && <p className="text-sm italic text-zinc-400">“{p.nota}”</p>}
+          {p.items.some((i: any) => i.esCasillero) && (
+            <SelectorCasillero
+              valor={casillero[p.id] ?? null}
+              onCambiar={(n) => setCasillero((c) => ({ ...c, [p.id]: n }))}
+            />
+          )}
           {/* Botones y no un select: en recepcion el foco vuelve solo al campo
               del lector, y un select abierto se cerraria al instante. */}
           <div className="flex flex-wrap gap-1.5 border-t border-borde pt-3" role="radiogroup" aria-label="Metodo de pago">

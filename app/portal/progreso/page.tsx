@@ -217,6 +217,141 @@ function ElegirZonas({
   );
 }
 
+/**
+ * Rutina guiada. Casi todos entrenan a su modo, asi que esto solo aparece para
+ * quien ya la tiene, o para quien recien empieza y puede pedirla.
+ */
+function RutinaGuiada({
+  rutina,
+  onCambio,
+  onUsar,
+}: {
+  rutina: any;
+  onCambio: (r: any) => void;
+  onUsar: (ejercicio: any) => void;
+}) {
+  const [nota, setNota] = useState('');
+  const [descartada, setDescartada] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    try {
+      setDescartada(localStorage.getItem('gym.rutina.noGracias') === '1');
+    } catch {
+      /* sin almacenamiento: se vuelve a ofrecer */
+    }
+  }, []);
+
+  async function pedir() {
+    setError('');
+    try {
+      onCambio(await api('/portal/routine/request', { metodo: 'POST', sesion: 'socio', cuerpo: nota.trim() ? { nota: nota.trim() } : {} }));
+    } catch (e: any) {
+      setError(e.message);
+    }
+  }
+
+  async function dejar() {
+    if (!window.confirm('¿Dejar la rutina guiada? Puedes seguir anotando lo que entrenes a tu manera.')) return;
+    await api('/portal/routine/stop', { metodo: 'POST', sesion: 'socio' });
+    onCambio({ estado: 'ninguna', puedePedir: false });
+  }
+
+  if (rutina.estado === 'solicitada') {
+    return (
+      <div className="aviso-ojo">
+        Pediste una rutina guiada. El entrenador te la arma y aparecera aqui.
+      </div>
+    );
+  }
+
+  if (rutina.estado === 'ninguna') {
+    if (!rutina.puedePedir || descartada) return null;
+    return (
+      <section className="tarjeta-acento space-y-3">
+        <div>
+          <h2 className="font-bold">¿Recien empiezas?</h2>
+          <p className="text-sm text-zinc-400">
+            Pide una rutina guiada para tus primeras semanas: el entrenador te dice que hacer cada
+            dia. Si ya tienes la tuya, ignora esto.
+          </p>
+        </div>
+        <input
+          className="campo py-2.5 text-sm"
+          maxLength={200}
+          placeholder="Algo que deba saber el entrenador (opcional)"
+          value={nota}
+          onChange={(e) => setNota(e.target.value)}
+        />
+        {error && <p className="aviso-mal">{error}</p>}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            className="boton-suave"
+            onClick={() => {
+              setDescartada(true);
+              try {
+                localStorage.setItem('gym.rutina.noGracias', '1');
+              } catch {
+                /* nada */
+              }
+            }}
+          >
+            No, gracias
+          </button>
+          <button className="boton" onClick={pedir}>
+            Pedir rutina
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="tarjeta-acento space-y-3">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="rotulo">Tu rutina · {rutina.rutina}</p>
+          <h2 className="mt-1 text-xl font-black tracking-tight">
+            {rutina.hoy ? `Hoy: ${rutina.hoy.titulo}` : 'Hoy toca descanso'}
+          </h2>
+        </div>
+        {rutina.hasta && (
+          <span className="shrink-0 text-xs text-zinc-500">hasta {fechaCorta(rutina.hasta.slice(0, 10))}</span>
+        )}
+      </div>
+      {rutina.nota && <p className="text-sm italic text-zinc-400">“{rutina.nota}”</p>}
+      {rutina.hoy ? (
+        <ul className="divide-y divide-borde rounded-xl border border-borde">
+          {rutina.hoy.ejercicios.map((e: any) => (
+            <li key={e.exerciseId}>
+              <button
+                type="button"
+                className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm hover:bg-white/[0.04]"
+                onClick={() => onUsar(e)}
+              >
+                <span className="text-zinc-200">{e.nombre}</span>
+                <span className="shrink-0 text-zinc-500 cifra">
+                  {e.series} × {e.repeticiones} <span className="text-acento">→</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-zinc-400">
+          Tu rutina no tiene nada para hoy. Descansa o entrena lo que quieras.
+        </p>
+      )}
+      <p className="text-xs text-zinc-500">
+        {rutina.dias.map((d: any) => `${d.nombreDia.slice(0, 3)}: ${d.titulo}`).join(' · ')}
+      </p>
+      <button className="text-xs text-zinc-500 underline hover:text-white" onClick={dejar}>
+        Dejar la rutina guiada
+      </button>
+    </section>
+  );
+}
+
 function Entrenamiento() {
   const [ejercicios, setEjercicios] = useState<any[]>([]);
   const [mios, setMios] = useState<any[]>([]);
@@ -230,7 +365,31 @@ function Entrenamiento() {
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => setZonas(leerZonas()), []);
+  const [rutina, setRutina] = useState<any>(null);
+
+  // La rutina guiada (si el socio la pidio) preselecciona las zonas del dia,
+  // pero solo si hoy todavia no eligio nada: lo que el socio toca manda.
+  useEffect(() => {
+    const elegidas = leerZonas();
+    setZonas(elegidas);
+    api('/portal/routine', { sesion: 'socio' })
+      .then((r: any) => {
+        setRutina(r);
+        if (r.estado === 'activa' && r.hoy?.grupos?.length && elegidas.length === 0) {
+          cambiarZonas(r.hoy.grupos);
+        }
+      })
+      .catch(() => setRutina(null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Tocar un ejercicio de la rutina lo deja listo en el formulario. */
+  function usarDeRutina(e: any) {
+    setExerciseId(e.exerciseId);
+    const reps = parseInt(String(e.repeticiones), 10) || 10;
+    setSeries(Array.from({ length: e.series }, () => ({ repeticiones: reps, pesoKg: series[0]?.pesoKg ?? 20 })));
+    document.getElementById('anotar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   function cambiarZonas(nuevas: string[]) {
     setZonas(nuevas);
@@ -305,9 +464,11 @@ function Entrenamiento() {
 
   return (
     <div className="space-y-5">
+      {rutina && <RutinaGuiada rutina={rutina} onCambio={setRutina} onUsar={usarDeRutina} />}
+
       <ElegirZonas elegidas={zonas} onCambiar={cambiarZonas} historial={historial} />
 
-      <form onSubmit={guardar} className="tarjeta space-y-4">
+      <form id="anotar" onSubmit={guardar} className="tarjeta scroll-mt-4 space-y-4">
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="font-semibold">Anotar lo de hoy</h2>
           {zonas.length > 0 && (

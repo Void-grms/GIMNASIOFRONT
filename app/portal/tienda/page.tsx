@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { api, hora, leerToken, soles } from '@/lib/api';
+import { api, hora, leerToken, soles, urlArchivo } from '@/lib/api';
 import { Esqueleto } from '@/components/Esqueleto';
 
 const ESTADO: Record<string, { texto: string; clase: string }> = {
@@ -51,7 +51,7 @@ export default function Tienda() {
 
   const sumar = (p: any, delta: number) =>
     setCarrito((c) => {
-      const tope = p.esServicio ? 10 : Math.min(10, p.disponible);
+      const tope = p.esCasillero ? 1 : p.esServicio ? 10 : Math.min(10, p.disponible);
       return { ...c, [p.id]: Math.max(0, Math.min(tope, (c[p.id] || 0) + delta)) };
     });
 
@@ -96,7 +96,7 @@ export default function Tienda() {
   const anteriores = pedidos.filter((p) => p.estado !== 'pendiente').slice(0, 5);
 
   return (
-    <main className="mx-auto max-w-md space-y-5 px-4 pb-40 pt-8">
+    <main className="mx-auto max-w-md space-y-5 px-4 pb-36 pt-8">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Tienda</h1>
         <Link href="/portal/mi" className="text-sm text-zinc-400 hover:text-white">
@@ -106,6 +106,7 @@ export default function Tienda() {
 
       <p className="text-sm text-zinc-500">
         Pide desde aqui y paga en recepcion al recogerlo. Lo que pidas queda apartado por 12 horas.
+        {productos?.some((p) => p.esCasillero) && ' El casillero te lo asignan con numero al pagar y se libera cuando marcas tu salida.'}
       </p>
 
       {aviso && <p className="aviso-ok">{aviso}</p>}
@@ -150,6 +151,16 @@ export default function Tienda() {
               const cantidad = carrito[p.id] || 0;
               return (
                 <li key={p.id} className={`flex items-center gap-3 p-4 ${agotado ? 'opacity-50' : ''}`}>
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-borde bg-black/40">
+                    {p.fotoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={urlArchivo(p.fotoUrl)!} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    ) : (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="text-zinc-700" aria-hidden="true">
+                        <path d="M6 7h12l-1 13H7zM9 7a3 3 0 0 1 6 0" />
+                      </svg>
+                    )}
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">{p.nombre}</p>
                     <p className="text-sm text-zinc-500">
@@ -213,8 +224,8 @@ export default function Tienda() {
       )}
 
       {lineas.length > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-borde bg-[#0C0C0E]/95 backdrop-blur">
-          <div className="mx-auto max-w-md space-y-3 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
+        <div className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-30 border-t border-borde bg-[#0C0C0E]/95 backdrop-blur">
+          <div className="mx-auto max-w-md space-y-3 px-4 pb-3 pt-3">
             <input
               className="campo py-2.5 text-sm"
               placeholder="Nota para recepcion (opcional)"

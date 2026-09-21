@@ -222,6 +222,74 @@ export default function Ajustes() {
       </section>
 
       <section className="tarjeta space-y-4">
+        <h2 className="text-lg font-semibold">Renovacion por Yape desde el portal</h2>
+        <p className="text-sm text-zinc-500">
+          El socio paga a este numero y sube la captura; recepcion la revisa y aprueba. Si lo dejas
+          vacio, el portal no ofrece renovar.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="etiqueta">Numero de Yape</label>
+            <input
+              className="campo"
+              inputMode="numeric"
+              maxLength={9}
+              placeholder="9 digitos"
+              value={datos.yapeNumero || ''}
+              onChange={(e) => set('yapeNumero', e.target.value.replace(/\D/g, ''))}
+            />
+          </div>
+          <div>
+            <label className="etiqueta">Titular que ve el socio</label>
+            <input
+              className="campo"
+              maxLength={80}
+              value={datos.yapeTitular || ''}
+              onChange={(e) => set('yapeTitular', e.target.value)}
+            />
+          </div>
+        </div>
+        <button
+          className="boton"
+          onClick={() => guardar({ yapeNumero: datos.yapeNumero || '', yapeTitular: datos.yapeTitular || '' })}
+        >
+          Guardar
+        </button>
+      </section>
+
+      <section className="tarjeta space-y-4">
+        <h2 className="text-lg font-semibold">Aforo en la pagina web</h2>
+        <p className="text-sm text-zinc-500">
+          La landing muestra cuantas personas hay entrenando ahora (solo el numero, sin nombres).
+          Con un aforo maximo, muestra tambien que tan lleno esta.
+        </p>
+        <label className="flex items-center gap-2 text-sm text-zinc-300">
+          <input
+            type="checkbox"
+            checked={datos.mostrarAforo ?? true}
+            onChange={(e) => set('mostrarAforo', e.target.checked)}
+          />
+          Mostrar el aforo en vivo en la pagina web
+        </label>
+        <div>
+          <label className="etiqueta">Aforo maximo del local (0 = no mostrar porcentaje)</label>
+          <input
+            type="number"
+            min={0}
+            className="campo"
+            value={datos.aforoMaximo ?? 0}
+            onChange={(e) => set('aforoMaximo', Number(e.target.value))}
+          />
+        </div>
+        <button
+          className="boton"
+          onClick={() => guardar({ mostrarAforo: datos.mostrarAforo ?? true, aforoMaximo: datos.aforoMaximo ?? 0 })}
+        >
+          Guardar
+        </button>
+      </section>
+
+      <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Regimen tributario</h2>
         <p className="text-sm text-zinc-500">
           Decide si el comprobante desglosa IGV y si se puede emitir factura. Cambiarlo aqui alcanza,

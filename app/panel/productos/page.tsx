@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { api, hora, soles } from '@/lib/api';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { api, hora, reducirImagen, soles, urlArchivo } from '@/lib/api';
 import { PedidosPendientes } from '@/components/PedidosPendientes';
+import { GrillaCasilleros, SelectorCasillero } from '@/components/Casilleros';
 
 const METODOS = ['efectivo', 'yape', 'plin', 'tarjeta', 'transferencia'];
 
@@ -13,6 +14,9 @@ export default function Productos() {
   const [metodo, setMetodo] = useState('efectivo');
   const [dni, setDni] = useState('');
   const [nuevo, setNuevo] = useState(false);
+  const [casillero, setCasillero] = useState<number | null>(null);
+  const [fotoDe, setFotoDe] = useState('');
+  const archivo = useRef<HTMLInputElement>(null);
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
 
@@ -31,10 +35,12 @@ export default function Productos() {
     0,
   );
   const hayCarrito = Object.values(carrito).some((c) => c > 0);
+  const hayCasillero = productos.some((p) => p.esCasillero && carrito[p.id] > 0);
 
   function sumar(id: string, delta: number) {
+    const tope = productos.find((p) => p.id === id)?.esCasillero ? 1 : Infinity;
     setCarrito((c) => {
-      const cantidad = Math.max(0, (c[id] || 0) + delta);
+      const cantidad = Math.min(tope, Math.max(0, (c[id] || 0) + delta));
       return { ...c, [id]: cantidad };
     });
   }
@@ -53,12 +59,17 @@ export default function Productos() {
         .filter(([, cantidad]) => cantidad > 0)
         .map(([productId, cantidad]) => ({ productId, cantidad }));
 
+      if (hayCasillero && !memberId) throw new Error('El casillero se alquila a un socio: pon su DNI');
       const venta: any = await api('/sales', {
         metodo: 'POST',
-        cuerpo: { items, metodo, memberId },
+        cuerpo: { items, metodo, memberId, ...(hayCasillero && casillero ? { casilleroNumero: casillero } : {}) },
       });
-      setAviso(`Venta registrada por ${soles(venta.total)}.`);
+      setAviso(
+        `Venta registrada por ${soles(venta.total)}.` +
+          (venta.casillero ? ` Entrega la llave del casillero ${venta.casillero}.` : ''),
+      );
       setCarrito({});
+      setCasillero(null);
       setDni('');
       cargar();
     } catch (e: any) {
@@ -66,8 +77,26 @@ export default function Productos() {
     }
   }
 
+  async function subirFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    e.target.value = '';
+    if (!f || !fotoDe) return;
+    setError('');
+    try {
+      const imagen = await reducirImagen(f, 900, 0.82);
+      await api(`/products/${fotoDe}/foto`, { metodo: 'POST', cuerpo: { imagen } });
+      setAviso('Foto actualizada. Ya se ve en la tienda del portal.');
+      cargar();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setFotoDe('');
+    }
+  }
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+      <input ref={archivo} type="file" accept="image/*" className="hidden" onChange={subirFoto} />
       <div className="space-y-5">
         <PedidosPendientes ocultarVacio onCobrado={() => cargar().catch(() => {})} />
 
@@ -95,7 +124,27 @@ export default function Productos() {
             {productos.map((p) => {
               const bajo = !p.esServicio && p.stock <= p.stockMinimo;
               return (
-                <li key={p.id} className="flex flex-wrap items-center gap-3 p-4">
+                <li key={p.id} className="flex flex-wrap items-center gap-x-3 gap-y-2.5 p-4">
+                  <button
+                    type="button"
+                    title={p.fotoUrl ? 'Cambiar foto' : 'Subir foto'}
+                    aria-label={`Foto de ${p.nombre}`}
+                    onClick={() => {
+                      setFotoDe(p.id);
+                      archivo.current?.click();
+                    }}
+                    className="group relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-bordeFuerte bg-black/40 text-zinc-600 hover:border-acento hover:text-acento"
+                  >
+                    {p.fotoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={urlArchivo(p.fotoUrl)!} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9} aria-hidden="true">
+                        <path d="M4 8h3l2-3h6l2 3h3v11H4zM12 16.5a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z" />
+                      </svg>
+                    )}
+                    {fotoDe === p.id && <span className="absolute inset-0 animate-pulse bg-acento/30" />}
+                  </button>
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">
                       {p.nombre}
@@ -103,15 +152,20 @@ export default function Productos() {
                     </p>
                     <p className="text-sm text-zinc-500">
                       {soles(p.precio)}
-                      {p.esServicio ? ' · servicio' : ` · stock ${p.stock}`}
+                      {p.esCasillero ? ' · casillero' : p.esServicio ? ' · servicio' : ` · stock ${p.stock}`}
                       {bajo && <span className="ml-2 text-porvencer">reponer</span>}
                     </p>
                   </div>
 
-                  {!p.esServicio && (
-                    <div className="flex items-center gap-1">
+                  {/* En el celular los controles bajan a su propia fila: a la
+                      izquierda el inventario, a la derecha lo que se vende. */}
+                  <div className="flex w-full items-center justify-between gap-2 sm:ml-auto sm:w-auto sm:justify-end sm:gap-4">
+                  {!p.esServicio ? (
+                    <div className="flex items-center gap-1" role="group" aria-label="Ajustar inventario">
+                      <span className="mr-1 text-xs text-zinc-500 sm:hidden">Stock</span>
                       <button
-                        className="boton-suave px-2 py-1"
+                        className="boton-suave min-h-9 px-2.5 py-1"
+                        aria-label="Restar del inventario"
                         title="Ajustar inventario"
                         onClick={() =>
                           api(`/products/${p.id}/stock`, { metodo: 'POST', cuerpo: { cantidad: -1 } })
@@ -122,7 +176,8 @@ export default function Productos() {
                         −
                       </button>
                       <button
-                        className="boton-suave px-2 py-1"
+                        className="boton-suave min-h-9 px-2.5 py-1"
+                        aria-label="Sumar al inventario"
                         onClick={() =>
                           api(`/products/${p.id}/stock`, { metodo: 'POST', cuerpo: { cantidad: 1 } })
                             .then(cargar)
@@ -132,22 +187,27 @@ export default function Productos() {
                         +
                       </button>
                     </div>
+                  ) : (
+                    <span />
                   )}
 
-                  <div className="flex items-center gap-2">
-                    <button className="boton-suave px-3 py-1" onClick={() => sumar(p.id, -1)}>
+                  <div className="flex items-center gap-2" role="group" aria-label="Agregar a la venta">
+                    <button className="boton-suave min-h-9 px-3 py-1" aria-label={`Quitar ${p.nombre} de la venta`} onClick={() => sumar(p.id, -1)}>
                       −
                     </button>
-                    <span className="w-6 text-center font-medium">{carrito[p.id] || 0}</span>
-                    <button className="boton px-3 py-1" onClick={() => sumar(p.id, 1)}>
+                    <span className="w-6 text-center font-medium cifra">{carrito[p.id] || 0}</span>
+                    <button className="boton min-h-9 px-3 py-1" aria-label={`Agregar ${p.nombre} a la venta`} onClick={() => sumar(p.id, 1)}>
                       +
                     </button>
+                  </div>
                   </div>
                 </li>
               );
             })}
           </ul>
         </div>
+
+        <GrillaCasilleros />
 
         <section>
           <h2 className="rotulo mb-2">
@@ -175,7 +235,17 @@ export default function Productos() {
         </section>
       </div>
 
-      <aside className="tarjeta-acento h-fit space-y-4">
+      {/* En el celular la venta rapida queda al fondo: este atajo lleva ahi. */}
+      {hayCarrito && (
+        <a
+          href="#venta-rapida"
+          className="boton fixed inset-x-4 bottom-[calc(72px+env(safe-area-inset-bottom))] z-30 lg:hidden"
+        >
+          Ir a cobrar · <span className="cifra">{soles(total)}</span>
+        </a>
+      )}
+
+      <aside id="venta-rapida" className="tarjeta-acento h-fit scroll-mt-20 space-y-4">
         <h2 className="text-lg font-semibold">Venta rapida</h2>
 
         {!hayCarrito ? (
@@ -201,7 +271,7 @@ export default function Productos() {
         <div className="border-t border-borde pt-3 text-2xl font-black cifra">{soles(total)}</div>
 
         <div>
-          <label className="etiqueta">DNI del socio (opcional)</label>
+          <label className="etiqueta">DNI del socio {hayCasillero ? '(obligatorio para el casillero)' : '(opcional)'}</label>
           <input
             className="campo"
             maxLength={8}
@@ -209,6 +279,8 @@ export default function Productos() {
             onChange={(e) => setDni(e.target.value.replace(/\D/g, ''))}
           />
         </div>
+
+        {hayCasillero && <SelectorCasillero valor={casillero} onCambiar={setCasillero} />}
 
         <div>
           <label className="etiqueta">Metodo de pago</label>

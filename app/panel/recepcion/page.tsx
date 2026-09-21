@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { api, hora } from '@/lib/api';
 import { TarjetaSocio } from '@/components/TarjetaSocio';
 import { PedidosPendientes } from '@/components/PedidosPendientes';
+import { RenovacionesPendientes } from '@/components/RenovacionesPendientes';
 
 /**
  * Pantalla unica de recepcion. El input esta siempre enfocado: el lector QR USB
@@ -239,6 +240,8 @@ export default function Recepcion() {
           ))}
         </section>
 
+        <RenovacionesPendientes />
+
         <PedidosPendientes />
 
         <section>
@@ -255,6 +258,11 @@ export default function Recepcion() {
                 <li key={d.socio.id} className="flex items-center gap-3 p-3 text-sm">
                   <span className="punto-vigente" />
                   <span className="truncate font-medium">{d.socio.nombreCompleto}</span>
+                  {d.casillero && (
+                    <span className="shrink-0 rounded-md bg-acento/15 px-1.5 py-0.5 text-xs font-bold text-acento cifra" title="Casillero">
+                      C{d.casillero}
+                    </span>
+                  )}
                   <span className="ml-auto shrink-0 text-zinc-500 cifra">desde {hora(d.desde)}</span>
                 </li>
               ))}
