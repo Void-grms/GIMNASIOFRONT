@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-fondo text-zinc-100 antialiased;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid #FAD234;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+  }
+}
+
+/* Los numeros de un sistema de gimnasio se comparan en columna: tabulares. */
+.cifra {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Respeta a quien pidio menos movimiento: sin excepciones. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Superficies ─────────────────────────────────────────────────────────── */
+
+.tarjeta {
+  @apply rounded-2xl border border-borde bg-superficie p-5 shadow-tarjeta;
+}
+
+/* Tarjeta que responde al cursor: para listas y grillas navegables. */
+.tarjeta-viva {
+  @apply tarjeta transition duration-300 ease-suave hover:-translate-y-1
+         hover:border-bordeFuerte hover:bg-elevado;
+}
+
+/* Tarjeta con el acento de marca. Para el plan destacado y los paneles de cobro. */
+.tarjeta-acento {
+  @apply rounded-2xl border border-acento/30 p-5
+         bg-[linear-gradient(170deg,rgba(250,210,52,.07),#121215_46%)];
+}
+
+/* ── Botones ─────────────────────────────────────────────────────────────── */
+
+.boton {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-acento px-5 py-3
+         font-bold text-black shadow-acento transition duration-200 ease-suave
+         hover:-translate-y-0.5 hover:bg-acentoClaro hover:shadow-acentoFuerte
+         active:translate-y-0 active:scale-[.985]
+         disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none
+         disabled:hover:translate-y-0;
+}
+
+.boton-suave {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-borde
+         bg-white/[0.04] px-4 py-2.5 font-semibold text-zinc-200 transition duration-200
+         ease-suave hover:-translate-y-0.5 hover:border-bordeFuerte hover:bg-white/[0.09]
+         hover:text-white active:translate-y-0
+         disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
+}
+
+/* Boton grande de una sola accion: el "Estoy entrando" del portal. */
+.boton-grande {
+  @apply boton w-full rounded-2xl py-5 text-lg;
+}
+
+/* Boton de riesgo: anular comprobante, suprimir datos. */
+.boton-riesgo {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-vencido/30
+         bg-vencido/10 px-4 py-2.5 font-semibold text-vencido transition
+         hover:border-vencido/60 hover:bg-vencido/20;
+}
+
+/* ── Formularios ─────────────────────────────────────────────────────────── */
+
+.campo {
+  @apply w-full rounded-xl border border-borde bg-black/40 px-4 py-3 text-base text-zinc-100
+         outline-none transition duration-200 placeholder:text-zinc-600
+         focus:border-acento focus:bg-black/60 focus:ring-4 focus:ring-acento/[0.13];
+}
+
+/* El campo de escaneo de recepcion y quiosco: es el protagonista. */
+.campo-escaneo {
+  @apply campo py-[18px] text-[22px] font-semibold tracking-[0.06em] cifra;
+}
+
+.etiqueta {
+  @apply mb-1.5 block text-sm font-medium text-zinc-400;
+}
+
+/* Rotulo de seccion. Sustituye los h2 sueltos repetidos en cada pantalla. */
+.rotulo {
+  @apply text-[11.5px] font-bold uppercase tracking-[0.14em] text-zinc-600;
+}
+
+/* ── Semaforo ────────────────────────────────────────────────────────────── */
+
+/* La franja de color a la izquierda se lee antes que cualquier texto. */
+.franja-vigente,
+.franja-porvencer,
+.franja-vencido {
+  @apply relative overflow-hidden;
+}
+.franja-vigente::before,
+.franja-porvencer::before,
+.franja-vencido::before {
+  content: '';
+  @apply absolute bottom-0 left-0 top-0 w-1;
+}
+.franja-vigente::before { @apply bg-vigente; }
+.franja-porvencer::before { @apply bg-porvencer; }
+.franja-vencido::before { @apply bg-vencido; }
+
+.punto-vigente { @apply h-2.5 w-2.5 shrink-0 rounded-full bg-vigente shadow-[0_0_12px_rgba(34,197,94,.6)]; }
+.punto-porvencer { @apply h-2.5 w-2.5 shrink-0 rounded-full bg-porvencer shadow-[0_0_12px_rgba(251,146,60,.6)]; }
+.punto-vencido { @apply h-2.5 w-2.5 shrink-0 rounded-full bg-vencido shadow-[0_0_12px_rgba(239,68,68,.6)]; }
+
+/* ── Avisos ──────────────────────────────────────────────────────────────── */
+
+.aviso-ok { @apply rounded-xl border border-vigente/25 bg-vigente/10 px-4 py-3 text-sm font-medium text-vigente; }
+.aviso-ojo { @apply rounded-xl border border-porvencer/25 bg-porvencer/10 px-4 py-3 text-sm font-medium text-porvencer; }
+.aviso-mal { @apply rounded-xl border border-vencido/25 bg-vencido/10 px-4 py-3 text-sm font-medium text-vencido; }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+
+::selection { @apply bg-acento text-black; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #09090a; }
+::-webkit-scrollbar-thumb { background: #2a2a30; border-radius: 99px; border: 3px solid #09090a; }
+::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
