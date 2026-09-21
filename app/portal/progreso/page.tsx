@@ -13,8 +13,13 @@ import {
 import { SelectorEjercicio } from '@/components/entreno/SelectorEjercicio';
 import { SemanaEntreno } from '@/components/entreno/SemanaEntreno';
 import { Descanso } from '@/components/entreno/Descanso';
+import { Plantillas } from '@/components/entreno/Plantillas';
+import { NotaEjercicio } from '@/components/entreno/NotaEjercicio';
 
 const hoyTexto = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
+
+/** La plantilla cargada vale por el dia, igual que las zonas. */
+const LLAVE_PLANTILLA = () => `gym.plantilla.${hoyTexto()}`;
 
 /** Las zonas elegidas valen por el dia: manana se vuelve a preguntar. */
 const LLAVE_ZONAS = () => `gym.zonas.${hoyTexto()}`;
@@ -377,6 +382,16 @@ function Entrenamiento() {
   /** Series que manda la rutina: ganan sobre "la ultima vez" al cambiar de ejercicio. */
   const seriesDeRutina = useRef<{ repeticiones: number; pesoKg: number }[] | null>(null);
   const [planHoy, setPlanHoy] = useState<any>(null);
+  const [plantillas, setPlantillas] = useState<any[]>([]);
+  const [plantillaId, setPlantillaId] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      setPlantillaId(localStorage.getItem(LLAVE_PLANTILLA()));
+    } catch {
+      /* sin almacenamiento: la sesion no sobrevive a recargar */
+    }
+  }, []);
 
   // Las zonas del dia se preseleccionan solas, pero solo si hoy el socio aun no
   // eligio nada: primero la rutina del entrenador (si la pidio), si no, su
@@ -410,12 +425,14 @@ function Entrenamiento() {
   }
 
   const cargar = useCallback(async () => {
-    const [cat, propios, hist]: any = await Promise.all([
+    const [cat, propios, hist, plant]: any = await Promise.all([
       api('/portal/exercises', { sesion: 'socio' }),
       api('/portal/my-exercises', { sesion: 'socio' }),
       api('/portal/workouts', { sesion: 'socio' }),
+      api('/portal/templates', { sesion: 'socio' }).catch(() => []),
     ]);
     setEjercicios(cat);
+    setPlantillas(plant);
     setMios(propios);
     setHistorial(hist);
     setVerProgresoDe((v) => v || propios[0]?.id || '');
@@ -462,7 +479,7 @@ function Entrenamiento() {
   const esCardio = elegido?.grupo === 'cardio';
 
   /** Tocar un ejercicio de la rutina lo deja listo en el formulario. */
-  function usarDeRutina(e: any) {
+  function usarDeRutina(e: any, desplazar = true) {
     const reps = parseInt(String(e.repeticiones), 10) || 10;
     const nuevas = Array.from({ length: e.series }, () => ({ repeticiones: reps, pesoKg: series[0]?.pesoKg ?? 20 }));
     if (e.exerciseId === exerciseId) setSeries(nuevas);
@@ -470,7 +487,32 @@ function Entrenamiento() {
       seriesDeRutina.current = nuevas;
       setExerciseId(e.exerciseId);
     }
-    document.getElementById('anotar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (desplazar) document.getElementById('anotar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  const hoyDatos = historial.find((d) => d.dia === hoyTexto());
+  const hechosHoy = useMemo(
+    () => new Set<string>((hoyDatos?.ejercicios ?? []).map((e: any) => e.exerciseId)),
+    [hoyDatos],
+  );
+  const plantilla = plantillas.find((p) => p.id === plantillaId) ?? null;
+
+  function fijarPlantilla(id: string | null) {
+    setPlantillaId(id);
+    try {
+      if (id) localStorage.setItem(LLAVE_PLANTILLA(), id);
+      else localStorage.removeItem(LLAVE_PLANTILLA());
+    } catch {
+      /* nada */
+    }
+  }
+
+  /** Cargar una plantilla: marca sus zonas y deja listo el primer ejercicio pendiente. */
+  function cargarPlantilla(p: any) {
+    fijarPlantilla(p.id);
+    if (p.grupos?.length) cambiarZonas(p.grupos);
+    const siguiente = p.items.find((i: any) => !hechosHoy.has(i.exerciseId)) ?? p.items[0];
+    if (siguiente) usarDeRutina(siguiente);
   }
 
   async function guardar(e: React.FormEvent) {
@@ -488,6 +530,13 @@ function Entrenamiento() {
       if (r.record) setRecord(r);
       else setAviso(`${r.series} serie(s) de ${r.ejercicio} anotadas.`);
       setDescansoDesde(Date.now());
+      // Con una plantilla en curso, el formulario pasa solo al siguiente pendiente.
+      if (plantilla) {
+        const siguiente = plantilla.items.find(
+          (i: any) => i.exerciseId !== exerciseId && !hechosHoy.has(i.exerciseId),
+        );
+        if (siguiente) usarDeRutina(siguiente, false);
+      }
       cargar();
     } catch (err: any) {
       setError(err.message);
@@ -520,6 +569,20 @@ function Entrenamiento() {
         </p>
       )}
 
+      <Plantillas
+        plantillas={plantillas}
+        activa={plantilla}
+        hechosHoy={hechosHoy}
+        hayAnotadoHoy={hechosHoy.size > 0}
+        ejercicios={ejercicios}
+        recientes={mios.map((m) => m.id)}
+        onCargar={cargarPlantilla}
+        onCerrar={() => fijarPlantilla(null)}
+        onUsar={(i) => usarDeRutina(i)}
+        onCambio={() => cargar()}
+        onCambioCatalogo={() => cargar()}
+      />
+
       <ElegirZonas elegidas={zonas} onCambiar={cambiarZonas} historial={historial} />
 
       <form id="anotar" onSubmit={guardar} className="tarjeta scroll-mt-4 space-y-4">
@@ -540,6 +603,17 @@ function Entrenamiento() {
           onElegir={(e) => setExerciseId(e.id)}
           onCambioCatalogo={() => cargar()}
         />
+
+        {exerciseId && ultima && (
+          <NotaEjercicio
+            exerciseId={exerciseId}
+            nota={ultima.nota || ''}
+            onGuardada={(nota) => {
+              setUltima({ ...ultima, nota });
+              cargar();
+            }}
+          />
+        )}
 
         {ultima && (
           <div className="flex items-center justify-between gap-3 rounded-xl bg-black/30 px-3 py-2 text-sm">

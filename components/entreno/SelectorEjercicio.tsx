@@ -22,6 +22,7 @@ export function SelectorEjercicio({
   valor,
   onElegir,
   onCambioCatalogo,
+  etiqueta,
 }: {
   ejercicios: any[];
   /** ids de los ejercicios que el socio ya anoto, del mas reciente al mas viejo */
@@ -31,6 +32,8 @@ export function SelectorEjercicio({
   onElegir: (ejercicio: any) => void;
   /** Se creo o se borro un ejercicio propio: hay que recargar el catalogo. */
   onCambioCatalogo: () => void;
+  /** Si se indica, el boton es "+ etiqueta" (para agregar a una lista) en vez de mostrar el elegido. */
+  etiqueta?: string;
 }) {
   const [abierto, setAbierto] = useState(false);
   const [texto, setTexto] = useState('');
@@ -137,6 +140,15 @@ export function SelectorEjercicio({
 
   return (
     <>
+      {etiqueta ? (
+        <button
+          type="button"
+          onClick={() => setAbierto(true)}
+          className="w-full rounded-xl border border-dashed border-bordeFuerte px-4 py-3 text-sm font-semibold text-acento hover:border-acento"
+        >
+          + {etiqueta}
+        </button>
+      ) : (
       <button
         type="button"
         onClick={() => setAbierto(true)}
@@ -153,6 +165,7 @@ export function SelectorEjercicio({
         </span>
         <span className="shrink-0 text-sm font-semibold text-acento">Cambiar</span>
       </button>
+      )}
 
       {abierto &&
         createPortal(
