@@ -37,6 +37,7 @@ const GRUPOS: { titulo: string; items: Item[] }[] = [
     titulo: 'Operacion',
     items: [
       { href: '/panel/recepcion', texto: 'Recepcion', icono: <I d="M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v5H4zM14 15h3v3h-3zM19 19h1.5v1.5H19z" /> },
+      { href: '/panel/escaner', texto: 'Escaner', icono: <I d="M4 8V5a1 1 0 0 1 1-1h3M20 8V5a1 1 0 0 0-1-1h-3M4 16v3a1 1 0 0 0 1 1h3M20 16v3a1 1 0 0 1-1 1h-3M7 12h10" /> },
       { href: '/panel/socios', texto: 'Socios', icono: <I d="M9 4.6a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8zM2.5 20a6.5 6.5 0 0 1 13 0M16.5 5.2a3.4 3.4 0 0 1 0 5.6M18 20c0-2.1-.7-3.6-1.6-4.6" /> },
       { href: '/panel/invitados', texto: 'Invitados', icono: <I d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3.6a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8zM19 8v6M22 11h-6" /> },
     ],
@@ -213,11 +214,11 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         </div>
       </main>
 
-      {/* Barra inferior en el celular: las tres pantallas que recepcion usa todo
-          el dia, y el resto detras de "Mas". */}
+      {/* Barra inferior en el celular: las pantallas que recepcion usa todo el
+          dia (el escaner incluido), y el resto detras de "Mas". */}
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-borde bg-[#0C0C0E]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-        <div className="grid grid-cols-4">
-          {[GRUPOS[0].items[0], GRUPOS[0].items[1], GRUPOS[1].items[0]].map((item) => {
+        <div className="grid grid-cols-5">
+          {[GRUPOS[0].items[0], GRUPOS[0].items[1], GRUPOS[0].items[2], GRUPOS[1].items[0]].map((item) => {
             const activo = ruta === item.href;
             return (
               <Link

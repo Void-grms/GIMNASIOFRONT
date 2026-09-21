@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { api, hora } from '@/lib/api';
 import { TarjetaSocio } from '@/components/TarjetaSocio';
+import { PedidosPendientes } from '@/components/PedidosPendientes';
 
 /**
  * Pantalla unica de recepcion. El input esta siempre enfocado: el lector QR USB
@@ -12,6 +13,10 @@ import { TarjetaSocio } from '@/components/TarjetaSocio';
  *
  * No hay que elegir entre entrada y salida: el sistema alterna solo segun donde
  * este el socio.
+ *
+ * Si recepcion escanea con la camara del celular (/panel/escaner), el
+ * movimiento llega por la lista de recientes y se muestra aqui en grande igual
+ * que si se hubiera leido con el lector USB.
  */
 export default function Recepcion() {
   const [codigo, setCodigo] = useState('');
@@ -21,6 +26,8 @@ export default function Recepcion() {
   const [dentro, setDentro] = useState<any[]>([]);
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  /** Movimientos ya mostrados; null hasta la primera carga para no revivir los viejos. */
+  const vistos = useRef<Set<string> | null>(null);
 
   const enfocar = useCallback(() => inputRef.current?.focus(), []);
 
@@ -31,7 +38,28 @@ export default function Recepcion() {
         api('/check-ins/arrivals'),
         api('/check-ins/inside'),
       ]);
-      setRecientes(r as any[]);
+      const lista = r as any[];
+      if (vistos.current === null) {
+        vistos.current = new Set(lista.map((x) => x.id));
+      } else {
+        const nuevos = lista.filter((x) => !vistos.current!.has(x.id));
+        nuevos.forEach((x) => vistos.current!.add(x.id));
+        const delCelular = nuevos.find(
+          (x) =>
+            x.dispositivo?.startsWith('celular') &&
+            Date.now() - new Date(x.hora).getTime() < 30000,
+        );
+        if (delCelular) {
+          setUltimo({
+            socio: delCelular.socio,
+            resultado: delCelular.resultado,
+            tipo: delCelular.tipo,
+            motivo: delCelular.motivo,
+            desdeCelular: true,
+          });
+        }
+      }
+      setRecientes(lista);
       setLlegadas(l as any[]);
       setDentro(d as any[]);
     } catch {
@@ -42,7 +70,7 @@ export default function Recepcion() {
   useEffect(() => {
     enfocar();
     refrescar();
-    const t = setInterval(refrescar, 4000);
+    const t = setInterval(refrescar, 2500);
     return () => clearInterval(t);
   }, [enfocar, refrescar]);
 
@@ -66,6 +94,7 @@ export default function Recepcion() {
         cuerpo: { codigo: valor, dispositivo: 'recepcion-1' },
       });
       setUltimo(r);
+      if (r?.checkInId) vistos.current?.add(r.checkInId);
       refrescar();
     } catch (err: any) {
       setError(err.message);
@@ -118,6 +147,12 @@ export default function Recepcion() {
         {error && <p className="aviso-mal">{error}</p>}
 
         <div className="min-h-[13rem]">
+          {ultimo?.desdeCelular && (
+            <p className="rotulo mb-2 flex items-center gap-2 text-acento">
+              <span className="h-2 w-2 rounded-full bg-acento" />
+              Leido con la camara del celular
+            </p>
+          )}
           {ultimo ? (
             <TarjetaSocio
               socio={ultimo.socio}
@@ -203,6 +238,8 @@ export default function Recepcion() {
             </div>
           ))}
         </section>
+
+        <PedidosPendientes />
 
         <section>
           <h2 className="rotulo mb-2">

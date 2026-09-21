@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { api, hora, soles } from '@/lib/api';
+import { PedidosPendientes } from '@/components/PedidosPendientes';
 
 const METODOS = ['efectivo', 'yape', 'plin', 'tarjeta', 'transferencia'];
 
@@ -68,6 +69,8 @@ export default function Productos() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
       <div className="space-y-5">
+        <PedidosPendientes ocultarVacio onCobrado={() => cargar().catch(() => {})} />
+
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Catalogo</h2>
           <button className="boton-suave" onClick={() => setNuevo((v) => !v)}>

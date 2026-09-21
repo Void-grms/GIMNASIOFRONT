@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import { api, cerrarSesion, fechaCorta, leerToken, soles, urlArchivo } from '@/lib/api';
 import { Esqueleto } from '@/components/Esqueleto';
+import { ConfirmarSalida } from '@/components/ConfirmarSalida';
 
 const COLOR: Record<string, string> = {
   vigente: 'text-vigente',
@@ -20,6 +21,9 @@ export default function MiCredencial() {
   const [qr, setQr] = useState('');
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
+  const [esperando, setEsperando] = useState(false);
+  const [confirmandoSalida, setConfirmandoSalida] = useState<string | null>(null);
+  const dentroAntes = useRef<boolean | null>(null);
 
   const cargarPanel = useCallback(async () => {
     try {
@@ -50,17 +54,57 @@ export default function MiCredencial() {
     return () => clearInterval(t);
   }, [router, cargarPanel, refrescarQr]);
 
-  /** Un solo boton: fuera avisa la llegada, dentro registra la salida. */
+  // Recepcion confirma en su pantalla, no aqui: el celular se entera
+  // preguntando cada pocos segundos. En cuanto pasa de "fuera" a "dentro" (por
+  // el aviso o porque escanearon el QR), se abre lo de entrenar.
+  useEffect(() => {
+    let vivo = true;
+    async function mirar() {
+      if (document.hidden) return;
+      try {
+        const p: any = await api('/portal/presence', { sesion: 'socio' });
+        if (!vivo) return;
+        if (dentroAntes.current === false && p.dentro) {
+          router.push('/portal/progreso?hoy=1');
+          return;
+        }
+        dentroAntes.current = p.dentro;
+      } catch {
+        /* sin red en el gimnasio: se reintenta en la siguiente vuelta */
+      }
+    }
+    mirar();
+    const t = setInterval(mirar, 4000);
+    return () => {
+      vivo = false;
+      clearInterval(t);
+    };
+  }, [router]);
+
+  /** Fuera avisa la llegada. Dentro abre la confirmacion de salida. */
   async function alternarPresencia() {
     setError('');
     try {
       const r: any = await api('/portal/presence', { metodo: 'POST', sesion: 'socio' });
+      if (r.accion === 'confirmar_salida') {
+        setConfirmandoSalida(r.desde);
+        return;
+      }
+      setEsperando(r.accion === 'entrada_anunciada');
       setAviso(r.mensaje);
       setTimeout(() => setAviso(''), 8000);
       cargarPanel();
     } catch (e: any) {
       setError(e.message);
     }
+  }
+
+  function salidaRegistrada(mensaje: string) {
+    setConfirmandoSalida(null);
+    dentroAntes.current = false;
+    setAviso(mensaje);
+    setTimeout(() => setAviso(''), 8000);
+    cargarPanel();
   }
 
   if (error && !panel) return <main className="p-8 text-vencido">{error}</main>;
@@ -144,9 +188,14 @@ export default function MiCredencial() {
       </div>
 
       {panel.dentro ? (
-        <button className="boton-grande bg-zinc-200 hover:bg-white" onClick={alternarPresencia}>
-          Marcar salida
-        </button>
+        <div className="grid grid-cols-[1fr_auto] gap-3">
+          <Link href="/portal/progreso?hoy=1" className="boton-grande">
+            Entrenar hoy
+          </Link>
+          <button className="boton-suave rounded-2xl px-5" onClick={alternarPresencia}>
+            Marcar salida
+          </button>
+        </div>
       ) : (
         <button className="boton-grande" onClick={alternarPresencia} disabled={vencido}>
           Estoy entrando
@@ -157,10 +206,23 @@ export default function MiCredencial() {
           Estas dentro del gimnasio. Marca tu salida al irte.
         </p>
       )}
+      {esperando && !panel.dentro && (
+        <p className="-mt-2 flex items-center justify-center gap-2 text-center text-sm text-zinc-400">
+          <span className="h-2 w-2 animate-latir rounded-full bg-acento" />
+          Esperando que recepcion confirme tu ingreso…
+        </p>
+      )}
       {aviso && (
         <p className="aviso-ok text-center">{aviso}</p>
       )}
       {error && <p className="aviso-mal text-center">{error}</p>}
+      {confirmandoSalida !== null && (
+        <ConfirmarSalida
+          desde={confirmandoSalida}
+          onCerrar={() => setConfirmandoSalida(null)}
+          onSalida={salidaRegistrada}
+        />
+      )}
 
       <div className="grid grid-cols-2 gap-4">
         <div className="tarjeta text-center">
@@ -173,11 +235,14 @@ export default function MiCredencial() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <Link href="/portal/progreso" className="boton-suave">
+      <div className="grid grid-cols-3 gap-3">
+        <Link href="/portal/progreso" className="boton-suave px-2">
           Mi progreso
         </Link>
-        <Link href="/portal/perfil" className="boton-suave">
+        <Link href="/portal/tienda" className="boton-suave px-2">
+          Tienda
+        </Link>
+        <Link href="/portal/perfil" className="boton-suave px-2">
           Mi perfil
         </Link>
       </div>
