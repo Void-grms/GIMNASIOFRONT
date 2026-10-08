@@ -1,7 +1,7 @@
 # Frontend - Sistema de gimnasio
 
-Next.js 14 (App Router) + Tailwind + Framer Motion. Habla con el backend por
-`NEXT_PUBLIC_API_URL`.
+Next.js 15 (App Router) + React 19 + Tailwind. GSAP se usa solo en el home.
+Habla con el backend por `NEXT_PUBLIC_API_URL`.
 
 ## Arrancar
 
@@ -12,6 +12,39 @@ npm run dev        # http://localhost:3000
 ```
 
 El backend debe estar corriendo en `http://localhost:4000`.
+
+Comandos de verificación disponibles:
+
+```bash
+npm run typecheck
+npm run build
+```
+
+## Home de captación
+
+- `app/page.tsx` contiene la presentación pública, los planes, las clases,
+  horarios, ubicación, preguntas frecuentes y metadatos del gimnasio.
+- `app/home.module.css` concentra el diseño responsive del home; los títulos
+  usan Barlow Condensed y el resto conserva Archivo.
+- `components/home/HomeNavigation.tsx` y su CSS organizan la navegación y el
+  menú móvil. «Portal de clientes» lleva a `/portal` (DNI + PIN) y
+  «Administración» a `/login` (correo + contraseña, solo personal autorizado).
+- `components/home/HomeMotion.tsx` carga GSAP y ScrollTrigger dinámicamente.
+  El contenido se renderiza visible en el servidor y se puede leer sin
+  JavaScript. Las animaciones respetan `prefers-reduced-motion`, conservan el
+  desplazamiento nativo y se limpian al salir de la página.
+
+Las fotografías editoriales de entrenamiento se sirven como WebP locales desde
+`public/home/`; autores y fuentes están en [CREDITS.md](public/home/CREDITS.md).
+La imagen de `public/fachada.webp` muestra el local real en la sección de
+ubicación.
+
+Los planes del home son estáticos: pase diario S/ 8, mensual S/ 100 y
+universitario S/ 80. Conservan los valores iniciales del backend; su API de
+planes es privada y los cambios en administración no actualizan estos textos.
+Los CTA abren WhatsApp con una consulta sobre el plan elegido; la inscripción
+y el pago se coordinan con recepción. El aforo sigue consultando el endpoint
+público y se oculta cuando está desactivado o no responde.
 
 ## Pantallas
 
@@ -41,15 +74,15 @@ El backend debe estar corriendo en `http://localhost:4000`.
 
 ## Sistema de diseno
 
-La paleta, las clases y la tipografia viven en tres archivos y de ahi salen las
-23 pantallas:
+La paleta, las clases y la tipografia compartidas viven en estos archivos:
 
 - `tailwind.config.ts` — colores de marca (`acento` #FAD234), profundidades,
   sombras, keyframes y easings.
 - `app/globals.css` — las clases compartidas: `.tarjeta`, `.tarjeta-viva`,
   `.tarjeta-acento`, `.boton`, `.boton-grande`, `.boton-riesgo`, `.campo`,
   `.campo-escaneo`, `.rotulo`, `.cifra`, `.franja-*`, `.punto-*`, `.aviso-*`.
-- `app/layout.tsx` — la tipografia Archivo via `next/font`.
+- `app/layout.tsx` — la tipografia Archivo via `next/font`; el home añade
+  Barlow Condensed desde `app/page.tsx`.
 
 Dos reglas al escribir pantallas nuevas:
 
@@ -58,8 +91,8 @@ Dos reglas al escribir pantallas nuevas:
 - Los avisos inline son `.aviso-ok`, `.aviso-ojo` y `.aviso-mal`; los rotulos
   de seccion son `.rotulo`.
 
-> **La fuente se descarga al compilar.** `next/font/google` va a buscar Archivo
-> a fonts.googleapis.com la primera vez que corres `npm run build` o
+> **Las fuentes se descargan al compilar.** `next/font/google` va a buscar
+> Archivo y Barlow Condensed a fonts.googleapis.com al correr `npm run build` o
 > `npm run dev`. Si alguna vez despliegas donde no haya salida a Google Fonts,
 > baja los `.woff2` a `app/fuentes/` y cambia a `next/font/local`.
 
@@ -75,9 +108,9 @@ Dos reglas al escribir pantallas nuevas:
   necesita permiso de nadie.
 - La captura de foto recorta cuadrado y comprime a JPEG antes de subir, con
   opcion de subir un archivo cuando no hay camara.
-- `Revelar` anima las secciones de la landing al entrar en pantalla, pero el
-  contenido se renderiza **visible** en el servidor: si el JavaScript falla o
-  tarda, la pagina se lee completa. Por eso no usa Framer Motion.
+- `Revelar` queda disponible como componente auxiliar; el home usa
+  `HomeMotion` para sus animaciones y mantiene el contenido **visible** en el
+  servidor.
 - La foto de la fachada esta en `public/fachada.webp` (157 KB) con
   `fachada.jpg` de respaldo. El PNG original de 2 MB no entra al repositorio.
 
@@ -101,10 +134,9 @@ Criterios tomados de NN/g, WCAG 2.2 y web.dev, aplicados en todo el sistema:
   `inputMode="decimal"` para montos). Lo opcional se marca en la etiqueta.
 - **Foco visible.** Anillo amarillo de 2 px con `:focus-visible` (solo al usar
   teclado), sin tocar el foco propio de los campos.
-- **Landing.** La fachada es `next/image` con `priority` (la imagen del hero es
-  el LCP; como fondo CSS el navegador la descubre tarde). Titular con
-  `clamp()`, CTA de prueba por S/ 8 arriba del pliegue, franja de prueba
-  social y una barra fija en el celular con WhatsApp y "Como llegar" que
-  respeta `env(safe-area-inset-bottom)`.
+- **Landing.** El hero editorial usa `next/image` con `priority`; la fachada
+  real aparece en ubicación. Titular con `clamp()`, CTA de prueba por S/ 8,
+  enlace para saltar al contenido y una barra fija en el celular para consultar
+  por WhatsApp o abrir "Cómo llegar", respetando `env(safe-area-inset-bottom)`.
 - **Tokens con alfa.** `borde` ya es `rgba(...)`: no uses `border-borde/60`,
   Tailwind reemplaza el alfa y sale una linea blanca al 60 %.
