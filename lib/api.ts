@@ -32,10 +32,10 @@ export class ApiError extends Error {
 
 export async function api<T = any>(
   ruta: string,
-  opciones: { metodo?: string; cuerpo?: any; sesion?: Sesion } = {},
+  opciones: { metodo?: string; cuerpo?: any; sesion?: Sesion | null } = {},
 ): Promise<T> {
   const { metodo = 'GET', cuerpo, sesion = 'staff' } = opciones;
-  const token = leerToken(sesion);
+  const token = sesion ? leerToken(sesion) : null;
 
   const res = await fetch(`${BASE}${ruta}`, {
     method: metodo,
@@ -118,6 +118,7 @@ export function sesionActual(tipo: Sesion = 'staff'): {
   nombre?: string;
   rol?: string;
   sub?: string;
+  debeCambiarPin?: boolean;
 } | null {
   const token = leerToken(tipo);
   if (!token) return null;

@@ -143,7 +143,7 @@ export default function Recepcion() {
 
         <form onSubmit={escanear}>
           <label className="etiqueta" htmlFor="codigo">
-            Escanea el QR o teclea el DNI — el sistema sabe si entra o sale
+            Escanea el QR o teclea su código o DNI — el sistema sabe si entra o sale
           </label>
           <input
             id="codigo"
@@ -152,7 +152,7 @@ export default function Recepcion() {
             value={codigo}
             onChange={(e) => setCodigo(e.target.value)}
             onBlur={() => setTimeout(enfocar, 80)}
-            placeholder="Esperando lector..."
+            placeholder="Código, DNI o lector QR..."
             autoComplete="off"
           />
         </form>

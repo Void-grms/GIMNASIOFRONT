@@ -103,7 +103,7 @@ export default function Quiosco() {
           <div className="text-center">
             <p className="text-4xl font-black text-zinc-300 sm:text-6xl">Acerca tu codigo</p>
             <p className="mt-4 text-xl text-zinc-600 sm:text-2xl">
-              O dile tu DNI a recepcion
+              O dile tu código o DNI a recepción
             </p>
             {error && <p className="mt-6 text-xl text-vencido">{error}</p>}
           </div>
@@ -133,11 +133,19 @@ export default function Quiosco() {
               <p className="mt-4 truncate text-3xl font-bold sm:text-4xl">
                 {ultimo.socio?.nombreCompleto ?? 'Codigo no reconocido'}
               </p>
+              {ultimo.socio && (
+                <p className="mt-2 text-lg text-zinc-400 cifra">
+                  {ultimo.socio.codigoERP ? `Código ${ultimo.socio.codigoERP} · ` : ''}
+                  {ultimo.socio.dni ? `DNI ${ultimo.socio.dni}` : 'DNI por completar'}
+                </p>
+              )}
               {ultimo.socio?.diasRestantes !== null && ultimo.socio?.diasRestantes !== undefined && (
                 <p className="mt-2 text-2xl text-zinc-300">
-                  {ultimo.socio.diasRestantes >= 0
-                    ? `Te quedan ${ultimo.socio.diasRestantes} dia(s)`
-                    : `Vencio hace ${Math.abs(ultimo.socio.diasRestantes)} dia(s)`}
+                  {ultimo.socio.estado === 'vencido' && ultimo.socio.diasRestantes >= 0
+                    ? 'Membresía registrada como vencida'
+                    : ultimo.socio.diasRestantes >= 0
+                      ? `Te quedan ${ultimo.socio.diasRestantes} dia(s)`
+                      : `Vencio hace ${Math.abs(ultimo.socio.diasRestantes)} dia(s)`}
                 </p>
               )}
               {ultimo.motivo && <p className="mt-2 text-2xl text-zinc-300">{ultimo.motivo}</p>}

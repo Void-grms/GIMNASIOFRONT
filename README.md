@@ -140,3 +140,35 @@ Criterios tomados de NN/g, WCAG 2.2 y web.dev, aplicados en todo el sistema:
   por WhatsApp o abrir "Cómo llegar", respetando `env(safe-area-inset-bottom)`.
 - **Tokens con alfa.** `borde` ya es `rgba(...)`: no uses `border-borde/60`,
   Tailwind reemplaza el alfa y sale una linea blanca al 60 %.
+
+## Socios migrados y acceso al portal
+
+Recepción conserva el código de asistencia importado. Las pantallas de recepción,
+quiosco y escáner aceptan código, DNI o QR mediante `/check-ins/scan`. La búsqueda
+de socios incluye el código; la ficha y la tarjeta muestran si falta completar el DNI.
+Si un código coincide con un DNI de otro socio, recepción puede usar `ERP:codigo`
+o `DNI:numero` para identificarlo sin ambigüedad.
+
+En la ficha, `AccesoSocio` permite verificar la identidad y completar DNI y celular.
+Sin DNI válido no se prepara acceso al portal. El PIN temporal dura 24 horas,
+se muestra una sola vez y debe cambiarse al primer ingreso. Cuando falta el
+consentimiento, su entrega requiere mostrar el texto vigente y confirmar que el
+socio lo leyó y aceptó; se manda la versión mostrada al backend.
+
+Como alternativa, recepción prepara un enlace de activación, revisa el mensaje
+y confirma el teléfono y destinatario antes de abrir WhatsApp. El envío es manual:
+abrir WhatsApp no registra el mensaje como enviado. El socio puede aceptar el
+consentimiento desde su celular y elegir su PIN, aunque todavía no lo hubiera
+aceptado en recepción. Un número compartido debe verificarse con el destinatario.
+
+`/portal/activar#token=...` lee el enlace de un solo uso, retira el fragmento del
+historial y consulta `POST /portal/activacion/consultar` con el token en el cuerpo.
+El token y los PIN permanecen en memoria; no se almacenan en localStorage ni
+se envían a servicios externos desde la pantalla de activación. Se confirma
+DNI completo, PIN y consentimiento/version antes de consumir el enlace. Después
+se muestra el acceso para iniciar sesión, sin entrada automática.
+
+La sesión con PIN temporal solo permite el perfil. Al cambiar el PIN, el frontend
+guarda el nuevo `access_token` devuelto por `PATCH /portal/me` antes de abrir el
+resto del portal. El backend valida esta restricción y la fortaleza del PIN.
+El código de asistencia se mantiene separado del PIN personal.

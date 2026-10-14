@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
+import { leerToken, sesionActual } from '@/lib/api';
 
 const I = ({ d }: { d: string }) => (
   <svg
@@ -34,9 +36,29 @@ const PESTANAS = [
  */
 export default function PortalLayout({ children }: { children: ReactNode }) {
   const ruta = usePathname();
-  const conBarra = ruta !== '/portal';
+  const router = useRouter();
+  const publica = ruta === '/portal' || ruta === '/portal/activar';
+  const [estado, setEstado] = useState<'cargando' | 'pendiente' | 'activo'>('cargando');
 
-  if (!conBarra) return <>{children}</>;
+  useEffect(() => {
+    if (publica) {
+      setEstado('cargando');
+      return;
+    }
+    if (!leerToken('socio')) {
+      router.replace('/portal');
+      return;
+    }
+    const pendiente = sesionActual('socio')?.debeCambiarPin === true;
+    setEstado(pendiente ? 'pendiente' : 'activo');
+    if (pendiente && ruta !== '/portal/perfil') router.replace('/portal/perfil?cambiar=1');
+  }, [ruta, publica, router]);
+
+  if (publica) return <>{children}</>;
+  if (estado === 'cargando' || (estado === 'pendiente' && ruta !== '/portal/perfil')) {
+    return <main className="flex min-h-screen items-center justify-center px-4"><p role="status" className="text-sm text-zinc-400">Comprobando tu acceso...</p></main>;
+  }
+  if (estado === 'pendiente') return <>{children}</>;
 
   return (
     <div className="min-h-screen pb-[calc(4.25rem+env(safe-area-inset-bottom))]">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { api, fechaCorta } from '@/lib/api';
+import { api, fechaCorta, hora } from '@/lib/api';
 
 const COLOR: Record<string, string> = {
   vigente: 'punto-vigente',
@@ -31,7 +31,8 @@ export default function Socios() {
       <div className="flex flex-wrap gap-3">
         <input
           className="campo flex-1"
-          placeholder="Buscar por nombre o DNI"
+          placeholder="Buscar por nombre, DNI o código"
+          aria-label="Buscar socios por nombre, DNI o código de asistencia"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -59,7 +60,8 @@ export default function Socios() {
                 <div className="min-w-0">
                   <p className="truncate font-medium">{s.nombreCompleto}</p>
                   <p className="text-sm text-zinc-500 cifra">
-                    DNI {s.dni}
+                    {s.codigoERP ? `Código ${s.codigoERP} · ` : ''}
+                    {s.dni ? `DNI ${s.dni}` : 'DNI por completar'}
                     {s.plan ? ` · ${s.plan}` : ' · sin membresia'}
                   </p>
                 </div>
@@ -124,6 +126,9 @@ function FormularioSocio({ onListo }: { onListo: () => void }) {
         </p>
         <p className="rounded-xl bg-black/50 py-4 text-center text-4xl font-black tracking-[0.4em]">
           {creado.pinInicial}
+        </p>
+        <p className="text-sm text-zinc-400">
+          Válido por 24 horas{creado.vence ? `, hasta el ${fechaCorta(creado.vence)} a las ${hora(creado.vence)}` : ''}.
         </p>
         <button className="boton w-full" onClick={onListo}>
           Ya lo anote
@@ -197,7 +202,7 @@ function FormularioSocio({ onListo }: { onListo: () => void }) {
       </label>
 
       <p className="text-sm text-zinc-500">
-        Su PIN del portal seran los ultimos 4 digitos del DNI.
+        Se generará un PIN temporal para su portal. Tendrá que cambiarlo al primer ingreso.
       </p>
 
       {/* Consentimiento expreso, especifico e informado (Ley 29733). Sin esto
