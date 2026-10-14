@@ -8,6 +8,7 @@ import { CapturaFoto } from '@/components/CapturaFoto';
 import { FormularioCobro } from '@/components/FormularioCobro';
 import { EnviarWhatsapp } from '@/components/EnviarWhatsapp';
 import { Esqueleto } from '@/components/Esqueleto';
+import { AccesoSocio } from '@/components/AccesoSocio';
 
 export default function FichaSocio() {
   const { id } = useParams<{ id: string }>();
@@ -71,6 +72,8 @@ export default function FichaSocio() {
       <div className="space-y-6">
         <TarjetaSocio socio={ficha} />
 
+        <AccesoSocio socio={ficha} ajustes={ajustes} onActualizado={cargar} />
+
         {aviso && <p className="aviso-ok">{aviso}</p>}
         {error && <p className="aviso-mal">{error}</p>}
 
@@ -109,7 +112,7 @@ export default function FichaSocio() {
                   <div>
                     <p className="font-medium">{m.plan.nombre}</p>
                     <p className="text-zinc-500">
-                      {fechaCorta(m.fechaInicio)} — {fechaCorta(m.fechaFin)}
+                      {fechaCorta(m.fechaInicio.slice(0, 10))} — {fechaCorta(m.fechaFin.slice(0, 10))}
                     </p>
                   </div>
                   <span className="flex flex-col items-end gap-1.5">

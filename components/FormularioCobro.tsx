@@ -38,7 +38,7 @@ export function FormularioCobro({
   const [preview, setPreview] = useState<any>(null);
 
   const [tipoComprobante, setTipoComprobante] = useState('boleta');
-  const [tipoDoc, setTipoDoc] = useState('dni');
+  const [tipoDoc, setTipoDoc] = useState(socio?.dni ? 'dni' : 'sin_documento');
   const [numDoc, setNumDoc] = useState(socio?.dni || '');
   const [nombre, setNombre] = useState(socio?.nombreCompleto || '');
   const [direccion, setDireccion] = useState('');
@@ -49,6 +49,15 @@ export function FormularioCobro({
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
   const [cobrando, setCobrando] = useState(false);
+
+  useEffect(() => {
+    if (tipoComprobante !== 'factura') {
+      setTipoDoc(socio?.dni ? 'dni' : 'sin_documento');
+      setNumDoc(socio?.dni || '');
+    }
+    // Completar el DNI en recepción actualiza la boleta sin borrar una factura en edición.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socio?.id, socio?.dni]);
 
   useEffect(() => {
     api('/plans').then((p: any) => {
@@ -153,8 +162,13 @@ export function FormularioCobro({
               type="button"
               onClick={() => {
                 setTipoComprobante(t);
-                if (t === 'factura') setTipoDoc('ruc');
-                else if (tipoDoc === 'ruc') setTipoDoc('dni');
+                if (t === 'factura') {
+                  setTipoDoc('ruc');
+                  setNumDoc('');
+                } else if (tipoDoc === 'ruc') {
+                  setTipoDoc(socio?.dni ? 'dni' : 'sin_documento');
+                  setNumDoc(socio?.dni || '');
+                }
               }}
               className={`flex-1 rounded-xl border px-3 py-2 text-sm capitalize transition ${
                 tipoComprobante === t

@@ -14,7 +14,7 @@ import { EscanerCamara } from '@/components/EscanerCamara';
 export default function Escaner() {
   const [resultado, setResultado] = useState<any>(null);
   const [procesando, setProcesando] = useState(false);
-  const [dni, setDni] = useState('');
+  const [codigoManual, setCodigoManual] = useState('');
   const [error, setError] = useState('');
 
   const enviar = useCallback(async (codigo: string) => {
@@ -76,21 +76,22 @@ export default function Escaner() {
         className="flex gap-2"
         onSubmit={(e) => {
           e.preventDefault();
-          if (dni.length === 8) {
-            enviar(dni);
-            setDni('');
+          if (codigoManual.trim()) {
+            enviar(codigoManual.trim());
+            setCodigoManual('');
           }
         }}
       >
         <input
           className="campo"
           inputMode="numeric"
-          maxLength={8}
-          placeholder="O teclea el DNI"
-          value={dni}
-          onChange={(e) => setDni(e.target.value.replace(/\D/g, ''))}
+          maxLength={40}
+          placeholder="Código de asistencia o DNI"
+          aria-label="Código de asistencia o DNI del socio"
+          value={codigoManual}
+          onChange={(e) => setCodigoManual(e.target.value)}
         />
-        <button className="boton shrink-0" disabled={dni.length !== 8 || procesando}>
+        <button className="boton shrink-0" disabled={!codigoManual.trim() || procesando}>
           Marcar
         </button>
       </form>

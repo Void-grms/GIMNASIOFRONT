@@ -119,7 +119,8 @@ export function TarjetaSocio({
         </div>
 
         <p className="mt-1.5 text-sm text-zinc-400 cifra">
-          DNI {socio.dni}
+          {socio.codigoERP ? `Código ${socio.codigoERP} · ` : ''}
+          {socio.dni ? `DNI ${socio.dni}` : 'DNI por completar'}
           {socio.plan ? ` · ${socio.plan}` : ''}
         </p>
 
@@ -129,9 +130,11 @@ export function TarjetaSocio({
           </span>
           {socio.diasRestantes !== null && socio.diasRestantes !== undefined && (
             <span className="text-[13.5px] text-zinc-300 cifra">
-              {socio.diasRestantes >= 0
-                ? `Quedan ${socio.diasRestantes} dia(s) · vence ${fechaCorta(socio.vence)}`
-                : `Vencio hace ${Math.abs(socio.diasRestantes)} dia(s)`}
+              {socio.estado === 'vencido' && socio.diasRestantes >= 0
+                ? 'Membresía registrada como vencida'
+                : socio.diasRestantes >= 0
+                  ? `Quedan ${socio.diasRestantes} dia(s) · vence ${fechaCorta(socio.vence)}`
+                  : `Vencio hace ${Math.abs(socio.diasRestantes)} dia(s)`}
             </span>
           )}
           {socio.dentro && !tipo && (
