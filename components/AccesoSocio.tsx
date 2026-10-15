@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { api, fechaCorta, hora } from '@/lib/api';
 
 type PinTemporal = { pinInicial: string; vence: string; dni: string; codigoERP?: string | null };
-type Activacion = { enlace: string; mensaje: string; whatsappUrl: string | null; expiresAt: string };
+type Activacion = { enlace: string; enlaceBienvenida?: string; mensaje: string; whatsappUrl: string | null; expiresAt: string };
 
 const ESTADOS: Record<string, string> = {
   sin_dni: 'Completar DNI para habilitar el portal',
@@ -142,6 +143,7 @@ export function AccesoSocio({ socio, ajustes, onActualizado }: {
         <p className="mt-1 text-sm text-zinc-400">
           Su código de asistencia se conserva. El portal usa su DNI y un PIN propio.
         </p>
+        <Link href="/portal/bienvenida" target="_blank" rel="noreferrer" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-acento underline underline-offset-4 hover:text-acentoClaro">Ver la guía de bienvenida para el socio</Link>
         {socio.documentoERP && (
           <p className="mt-2 text-sm text-zinc-500 cifra">Documento registrado anteriormente: {socio.documentoERP}</p>
         )}

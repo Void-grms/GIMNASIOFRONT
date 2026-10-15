@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { api, fechaCorta, hora } from '@/lib/api';
+import { GuiaActivacion } from '@/components/GuiaActivacion';
 
 type Invitacion = { nombre: string; dniUltimos4: string; expiresAt: string };
 
@@ -88,6 +89,15 @@ export default function ActivarPortal() {
       <div className="tarjeta w-full max-w-md space-y-5">
         <p className="text-xs font-semibold tracking-widest text-acento">FORCES GYM · TU ESPACIO</p>
         <h1 className="text-2xl font-bold">{completo ? 'Tu portal está activo' : 'Activa tu portal'}</h1>
+        {!completo && (
+          <div className="space-y-3">
+            <p className="text-sm leading-relaxed text-zinc-400">Este es el acceso a tu nuevo portal de Forces Gym. Tu código de asistencia se mantiene en recepción; aquí eliges tu PIN personal.</p>
+            <details className="rounded-xl border border-borde bg-black/20 p-4">
+              <summary className="cursor-pointer text-sm font-semibold text-acento">Cómo funciona el nuevo acceso</summary>
+              <div className="pt-4"><GuiaActivacion compacta /></div>
+            </details>
+          </div>
+        )}
         {cargando ? <p role="status" className="text-sm text-zinc-400">Comprobando tu enlace...</p> : completo ? (
           <>
             <p className="text-sm text-zinc-300">Ya puedes entrar con tu DNI y el PIN que elegiste. Tu código para marcar asistencia se mantiene.</p>

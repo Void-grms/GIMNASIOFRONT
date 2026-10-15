@@ -55,6 +55,9 @@ export default function LoginSocio() {
           El PIN temporal dura 24 horas. Si venció o perdiste tu acceso, solicita uno nuevo
           en recepción. Tu código de asistencia se mantiene.
         </p>
+        <Link href="/portal/bienvenida" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-acento underline underline-offset-4 hover:text-acentoClaro">
+          ¿Primera vez en el nuevo portal? Empieza aquí
+        </Link>
 
         <div className="mt-6 space-y-4">
           <div>
