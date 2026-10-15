@@ -184,3 +184,13 @@ personal de activación; la guía por sí sola no crea ni activa cuentas.
 La pantalla `/portal/activar` incluye la misma explicación en un desplegable.
 Abrir la ayuda mantiene el formulario, el consentimiento y el token en memoria;
 no navega fuera de la activación ni copia el token a otra URL.
+
+### Parches de mantenimiento (15/10/2026)
+
+Next.js queda fijado en 15.5.28. PostCSS se unifica en 8.5.30 mediante
+`overrides.postcss` para que la copia anidada de Next también reciba los parches
+de la misma familia 8.x. Se actualizaron Sharp y source-map-js dentro de sus
+rangos compatibles. `npm audit --omit=dev` devuelve cero avisos en esta revisión.
+Las advertencias restantes de herramientas de compilación (Tailwind 3 y su
+parser de patrones/selectores) requieren revisar una actualización mayor; la
+aplicación no compila CSS ni patrones aportados por visitantes.
