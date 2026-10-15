@@ -172,3 +172,15 @@ La sesión con PIN temporal solo permite el perfil. Al cambiar el PIN, el fronte
 guarda el nuevo `access_token` devuelto por `PATCH /portal/me` antes de abrir el
 resto del portal. El backend valida esta restricción y la fortaleza del PIN.
 El código de asistencia se mantiene separado del PIN personal.
+
+### Bienvenida al nuevo sistema
+
+`/portal/bienvenida` es una guía pública para los socios: explica la continuidad
+del código de asistencia, la activación por enlace personal y el ingreso con
+DNI y PIN. Se puede consultar desde el login y desde la ficha de recepción.
+El backend puede incluir su URL pública en `enlaceBienvenida` junto al enlace
+personal de activación; la guía por sí sola no crea ni activa cuentas.
+
+La pantalla `/portal/activar` incluye la misma explicación en un desplegable.
+Abrir la ayuda mantiene el formulario, el consentimiento y el token en memoria;
+no navega fuera de la activación ni copia el token a otra URL.

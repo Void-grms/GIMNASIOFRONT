@@ -37,7 +37,7 @@ const PESTANAS = [
 export default function PortalLayout({ children }: { children: ReactNode }) {
   const ruta = usePathname();
   const router = useRouter();
-  const publica = ruta === '/portal' || ruta === '/portal/activar';
+  const publica = ruta === '/portal' || ruta === '/portal/activar' || ruta === '/portal/bienvenida';
   const [estado, setEstado] = useState<'cargando' | 'pendiente' | 'activo'>('cargando');
 
   useEffect(() => {

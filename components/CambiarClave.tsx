@@ -4,7 +4,7 @@
 // deploy). Esta tarjeta deja que cada quien ponga la suya sin tocar la base.
 
 import { useState } from 'react';
-import { api } from '@/lib/api';
+import { api, guardarToken } from '@/lib/api';
 
 export function CambiarClave() {
   const [actual, setActual] = useState('');
@@ -22,7 +22,8 @@ export function CambiarClave() {
     setEnviando(true);
     setEstado(null);
     try {
-      await api('/auth/password', { metodo: 'POST', cuerpo: { actual, nueva } });
+      const respuesta = await api<{ access_token?: string }>('/auth/password', { metodo: 'POST', cuerpo: { actual, nueva } });
+      if (respuesta.access_token) guardarToken('staff', respuesta.access_token);
       setEstado({ tipo: 'ok', texto: 'Contrasena actualizada. Usala la proxima vez que entres.' });
       setActual('');
       setNueva('');
