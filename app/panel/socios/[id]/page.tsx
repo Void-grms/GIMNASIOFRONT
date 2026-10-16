@@ -110,10 +110,11 @@ export default function FichaSocio() {
               {ficha.historial.map((m: any) => (
                 <li key={m.id} className="flex items-center justify-between p-4 text-sm">
                   <div>
-                    <p className="font-medium">{m.plan.nombre}</p>
+                    <p className="font-medium">{m.planNombre || m.plan.nombre}</p>
                     <p className="text-zinc-500">
                       {fechaCorta(m.fechaInicio.slice(0, 10))} — {fechaCorta(m.fechaFin.slice(0, 10))}
                     </p>
+                    {m.limiteAsistencias != null && <p className="mt-1 text-xs text-zinc-400">{m.asistenciasUsadas ?? 0} de {m.limiteAsistencias} asistencias utilizadas</p>}
                   </div>
                   <span className="flex flex-col items-end gap-1.5">
                     <span className={m.estado === 'anulada' ? 'text-vencido' : 'text-zinc-300'}>

@@ -23,20 +23,35 @@ export default function Renovar() {
   const [copiado, setCopiado] = useState(false);
   const [listo, setListo] = useState(false);
   const [error, setError] = useState('');
+  const [revisionPlanes, setRevisionPlanes] = useState(0);
+  const [cargandoPlanes, setCargandoPlanes] = useState(true);
+  const [ofertaCambio, setOfertaCambio] = useState(false);
   const archivo = useRef<HTMLInputElement>(null);
+  const solicitudEnCurso = useRef(false);
+  const cambioDetectado = useRef(false);
 
   useEffect(() => {
     if (!leerToken('socio')) {
       router.replace('/portal');
       return;
     }
+    let vigente = true;
+    setCargandoPlanes(true);
+    setError('');
+    setDatos(null);
+    setPlanId('');
+    setAcepta(false);
     api('/portal/renewals/plans', { sesion: 'socio' })
       .then((d: any) => {
+        if (!vigente) return;
+        if (d.planes.some((p: any) => !/^[a-f0-9]{64}$/i.test(p.versionOferta || ''))) throw new Error('No pudimos validar las condiciones de las membresías. Actualiza los planes antes de pagar.');
         setDatos(d);
-        if (d.planes[0]) setPlanId(d.planes[0].id);
+        if (d.planes[0] && !cambioDetectado.current) setPlanId(d.planes[0].id);
       })
-      .catch((e) => setError(e.message));
-  }, [router]);
+      .catch((e) => { if (vigente) setError(e.message); })
+      .finally(() => { if (vigente) setCargandoPlanes(false); });
+    return () => { vigente = false; };
+  }, [router, revisionPlanes]);
 
   async function elegirArchivo(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -60,6 +75,8 @@ export default function Renovar() {
   }
 
   async function enviar() {
+    if (solicitudEnCurso.current || enviando || ofertaCambio || cargandoPlanes || !plan?.versionOferta || !imagen || !acepta) return;
+    solicitudEnCurso.current = true;
     setEnviando(true);
     setError('');
     try {
@@ -68,6 +85,7 @@ export default function Renovar() {
         sesion: 'socio',
         cuerpo: {
           planId,
+          versionOferta: plan.versionOferta,
           imagen,
           aceptaTerminos: acepta,
           ...(operacion.trim() ? { operacion: operacion.trim() } : {}),
@@ -75,8 +93,15 @@ export default function Renovar() {
       });
       setListo(true);
     } catch (e: any) {
-      setError(e.message);
+      if (e.status === 409 && /condiciones.*plan.*cambi|oferta.*cambi/i.test(e.message || '')) {
+        cambioDetectado.current = true;
+        setOfertaCambio(true);
+        setPlanId('');
+        setAcepta(false);
+        setRevisionPlanes((v) => v + 1);
+      } else setError(e.message);
     } finally {
+      solicitudEnCurso.current = false;
       setEnviando(false);
     }
   }
@@ -110,7 +135,8 @@ export default function Renovar() {
         </Link>
       </header>
 
-      {error && <p className="aviso-mal">{error}</p>}
+      {ofertaCambio && <div role="alert" className="aviso-ojo space-y-2"><p className="font-bold">Las condiciones de la membresía cambiaron.</p><p>No se envió tu solicitud. Revisa los planes actualizados. Si ya hiciste el Yape, conserva la captura y acércate a recepción para revisar tu pago. No vuelvas a pagar.</p><p>Tu captura se conserva en esta pantalla. Recepción te ayudará a completar la renovación.</p></div>}
+      {error && <div role="alert" className="aviso-mal"><p>{error}</p>{!datos && <button type="button" className="mt-2 underline underline-offset-4" onClick={() => setRevisionPlanes((v) => v + 1)}>Volver a cargar los planes</button>}</div>}
       {!datos ? (
         !error && <Esqueleto filas={2} />
       ) : !datos.yapeNumero ? (
@@ -126,24 +152,28 @@ export default function Renovar() {
               <button
                 key={p.id}
                 type="button"
-                onClick={() => setPlanId(p.id)}
+                onClick={() => { setPlanId(p.id); setAcepta(false); }}
+                disabled={enviando || cargandoPlanes}
                 aria-pressed={planId === p.id}
                 className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition ${
                   planId === p.id ? 'border-acento/60 bg-acento/[0.08]' : 'border-borde bg-superficie'
                 }`}
               >
-                <span>
-                  <span className="block font-bold">{p.nombre}</span>
+                <span className="min-w-0 pr-3">
+                  <span className="block font-bold">{p.nombre}{p.esPromocion && <span className="ml-2 text-xs font-semibold text-acento">Promoción</span>}</span>
                   <span className="block text-sm text-zinc-500">
-                    {p.duracionDias} dias{p.descripcion ? ` · ${p.descripcion}` : ''}
+                    {p.duracionDias} días desde el inicio · {p.limiteAsistencias == null ? 'Asistencias sin límite' : `${p.limiteAsistencias} asistencias en total`}
                   </span>
+                  {p.descripcion && <span className="mt-1 block text-xs leading-relaxed text-zinc-400">{p.descripcion}</span>}
                 </span>
-                <span className="text-xl font-black cifra">{soles(p.precio)}</span>
+                <span className="shrink-0 text-xl font-black cifra">{soles(p.precio)}</span>
               </button>
             ))}
+            {!datos.planes.length && <p className="text-sm text-zinc-400">Por ahora no hay planes disponibles. Consulta en recepción.</p>}
+            {plan?.limiteAsistencias != null && <p className="text-xs leading-relaxed text-zinc-400">Tu plan incluye {plan.limiteAsistencias} asistencias durante {plan.duracionDias} días. Se cuenta una asistencia por día; salir y volver el mismo día no consume otra. No exige días alternos.</p>}
           </section>
 
-          <section className="tarjeta space-y-3">
+          {!ofertaCambio && plan && <section className="tarjeta space-y-3">
             <p className="rotulo">2 · Yapea {plan ? soles(plan.precio) : ''}</p>
             <div className="flex items-center justify-between gap-3 rounded-xl bg-black/40 p-3">
               <div>
@@ -159,16 +189,16 @@ export default function Renovar() {
             <p className="text-xs text-zinc-500">
               Verifica que el nombre que te muestra Yape coincida antes de pagar.
             </p>
-          </section>
+          </section>}
 
           <section className="tarjeta space-y-3">
             <p className="rotulo">3 · Sube la captura del pago</p>
-            <input ref={archivo} type="file" accept="image/*" className="hidden" onChange={elegirArchivo} />
+            <input ref={archivo} type="file" accept="image/*" className="hidden" onChange={elegirArchivo} disabled={enviando || ofertaCambio} />
             {imagen ? (
               <div className="space-y-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={imagen} alt="Captura del Yape" className="max-h-80 w-full rounded-xl object-contain" />
-                <button type="button" className="boton-suave w-full" onClick={() => archivo.current?.click()}>
+                <button type="button" className="boton-suave w-full" disabled={enviando || ofertaCambio} onClick={() => archivo.current?.click()}>
                   Cambiar captura
                 </button>
               </div>
@@ -195,7 +225,7 @@ export default function Renovar() {
           </section>
 
           <label className="flex items-start gap-3 text-sm text-zinc-300">
-            <input type="checkbox" className="mt-1" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} />
+            <input type="checkbox" className="mt-1" checked={acepta} disabled={!plan || enviando || ofertaCambio} onChange={(e) => setAcepta(e.target.checked)} />
             <span>
               Acepto las{' '}
               <button type="button" className="underline" onClick={() => setVerTerminos((v) => !v)}>
@@ -210,9 +240,10 @@ export default function Renovar() {
             </pre>
           )}
 
-          <button className="boton-grande" disabled={!planId || !imagen || !acepta || enviando} onClick={enviar}>
+          <button className="boton-grande" disabled={!plan?.versionOferta || !imagen || !acepta || enviando || cargandoPlanes || ofertaCambio} onClick={enviar}>
             {enviando ? 'Enviando…' : 'Enviar para revision'}
           </button>
+          {ofertaCambio && <Link href="/portal/mi" className="boton-suave w-full">Volver a mi credencial</Link>}
         </>
       )}
     </main>

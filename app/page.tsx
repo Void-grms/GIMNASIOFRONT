@@ -5,6 +5,7 @@ import { Barlow_Condensed } from "next/font/google";
 import { AforoEnVivo } from "@/components/Landing";
 import HomeNavigation from "@/components/home/HomeNavigation";
 import HomeMotion from "@/components/home/HomeMotion";
+import HomePlans from "@/components/home/HomePlans";
 import styles from "./home.module.css";
 
 const display = Barlow_Condensed({
@@ -23,13 +24,13 @@ const MAPA =
 const whatsapp = (message: string) =>
   `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
 const PRIMER_DIA = whatsapp(
-  "Hola, quiero probar un día en Forces Gym por S/ 8. ¿Me dan más información?",
+  "Hola, quiero probar un día en Forces Gym. ¿Me dan más información?",
 );
 
 export const metadata: Metadata = {
   title: `${NOMBRE} · Tu gimnasio en Pacasmayo`,
   description:
-    "Entrena a tu ritmo en Forces Gym, Pacasmayo. Máquinas, peso libre y clases dirigidas. Pase diario S/ 8 y membresías desde S/ 80. Conoce los planes y visítanos.",
+    "Entrena a tu ritmo en Forces Gym, Pacasmayo. Máquinas, peso libre y clases dirigidas. Conoce nuestras membresías vigentes, sus precios y condiciones.",
   openGraph: {
     title: `${NOMBRE} · Tu fuerza. Tu ritmo. Tu lugar.`,
     description:
@@ -92,56 +93,10 @@ function Pin() {
     </svg>
   );
 }
-const PLANES = [
-  {
-    nombre: "Pase diario",
-    precio: "8",
-    periodo: "por día",
-    descripcion: "Conoce el gimnasio. Empieza sin compromiso.",
-    detalle: [
-      "Sin registro previo",
-      "Sala de máquinas y peso libre",
-      "Pagas en recepción y entrenas",
-    ],
-    accion: "Quiero probar un día",
-    mensaje: "Hola, quiero probar un día en Forces Gym por S/ 8.",
-    destacado: false,
-  },
-  {
-    nombre: "Mensual",
-    precio: "100",
-    periodo: "por 30 días",
-    descripcion: "Haz del entrenamiento parte de tu día.",
-    detalle: [
-      "Acceso libre en todo el horario",
-      "Clases dirigidas incluidas",
-      "Portal de clientes y credencial QR",
-    ],
-    accion: "Quiero el plan mensual",
-    mensaje:
-      "Hola, me interesa el plan Mensual de Forces Gym por S/ 100. ¿Cómo me inscribo?",
-    destacado: true,
-  },
-  {
-    nombre: "Universitario",
-    precio: "80",
-    periodo: "por 30 días",
-    descripcion: "Entre clases, también hay tiempo para ti.",
-    detalle: [
-      "Todos los beneficios del mensual",
-      "Presentando carné vigente",
-      "El mismo acceso, a un menor precio",
-    ],
-    accion: "Consultar plan universitario",
-    mensaje:
-      "Hola, me interesa el plan Universitario de Forces Gym por S/ 80. ¿Qué necesito para inscribirme?",
-    destacado: false,
-  },
-];
 const FAQS = [
   [
     "¿Puedo probar antes de inscribirme?",
-    "Sí. Con el pase diario de S/ 8 puedes conocer el gimnasio y entrenar sin registro previo. Escríbenos por WhatsApp si quieres resolver alguna duda antes de venir.",
+    "Sí. Consulta nuestro pase diario para conocer el gimnasio y entrenar. Escríbenos por WhatsApp si quieres resolver alguna duda antes de venir.",
   ],
   [
     "¿Necesito experiencia para empezar?",
@@ -205,7 +160,7 @@ export default function Landing() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Empieza por S/ 8 <Arrow />
+                  Prueba un día <Arrow />
                 </a>
                 <a className={styles.textButton} href="#planes">
                   Explorar planes <span aria-hidden="true">↓</span>
@@ -380,51 +335,12 @@ export default function Landing() {
                 </h2>
               </div>
               <p>
-                Sin matrícula. Sin permanencia mínima.
+                Precio, vigencia y asistencias a la vista.
                 <br />
                 Elige cómo empezar; nosotros te esperamos.
               </p>
             </div>
-            <div className={styles.plansGrid}>
-              {PLANES.map((plan) => (
-                <article
-                  key={plan.nombre}
-                  className={`${styles.planCard} ${plan.destacado ? styles.featuredPlan : ""}`}
-                  data-reveal
-                >
-                  <div className={styles.planTop}>
-                    <h3>{plan.nombre}</h3>
-                    {plan.destacado && <span>DALE CONTINUIDAD</span>}
-                  </div>
-                  <p className={styles.planDescription}>{plan.descripcion}</p>
-                  <p className={styles.price}>
-                    <span>S/</span> {plan.precio}
-                    <small>{plan.periodo}</small>
-                  </p>
-                  <ul>
-                    {plan.detalle.map((item) => (
-                      <li key={item}>
-                        <Check />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    className={
-                      plan.destacado
-                        ? styles.primaryButton
-                        : styles.outlineButton
-                    }
-                    href={whatsapp(plan.mensaje)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {plan.accion}
-                    <Arrow />
-                  </a>
-                </article>
-              ))}
-            </div>
+            <HomePlans whatsappNumero={WHATSAPP} />
             <p className={styles.paymentNote}>
               Te atendemos por WhatsApp. Paga en recepción con{" "}
               <strong>efectivo, Yape o Plin.</strong>
@@ -448,7 +364,7 @@ export default function Landing() {
             {[
               [
                 "Elige tu primer día",
-                "Prueba por S/ 8 o consulta el plan que mejor encaja contigo.",
+                "Consulta el pase diario o el plan que mejor encaja contigo.",
               ],
               [
                 "Ven a conocernos",
@@ -671,7 +587,7 @@ export default function Landing() {
               >
                 Quiero empezar <Arrow diagonal />
               </a>
-              <p>Pase diario S/ 8 · Te esperamos en Forces.</p>
+              <p>Consulta nuestros planes · Te esperamos en Forces.</p>
             </div>
           </div>
         </section>
@@ -711,7 +627,7 @@ export default function Landing() {
           rel="noreferrer"
           className={styles.primaryButton}
         >
-          Empieza por S/ 8 <Arrow />
+          Prueba un día <Arrow />
         </a>
         <a
           href={COMO_LLEGAR}

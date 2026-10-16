@@ -73,6 +73,7 @@ export function TarjetaSocio({
 
   const estilo = COLORES[socio.estado] ?? COLORES.sin_membresia;
   const denegado = resultado === 'denegado';
+  const cupoAgotado = socio.limiteAsistencias != null && socio.asistenciasRestantes === 0;
   const marco = denegado ? COLORES.vencido : estilo;
   const foto = urlArchivo(socio.fotoUrl);
 
@@ -126,7 +127,7 @@ export function TarjetaSocio({
 
         <div className="mt-4 flex flex-wrap items-center gap-2.5">
           <span className={`rounded-[9px] px-3 py-1.5 text-[13.5px] font-bold ${marco.fondo} ${marco.texto}`}>
-            {denegado ? 'No puede pasar' : estilo.etiqueta}
+            {denegado ? 'No puede pasar' : cupoAgotado && resultado !== 'permitido' ? 'Sin nuevas asistencias' : estilo.etiqueta}
           </span>
           {socio.diasRestantes !== null && socio.diasRestantes !== undefined && (
             <span className="text-[13.5px] text-zinc-300 cifra">
@@ -143,6 +144,8 @@ export function TarjetaSocio({
             </span>
           )}
         </div>
+
+        {socio.limiteAsistencias != null && <p className={`mt-3 text-sm font-semibold cifra ${cupoAgotado ? 'text-porvencer' : 'text-zinc-300'}`}>{socio.asistenciasRestantes ?? Math.max(0, socio.limiteAsistencias - (socio.asistenciasUsadas ?? 0))} de {socio.limiteAsistencias} asistencias disponibles{cupoAgotado ? ' · Los reingresos del mismo día siguen incluidos' : ''}</p>}
 
         {motivo && <p className="mt-2.5 text-sm text-zinc-300">{motivo}</p>}
       </div>

@@ -117,6 +117,7 @@ export default function MiCredencial() {
   if (!panel) return <main className="p-6"><Esqueleto filas={2} /></main>;
 
   const vencido = panel.estado === 'vencido' || panel.estado === 'sin_membresia';
+  const cupoAgotado = panel.limiteAsistencias != null && panel.asistenciasRestantes === 0;
   const foto = urlArchivo(panel.fotoUrl);
 
   return (
@@ -186,6 +187,11 @@ export default function MiCredencial() {
           </span>
         </div>
         {panel.vence && <p className="mt-1 text-sm text-zinc-500">Vence el {fechaCorta(panel.vence)}</p>}
+        {panel.limiteAsistencias != null && <div className="mt-4 border-t border-borde pt-3">
+          <p className="font-bold cifra">{panel.asistenciasRestantes ?? Math.max(0, panel.limiteAsistencias - (panel.asistenciasUsadas ?? 0))} de {panel.limiteAsistencias} asistencias disponibles</p>
+          <p className="mt-1 text-xs leading-relaxed text-zinc-400">Válidas durante esta membresía. Se descuenta una por día; salir y volver el mismo día no descuenta otra.</p>
+          {cupoAgotado && !panel.dentro && <p className="aviso-ojo mt-3">Ya usaste las asistencias de tu plan. Los reingresos del mismo día siguen incluidos; para un nuevo día, renueva en recepción o desde aquí.</p>}
+        </div>}
         {vencido && renovacion?.estado !== 'pendiente' && (
           <p className="aviso-mal mt-3">
             Tu membresia no esta vigente. Renueva aqui con Yape o en recepcion.
@@ -195,7 +201,7 @@ export default function MiCredencial() {
         {renovacion?.estado !== 'pendiente' && (
           <Link
             href="/portal/renovar"
-            className={`mt-3 w-full ${vencido || panel.estado === 'por_vencer' ? 'boton' : 'boton-suave'}`}
+            className={`mt-3 w-full ${vencido || cupoAgotado || panel.estado === 'por_vencer' ? 'boton' : 'boton-suave'}`}
           >
             Renovar con Yape
           </Link>

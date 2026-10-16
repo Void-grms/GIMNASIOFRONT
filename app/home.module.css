@@ -428,6 +428,26 @@
   gap: 20px;
   align-items: stretch;
 }
+.planFeedback {
+  padding: 28px;
+  border: 1px solid #16191b24;
+  border-radius: 6px;
+  color: #3f453f;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.planFeedback a,
+.planFeedback button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 12px;
+  margin-right: 20px;
+  color: #191c20;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .planCard {
   padding: 30px 26px;
   border: 1px solid #16191b24;
@@ -461,6 +481,7 @@
   min-height: 30px;
 }
 .planTop h3 {
+  overflow-wrap: anywhere;
   font-size: 18px;
   font-weight: 700;
 }
@@ -474,6 +495,7 @@
   border-radius: 2px;
 }
 .planDescription {
+  overflow-wrap: anywhere;
   color: #555b54;
   font-size: 12px;
   line-height: 1.7;
