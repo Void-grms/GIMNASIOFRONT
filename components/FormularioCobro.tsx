@@ -236,7 +236,7 @@ export function FormularioCobro({
                   : 'border-borde text-zinc-400 hover:text-white'
               }`}
             >
-              {t}
+              {t === 'recibo' ? 'Recibo interno' : t}
             </button>
           ))}
         </div>
@@ -245,10 +245,9 @@ export function FormularioCobro({
             El regimen actual no permite emitir factura. Se cambia en Ajustes.
           </p>
         )}
-        {tipoComprobante === 'recibo' && (
+        {(tipoComprobante === 'recibo' || !ajustes?.emisionElectronica) && (
           <p className="mt-2 text-sm text-porvencer">
-            El recibo interno no tiene valor tributario. Usalo solo si el gimnasio todavia no emite
-            comprobantes.
+            Se guardará un recibo interno sin valor tributario. El registro del pago no sustituye la emisión fiscal. El laboratorio SUNAT BETA se administra por separado.
           </p>
         )}
       </div>
@@ -363,7 +362,7 @@ export function FormularioCobro({
           </p>
           <p className="text-zinc-400">
             {emitido.estadoSunat === 'no_aplica'
-              ? 'Guardado en el sistema, sin envio electronico.'
+              ? 'Recibo interno guardado, sin valor tributario ni envío a SUNAT.'
               : `SUNAT: ${emitido.estadoSunat}`}
           </p>
           <Link
@@ -379,7 +378,7 @@ export function FormularioCobro({
       {pagoId && (
         <div className="space-y-2 rounded-xl border border-[#25D366]/30 bg-[#25D366]/[0.06] p-3">
           <p className="text-sm text-zinc-300">
-            Mandale su {emitido ? 'boleta' : 'constancia de pago'} y la fecha de vencimiento por WhatsApp.
+            Puedes compartir su constancia de pago y la fecha de vencimiento por WhatsApp.
           </p>
           <EnviarWhatsapp paymentId={pagoId} />
         </div>

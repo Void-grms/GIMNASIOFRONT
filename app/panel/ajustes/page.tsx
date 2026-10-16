@@ -41,7 +41,7 @@ export default function Ajustes() {
   };
 
   useEffect(() => {
-    api('/settings')
+    api('/settings/admin')
       .then(setDatos)
       .catch((e) => setError(e.message));
     cargarSistema().catch(() => undefined);
@@ -53,7 +53,7 @@ export default function Ajustes() {
     try {
       await api('/settings', { metodo: 'PATCH', cuerpo: campos });
       setAviso('Ajustes guardados.');
-      setDatos(await api('/settings'));
+      setDatos(await api('/settings/admin'));
     } catch (e: any) {
       setError(e.message);
     }
@@ -403,8 +403,9 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Emision electronica</h2>
+        <a className="boton-suave" href="/panel/facturacion">Configurar y probar SUNAT BETA</a>
         <p className="text-sm text-zinc-500">
-          El gimnasio no firma XML ni habla con SUNAT directamente: lo hace un PSE. Mientras esto
+          Este apartado conserva la conexión opcional con NubeFact. La nueva conexión directa se prepara en Facturación SUNAT. Mientras el proveedor
           diga &quot;ninguno&quot;, los comprobantes se guardan en el sistema sin enviarse.
         </p>
 
@@ -433,6 +434,8 @@ export default function Ajustes() {
             <input
               className="campo"
               type="password"
+              autoComplete="new-password"
+              placeholder={datos.pseTokenConfigurado ? 'Token guardado; deja vacío para conservarlo' : 'Token del proveedor'}
               value={datos.pseToken || ''}
               onChange={(e) => set('pseToken', e.target.value)}
             />
