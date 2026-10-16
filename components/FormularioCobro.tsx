@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { api, fechaCorta, soles } from '@/lib/api';
 import { EnviarWhatsapp } from './EnviarWhatsapp';
@@ -36,6 +36,14 @@ export function FormularioCobro({
   const [planId, setPlanId] = useState('');
   const [metodo, setMetodo] = useState('efectivo');
   const [preview, setPreview] = useState<any>(null);
+  const [cargandoPlanes, setCargandoPlanes] = useState(true);
+  const [cargandoPreview, setCargandoPreview] = useState(false);
+  const [errorPlanes, setErrorPlanes] = useState('');
+  const [errorPreview, setErrorPreview] = useState('');
+  const [revisionPlanes, setRevisionPlanes] = useState(0);
+  const [revisionPreview, setRevisionPreview] = useState(0);
+  const cobroEnCurso = useRef(false);
+  const exigirSeleccion = useRef(false);
 
   const [tipoComprobante, setTipoComprobante] = useState('boleta');
   const [tipoDoc, setTipoDoc] = useState(socio?.dni ? 'dni' : 'sin_documento');
@@ -60,20 +68,53 @@ export function FormularioCobro({
   }, [socio?.id, socio?.dni]);
 
   useEffect(() => {
+    let vigente = true;
+    setCargandoPlanes(true);
+    setErrorPlanes('');
+    setPreview(null);
+    setCargandoPreview(false);
+    setErrorPreview('');
+    setAcepta(false);
     api('/plans').then((p: any) => {
+      if (!vigente) return;
       setPlanes(p);
-      if (p[0]) setPlanId((actual) => actual || p[0].id);
-    });
-  }, []);
+      setPlanId((actual) => exigirSeleccion.current ? '' : p.find((plan: any) => plan.id === actual)?.id || p[0]?.id || '');
+    }).catch((e) => {
+      if (!vigente) return;
+      setPlanes([]);
+      setPlanId('');
+      setErrorPlanes(e.message);
+    }).finally(() => { if (vigente) setCargandoPlanes(false); });
+    return () => { vigente = false; };
+  }, [revisionPlanes]);
 
   useEffect(() => {
-    if (!planId || !socio?.id) return;
-    api(`/memberships/preview?memberId=${socio.id}&planId=${planId}`)
-      .then(setPreview)
-      .catch(() => setPreview(null));
-  }, [planId, socio?.id]);
+    if (!planId || !socio?.id || cargandoPlanes) return;
+    let vigente = true;
+    const memberId = socio.id;
+    setPreview(null);
+    setAcepta(false);
+    setCargandoPreview(true);
+    setErrorPreview('');
+    api(`/memberships/preview?memberId=${encodeURIComponent(memberId)}&planId=${encodeURIComponent(planId)}`)
+      .then((p) => {
+        if (!vigente) return;
+        if (!/^[a-f0-9]{64}$/i.test(p.versionOferta || '')) throw new Error('No se pudieron validar las condiciones del plan. Vuelve a calcular antes de cobrar.');
+        setPreview({ ...p, memberId, planId });
+        setPlanes((actuales) => actuales.map((actual) => actual.id === planId ? {
+          ...actual, nombre: p.plan, precio: p.precio, duracionDias: p.duracionDias,
+          limiteAsistencias: p.limiteAsistencias, descripcion: p.descripcion, esPromocion: p.esPromocion,
+        } : actual));
+      })
+      .catch((e) => { if (vigente) setErrorPreview(e.message); })
+      .finally(() => { if (vigente) setCargandoPreview(false); });
+    return () => { vigente = false; };
+  }, [planId, socio?.id, cargandoPlanes, revisionPreview]);
 
-  const total = preview?.precio ?? 0;
+  const plan = planes.find((p) => p.id === planId);
+  const previewVigente = !!preview && !cargandoPlanes && preview.memberId === socio?.id && preview.planId === planId;
+  const oferta = previewVigente ? preview : null;
+  const total = previewVigente ? preview.precio : 0;
   const aplicaIgv = !!ajustes?.aplicaIgv && tipoComprobante !== 'recibo';
 
   // El precio de lista ya incluye IGV, asi que se desagrega hacia atras.
@@ -89,9 +130,11 @@ export function FormularioCobro({
   const facturaIncompleta =
     tipoComprobante === 'factura' && (tipoDoc !== 'ruc' || !numDoc || !nombre || !direccion);
 
-  const puedeCobrar = !!planId && acepta && !faltaDocumento && !facturaIncompleta && !cobrando;
+  const puedeCobrar = !!plan && previewVigente && !cargandoPlanes && !cargandoPreview && !errorPlanes && !errorPreview && acepta && !faltaDocumento && !facturaIncompleta && !cobrando;
 
   async function cobrar() {
+    if (!puedeCobrar || cobroEnCurso.current) return;
+    cobroEnCurso.current = true;
     setError('');
     setAviso('');
     setCobrando(true);
@@ -101,6 +144,7 @@ export function FormularioCobro({
         cuerpo: {
           memberId: socio.id,
           planId,
+          versionOferta: preview.versionOferta,
           metodo,
           aceptaTerminos: acepta,
           comprobante: {
@@ -119,10 +163,19 @@ export function FormularioCobro({
         setError(`El pago quedo registrado, pero el comprobante no se emitio: ${r.errorComprobante}`);
       }
       setAcepta(false);
+      setRevisionPreview((v) => v + 1);
       onCobrado();
     } catch (e: any) {
-      setError(e.message);
+      if (e.status === 409 && /condiciones.*plan.*cambi|oferta.*cambi/i.test(e.message || '')) {
+        exigirSeleccion.current = true;
+        setPlanId('');
+        setPreview(null);
+        setAcepta(false);
+        setRevisionPlanes((v) => v + 1);
+        setError('El plan cambió mientras revisabas el cobro. No se registró el pago. Selecciona el plan otra vez, revisa el precio y las condiciones actualizadas y pide al socio que las acepte antes de cobrar.');
+      } else setError(e.message);
     } finally {
+      cobroEnCurso.current = false;
       setCobrando(false);
     }
   }
@@ -132,14 +185,21 @@ export function FormularioCobro({
       <h2 className="text-lg font-semibold">Cobrar membresia</h2>
 
       <div>
-        <label className="etiqueta">Plan</label>
-        <select className="campo" value={planId} onChange={(e) => setPlanId(e.target.value)}>
+        <label className="etiqueta" htmlFor="cobro-plan">Plan</label>
+        <select id="cobro-plan" className="campo" value={planId} disabled={cargandoPlanes || cobrando} onChange={(e) => { exigirSeleccion.current = false; setPreview(null); setAcepta(false); setPlanId(e.target.value); }}>
+          {!planId && <option value="">{cargandoPlanes ? 'Cargando planes…' : planes.length ? 'Selecciona y revisa un plan' : 'No hay planes activos'}</option>}
           {planes.map((p) => (
             <option key={p.id} value={p.id}>
-              {p.nombre} — {soles(p.precio)} / {p.duracionDias} dia(s)
+              {p.nombre}{p.esPromocion ? ' (promoción)' : ''} — {soles(p.precio)} / {p.duracionDias} día(s){p.limiteAsistencias != null ? ` · ${p.limiteAsistencias} asistencias` : ''}
             </option>
           ))}
         </select>
+        {errorPlanes && <div className="aviso-mal mt-2" role="alert"><p>{errorPlanes}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => setRevisionPlanes((v) => v + 1)}>Volver a cargar los planes</button></div>}
+        {oferta && <div className="mt-2 space-y-1 text-sm leading-relaxed text-zinc-400">
+          <p>{oferta.limiteAsistencias == null ? 'Asistencias sin límite' : `${oferta.limiteAsistencias} asistencias en total`} durante {oferta.duracionDias} días desde el inicio.</p>
+          {oferta.limiteAsistencias != null && <p className="text-xs">Se descuenta una asistencia por día. Volver a entrar el mismo día no descuenta otra.</p>}
+          {oferta.descripcion && <p className="text-xs">{oferta.descripcion}</p>}
+        </div>}
       </div>
 
       <div>
@@ -240,12 +300,15 @@ export function FormularioCobro({
         </p>
       )}
 
-      {preview && (
+      {cargandoPreview && <p role="status" className="text-sm text-zinc-400">Calculando importe y fechas…</p>}
+      {errorPreview && <div className="aviso-mal" role="alert"><p>{errorPreview}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => setRevisionPreview((v) => v + 1)}>Volver a calcular</button></div>}
+      {previewVigente && (
         <div className="rounded-xl bg-black/40 p-4 text-sm">
           <p className="text-zinc-400">Quedaria vigente</p>
           <p className="mt-1 font-medium">
             {fechaCorta(preview.inicio)} — {fechaCorta(preview.vence)}
           </p>
+          {socio.limiteAsistencias != null && socio.asistenciasRestantes === 0 && <p className="mt-2 text-xs leading-relaxed text-porvencer">La membresía anterior ya agotó su cupo. Revisa las fechas de esta renovación; si ya hay una membresía programada, se respeta su orden.</p>}
 
           <dl className="mt-3 space-y-1 border-t border-borde pt-3">
             {aplicaIgv ? (
@@ -278,6 +341,7 @@ export function FormularioCobro({
           type="checkbox"
           className="mt-1"
           checked={acepta}
+          disabled={!previewVigente || cargandoPlanes || cargandoPreview || !!errorPreview || cobrando}
           onChange={(e) => setAcepta(e.target.checked)}
         />
         <span>
@@ -290,7 +354,7 @@ export function FormularioCobro({
       </label>
 
       {aviso && <p className="aviso-ok">{aviso}</p>}
-      {error && <p className="aviso-mal">{error}</p>}
+      {error && <p role="alert" className="aviso-mal">{error}</p>}
 
       {emitido && (
         <div className="rounded-xl border border-vigente/40 bg-vigente/10 p-3 text-sm">

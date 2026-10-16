@@ -14,7 +14,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 import { cerrarSesion, iniciales, leerToken, sesionActual } from '@/lib/api';
 
-type Item = { href: string; texto: string; icono: ReactNode; insignia?: number };
+type Item = { href: string; texto: string; icono: ReactNode; insignia?: number; soloAdmin?: boolean };
 
 const I = ({ d }: { d: string }) => (
   <svg
@@ -54,6 +54,7 @@ const GRUPOS: { titulo: string; items: Item[] }[] = [
   {
     titulo: 'Gestion',
     items: [
+      { href: '/panel/membresias', texto: 'Membresías', soloAdmin: true, icono: <I d="M4 5h16v14H4zM4 9h16M8 13h3M8 16h7" /> },
       { href: '/panel/avisos', texto: 'Avisos', icono: <I d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M10.3 20a2 2 0 0 0 3.4 0" /> },
       { href: '/panel/reclamaciones', texto: 'Reclamos', icono: <I d="M21 12a8.5 8.5 0 0 1-12.2 7.6L3 21l1.4-5.8A8.5 8.5 0 1 1 21 12z" /> },
       { href: '/panel', texto: 'Dashboard', icono: <I d="M3 20h18M6 20v-7M11 20V7M16 20v-4M21 20V4" /> },
@@ -75,6 +76,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   const [listo, setListo] = useState(false);
   const [menuMovil, setMenuMovil] = useState(false);
   const [usuario, setUsuario] = useState<{ nombre?: string; rol?: string } | null>(null);
+  const gruposVisibles = GRUPOS.map((grupo) => ({ ...grupo, items: grupo.items.filter((item) => !item.soloAdmin || usuario?.rol === 'admin') }));
 
   // Cambiar de pantalla cierra el menu movil.
   useEffect(() => setMenuMovil(false), [ruta]);
@@ -123,7 +125,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         </Link>
 
         <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2.5 pb-2.5 pt-1.5">
-          {GRUPOS.map((grupo) => (
+          {gruposVisibles.map((grupo) => (
             <div key={grupo.titulo} className="contents">
               <p className="mx-2 mb-1.5 mt-4 hidden text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-700 lg:block">
                 {grupo.titulo}
@@ -265,7 +267,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
           />
           <div className="absolute inset-x-0 bottom-0 max-h-[80vh] animate-subir overflow-y-auto rounded-t-3xl border-t border-borde bg-[#0C0C0E] px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3">
             <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/15" />
-            {GRUPOS.map((grupo) => (
+            {gruposVisibles.map((grupo) => (
               <div key={grupo.titulo} className="mb-4">
                 <p className="rotulo mb-2 px-2">{grupo.titulo}</p>
                 <div className="grid grid-cols-2 gap-2">
