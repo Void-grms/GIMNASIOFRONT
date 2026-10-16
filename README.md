@@ -194,3 +194,19 @@ rangos compatibles. `npm audit --omit=dev` devuelve cero avisos en esta revisió
 Las advertencias restantes de herramientas de compilación (Tailwind 3 y su
 parser de patrones/selectores) requieren revisar una actualización mayor; la
 aplicación no compila CSS ni patrones aportados por visitantes.
+
+### Accesos de clientes y personal
+
+`/portal` y `/login` comparten la presentación en `components/acceso/`, con la
+fachada real del gimnasio, selección del tipo de acceso y formularios adaptados
+a celular. Las páginas conservan metadatos propios; los formularios son
+componentes cliente separados. La ayuda de activación continúa en
+`/portal/bienvenida`.
+
+Los campos admiten gestores de contraseñas, mostrar/ocultar el secreto y pegado
+de DNI/PIN con espacios sin perder ceros iniciales. Los avisos distinguen
+credenciales incorrectas, bloqueos temporales y problemas de conexión. El envío
+permanece bloqueado durante la navegación; una respuesta de una página ya
+abandonada no guarda sesiones ni redirige. Se mantienen las sesiones separadas
+y el cambio obligatorio del PIN temporal. Los dos login públicos se solicitan
+con `sesion: null`.
