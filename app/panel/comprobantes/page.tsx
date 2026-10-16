@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { api, hora, soles } from '@/lib/api';
 
 const hoyTexto = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
+const esInterno = (c: any) => c.tipo === 'recibo' || !c.estadoSunat || c.estadoSunat === 'no_aplica';
 
 const ESTADO: Record<string, string> = {
   no_aplica: 'text-zinc-500',
@@ -36,7 +37,7 @@ export default function Comprobantes() {
   }, [cargar]);
 
   async function anular(id: string) {
-    const motivo = window.prompt('Un comprobante emitido no se borra, se anula. Motivo:');
+    const motivo = window.prompt('Anular este recibo interno en el sistema no realiza una baja ante SUNAT. Motivo:');
     if (!motivo) return;
     try {
       await api(`/receipts/${id}/anular`, { metodo: 'POST', cuerpo: { motivo } });
@@ -48,6 +49,7 @@ export default function Comprobantes() {
 
   return (
     <div className="space-y-5">
+      <p className="aviso-ojo">Los documentos sin envío electrónico son recibos internos sin valor tributario. Las pruebas de SUNAT se revisan en <Link href="/panel/facturacion" className="underline">Facturación SUNAT</Link>.</p>
       <div className="flex flex-wrap items-end gap-3">
         <div>
           <label className="etiqueta">Desde</label>
@@ -82,14 +84,14 @@ export default function Comprobantes() {
                 target="_blank"
                 className="font-semibold capitalize hover:underline"
               >
-                {c.tipo} {c.serie}-{String(c.numero).padStart(6, '0')}
+                {esInterno(c) ? 'Recibo interno' : c.tipo} {c.serie}-{String(c.numero).padStart(6, '0')}
               </Link>
               <span className="font-black cifra">{soles(c.total)}</span>
             </div>
             <p className="mt-1 text-sm text-zinc-500">
               {c.clienteNombre} · <span className="cifra">{hora(c.emitidoAt)}</span> ·{' '}
               <span className={ESTADO[c.estadoSunat] || 'text-zinc-500'}>
-                {c.anulado ? 'anulado' : c.estadoSunat.replace('_', ' ')}
+                {c.anulado ? 'Anulado en el sistema' : esInterno(c) ? 'Sin valor tributario' : c.estadoSunat.replace('_', ' ')}
               </span>
             </p>
           </li>
@@ -124,7 +126,7 @@ export default function Comprobantes() {
                     target="_blank"
                     className="font-medium capitalize hover:underline"
                   >
-                    {c.tipo} {c.serie}-{String(c.numero).padStart(6, '0')}
+                    {esInterno(c) ? 'Recibo interno' : c.tipo} {c.serie}-{String(c.numero).padStart(6, '0')}
                   </Link>
                   {c.anulado && <span className="ml-2 text-vencido">anulado</span>}
                 </td>
@@ -134,11 +136,11 @@ export default function Comprobantes() {
                 </td>
                 <td className="p-3 text-zinc-400 cifra">{hora(c.emitidoAt)}</td>
                 <td className={`p-3 ${ESTADO[c.estadoSunat] || 'text-zinc-500'}`}>
-                  {c.estadoSunat.replace('_', ' ')}
+                  {esInterno(c) ? 'Sin valor tributario' : c.estadoSunat.replace('_', ' ')}
                 </td>
                 <td className="p-3 text-right font-semibold cifra">{soles(c.total)}</td>
                 <td className="p-3 text-right">
-                  {!c.anulado && (
+                  {!c.anulado && esInterno(c) && (
                     <button className="text-sm text-zinc-500 hover:text-vencido" onClick={() => anular(c.id)}>
                       Anular
                     </button>

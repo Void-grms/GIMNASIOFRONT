@@ -14,6 +14,7 @@ export function HojaComprobante({
   esTicket?: boolean;
 }) {
   const numero = `${c.serie}-${String(c.numero).padStart(6, '0')}`;
+  const interno = c.tipo === 'recibo' || c.estadoSunat === 'no_aplica' || !c.estadoSunat;
   return (
     <article className={`hoja rounded-2xl border border-borde bg-white text-black ${esTicket ? 'p-4 text-sm' : 'p-8'}`}>
       <header
@@ -34,7 +35,7 @@ export function HojaComprobante({
           }`}
         >
           <p className="text-xs font-bold uppercase">
-            {c.tipo === 'recibo' ? 'Recibo interno' : `${c.tipo} electronica`}
+            {interno ? 'Recibo interno' : `${c.tipo} electrónica`}
           </p>
           <p className={esTicket ? 'text-base font-black' : 'text-lg font-black'}>{numero}</p>
         </div>
@@ -42,7 +43,7 @@ export function HojaComprobante({
 
       {c.anulado && (
         <p className="mt-4 rounded border-2 border-red-600 p-2 text-center font-bold text-red-600">
-          ANULADO — {c.motivoAnulacion}
+          ANULADO EN EL SISTEMA — {c.motivoAnulacion}
         </p>
       )}
 
@@ -115,7 +116,7 @@ export function HojaComprobante({
       </div>
 
       <footer className={`mt-6 border-t border-zinc-300 pt-3 text-zinc-600 ${esTicket ? 'text-[10px] text-center' : 'text-xs'}`}>
-        {c.tipo === 'recibo' ? (
+        {interno ? (
           <p>Documento interno sin valor tributario.</p>
         ) : (
           <p>

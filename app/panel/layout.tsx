@@ -55,6 +55,7 @@ const GRUPOS: { titulo: string; items: Item[] }[] = [
     titulo: 'Gestion',
     items: [
       { href: '/panel/membresias', texto: 'Membresías', soloAdmin: true, icono: <I d="M4 5h16v14H4zM4 9h16M8 13h3M8 16h7" /> },
+      { href: '/panel/facturacion', texto: 'Facturación SUNAT', soloAdmin: true, icono: <I d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6" /> },
       { href: '/panel/avisos', texto: 'Avisos', icono: <I d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M10.3 20a2 2 0 0 0 3.4 0" /> },
       { href: '/panel/reclamaciones', texto: 'Reclamos', icono: <I d="M21 12a8.5 8.5 0 0 1-12.2 7.6L3 21l1.4-5.8A8.5 8.5 0 1 1 21 12z" /> },
       { href: '/panel', texto: 'Dashboard', icono: <I d="M3 20h18M6 20v-7M11 20V7M16 20v-4M21 20V4" /> },
