@@ -47,7 +47,7 @@ export function AforoEnVivo() {
 
   return (
     <p
-      className="inline-flex items-center gap-2 rounded-full border border-borde bg-black/50 px-3.5 py-1.5 text-[13px] font-semibold text-zinc-200 backdrop-blur"
+      className="inline-flex items-center gap-2 rounded-full border border-borde bg-fondo/70 px-3.5 py-1.5 text-[13px] font-semibold text-tinta backdrop-blur"
       aria-live="polite"
     >
       <span className="relative flex h-2.5 w-2.5">
@@ -57,9 +57,9 @@ export function AforoEnVivo() {
       <span className="cifra">{texto}</span>
       {nivel && (
         <>
-          <span className="text-zinc-600">·</span>
+          <span className="text-tenue">·</span>
           <span className={nivel.color}>{nivel.texto}</span>
-          <span className="hidden h-1.5 w-12 overflow-hidden rounded-full bg-white/10 sm:inline-block" aria-hidden="true">
+          <span className="hidden h-1.5 w-12 overflow-hidden rounded-full bg-neutral/10 sm:inline-block" aria-hidden="true">
             <span className={`block h-full ${nivel.barra}`} style={{ width: `${Math.max(6, aforo.porcentaje)}%` }} />
           </span>
         </>
@@ -92,7 +92,7 @@ export function MenuLanding() {
         onClick={() => setAbierto(true)}
         aria-label="Abrir menu"
         aria-expanded={abierto}
-        className="flex h-11 w-11 items-center justify-center rounded-xl border border-borde text-zinc-200 sm:hidden"
+        className="flex h-11 w-11 items-center justify-center rounded-xl border border-borde text-tinta sm:hidden"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true">
           <path d="M4 6h16M4 12h16M4 18h16" />
@@ -104,14 +104,14 @@ export function MenuLanding() {
       {abierto && createPortal(
         <div className="fixed inset-0 z-50 sm:hidden" role="dialog" aria-modal="true" aria-label="Menu">
           <button type="button" aria-label="Cerrar menu" className="absolute inset-0 bg-black/70" onClick={() => setAbierto(false)} />
-          <div className="absolute inset-x-0 top-0 animate-entrar rounded-b-3xl border-b border-borde bg-[#0C0C0E] px-4 pb-6 pt-4">
+          <div className="absolute inset-x-0 top-0 animate-entrar rounded-b-3xl border-b border-borde bg-superficie px-4 pb-6 pt-4">
             <div className="mb-4 flex items-center justify-between">
               <span className="text-lg font-black tracking-tight">Menu</span>
               <button
                 type="button"
                 onClick={() => setAbierto(false)}
                 aria-label="Cerrar menu"
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-zinc-400"
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-secundario"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true">
                   <path d="M6 6l12 12M18 6 6 18" />
@@ -124,7 +124,7 @@ export function MenuLanding() {
                   key={e.href}
                   href={e.href}
                   onClick={() => setAbierto(false)}
-                  className="flex min-h-12 items-center rounded-xl px-3 text-lg font-bold text-zinc-200 hover:bg-white/[0.05]"
+                  className="flex min-h-12 items-center rounded-xl px-3 text-lg font-bold text-tinta hover:bg-neutral/[0.05]"
                 >
                   {e.texto}
                 </a>

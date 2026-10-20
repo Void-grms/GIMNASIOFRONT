@@ -19,13 +19,13 @@ export function GuiaActivacion({ compacta = false }: { compacta?: boolean }) {
       {PASOS.map((paso, indice) => (
         <li key={paso.titulo} className={compacta ? 'flex items-start gap-3' : 'border-t border-borde pt-5'}>
           <span aria-hidden="true" className={compacta
-            ? 'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-acento/10 text-xs font-bold text-acento cifra'
-            : 'mb-5 flex h-9 w-9 items-center justify-center rounded-full border border-acento/40 text-sm font-bold text-acento cifra'}>
+            ? 'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-acento/10 text-xs font-bold text-acentoTexto cifra'
+            : 'mb-5 flex h-9 w-9 items-center justify-center rounded-full border border-acento/40 text-sm font-bold text-acentoTexto cifra'}>
             {indice + 1}
           </span>
           <div>
-            <p className={compacta ? 'text-sm font-semibold text-zinc-200' : 'text-lg font-bold text-zinc-100'}>{paso.titulo}</p>
-            <p className={`mt-2 text-sm leading-relaxed text-zinc-400 ${compacta ? '' : 'max-w-sm'}`}>{paso.texto}</p>
+            <p className={compacta ? 'text-sm font-semibold text-tinta' : 'text-lg font-bold text-tinta'}>{paso.titulo}</p>
+            <p className={`mt-2 text-sm leading-relaxed text-secundario ${compacta ? '' : 'max-w-sm'}`}>{paso.texto}</p>
           </div>
         </li>
       ))}

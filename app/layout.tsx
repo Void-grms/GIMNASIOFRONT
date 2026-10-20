@@ -5,6 +5,9 @@
 import type { Metadata } from 'next';
 import { Archivo } from 'next/font/google';
 import './globals.css';
+import { ProveedorTema } from '@/components/tema/ProveedorTema';
+import { SCRIPT_TEMA } from '@/components/tema/configuracion';
+import { AparienciaGlobal } from '@/components/tema/SelectorTema';
 
 const archivo = Archivo({
   subsets: ['latin'],
@@ -20,8 +23,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={archivo.variable}>
-      <body>{children}</body>
+    <html lang="es" className={archivo.variable} suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: SCRIPT_TEMA }} /></head>
+      <body><ProveedorTema><AparienciaGlobal />{children}</ProveedorTema></body>
     </html>
   );
 }

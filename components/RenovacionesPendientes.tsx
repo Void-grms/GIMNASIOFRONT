@@ -92,7 +92,7 @@ export function RenovacionesPendientes() {
     <section className="space-y-3">
       <h2 className="rotulo">
         Renovaciones por Yape
-        {lista.length > 0 && <span className="ml-2 text-acento">{lista.length}</span>}
+        {lista.length > 0 && <span className="ml-2 text-acentoTexto">{lista.length}</span>}
       </h2>
       {aviso && <p className="aviso-ok">{aviso}</p>}
       {pagoAprobado && <EnviarWhatsapp paymentId={pagoAprobado} texto="Avisarle por WhatsApp" />}
@@ -105,14 +105,14 @@ export function RenovacionesPendientes() {
         >
           <span className="min-w-0">
             <span className="block truncate font-bold">{r.socio.nombreCompleto}</span>
-            <span className="block text-sm text-zinc-500">
+            <span className="block text-sm text-tenue">
               {r.plan} · {hora(r.creado)}
               {r.operacion ? ` · op. ${r.operacion}` : ''}
             </span>
           </span>
           <span className="shrink-0 text-right">
             <span className="block text-lg font-black cifra">{soles(r.monto)}</span>
-            <span className="block text-xs text-acento">Revisar</span>
+            <span className="block text-xs text-acentoTexto">Revisar</span>
           </span>
         </button>
       ))}
@@ -124,24 +124,24 @@ export function RenovacionesPendientes() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-lg font-black">{viendo.socio.nombreCompleto}</p>
-                <p className="text-sm text-zinc-500">
-                  DNI {viendo.socio.dni} · {viendo.plan} · <span className="font-bold text-white">{soles(viendo.monto)}</span>
+                <p className="text-sm text-tenue">
+                  DNI {viendo.socio.dni} · {viendo.plan} · <span className="font-bold text-tinta">{soles(viendo.monto)}</span>
                 </p>
-                {viendo.operacion && <p className="text-sm text-zinc-400">Operacion {viendo.operacion}</p>}
+                {viendo.operacion && <p className="text-sm text-secundario">Operacion {viendo.operacion}</p>}
               </div>
-              <button className="text-sm text-zinc-500 hover:text-white" onClick={cerrar}>
+              <button className="text-sm text-tenue hover:text-tinta" onClick={cerrar}>
                 Cerrar
               </button>
             </div>
-            <div className="flex min-h-40 items-center justify-center overflow-hidden rounded-xl bg-black/50">
+            <div className="flex min-h-40 items-center justify-center overflow-hidden rounded-xl bg-fondo/70">
               {imagen ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={imagen} alt="Captura del Yape" className="max-h-[55vh] w-full object-contain" />
               ) : (
-                !error && <span className="text-sm text-zinc-500">Cargando captura…</span>
+                !error && <span className="text-sm text-tenue">Cargando captura…</span>
               )}
             </div>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-tenue">
               Confirma en tu app de Yape que el pago llego, por el monto correcto, antes de aprobar.
             </p>
             {error && <p className="aviso-mal">{error}</p>}

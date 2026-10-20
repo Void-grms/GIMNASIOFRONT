@@ -54,24 +54,24 @@ export function Descanso({ inicio }: { inicio: number | null }) {
   const mmss = `${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, '0')}`;
 
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-borde bg-black/30 px-3 py-2">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={fin ? 'text-acento' : 'text-zinc-500'} aria-hidden="true">
+    <div className="flex items-center gap-2 rounded-xl border border-borde bg-fondo/70 px-3 py-2">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={fin ? 'text-acentoTexto' : 'text-tenue'} aria-hidden="true">
         <path d="M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 9v4l2.5 2.5M9.5 2h5" />
       </svg>
       {fin ? (
         <>
-          <span className="text-lg font-black text-acento cifra" aria-live="polite">{mmss}</span>
-          <span className="text-xs text-zinc-500">descanso</span>
-          <button type="button" className="ml-auto text-xs text-zinc-400 hover:text-white" onClick={() => setFin(fin + 15000)}>
+          <span className="text-lg font-black text-acentoTexto cifra" aria-live="polite">{mmss}</span>
+          <span className="text-xs text-tenue">descanso</span>
+          <button type="button" className="ml-auto text-xs text-secundario hover:text-tinta" onClick={() => setFin(fin + 15000)}>
             +15 s
           </button>
-          <button type="button" className="text-xs text-zinc-400 hover:text-white" onClick={() => setFin(null)}>
+          <button type="button" className="text-xs text-secundario hover:text-tinta" onClick={() => setFin(null)}>
             Saltar
           </button>
         </>
       ) : (
         <>
-          <span className="text-xs text-zinc-500">Descanso</span>
+          <span className="text-xs text-tenue">Descanso</span>
           <div className="ml-auto flex gap-1">
             {OPCIONES.map((s) => (
               <button
@@ -79,13 +79,13 @@ export function Descanso({ inicio }: { inicio: number | null }) {
                 type="button"
                 onClick={() => elegir(s)}
                 className={`rounded-md px-2 py-0.5 text-xs font-semibold cifra ${
-                  duracion === s ? 'bg-acento/15 text-acento' : 'text-zinc-500 hover:text-white'
+                  duracion === s ? 'bg-acento/15 text-acentoTexto' : 'text-tenue hover:text-tinta'
                 }`}
               >
                 {s < 120 ? `${s}s` : `${s / 60}m`}
               </button>
             ))}
-            <button type="button" className="ml-1 rounded-md px-2 py-0.5 text-xs font-semibold text-zinc-300 hover:text-white" onClick={() => setFin(Date.now() + duracion * 1000)}>
+            <button type="button" className="ml-1 rounded-md px-2 py-0.5 text-xs font-semibold text-secundario hover:text-tinta" onClick={() => setFin(Date.now() + duracion * 1000)}>
               ▶
             </button>
           </div>

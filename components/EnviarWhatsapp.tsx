@@ -70,7 +70,7 @@ export function EnviarWhatsapp({
         disabled={cargando}
         className={
           compacto
-            ? 'inline-flex items-center gap-1.5 rounded-lg border border-[#25D366]/40 px-2.5 py-1 text-xs font-semibold text-[#25D366] hover:bg-[#25D366]/10'
+            ? 'inline-flex items-center gap-1.5 rounded-lg border border-vigente/40 px-2.5 py-1 text-xs font-semibold text-vigente hover:bg-vigente/10'
             : 'inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 font-bold text-black transition hover:brightness-110 disabled:opacity-60'
         }
       >
@@ -93,11 +93,11 @@ export function EnviarWhatsapp({
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-lg font-black">{datos.socio}</p>
-                  <p className="text-sm text-zinc-500">
+                  <p className="text-sm text-tenue">
                     {datos.tipo === 'renovacion' ? 'Mensaje de renovacion' : 'Mensaje de bienvenida'}
                   </p>
                 </div>
-                <button className="text-sm text-zinc-500 hover:text-white" onClick={() => setDatos(null)}>
+                <button className="text-sm text-tenue hover:text-tinta" onClick={() => setDatos(null)}>
                   Cerrar
                 </button>
               </div>
@@ -120,7 +120,7 @@ export function EnviarWhatsapp({
                   onChange={(e) => setTelefono(e.target.value.replace(/\D/g, ''))}
                 />
                 {!datos.telefono && (
-                  <p className="mt-1 text-xs text-zinc-500">
+                  <p className="mt-1 text-xs text-tenue">
                     El socio no tiene celular en su ficha. Agregalo alli para la proxima.
                   </p>
                 )}
@@ -134,7 +134,7 @@ export function EnviarWhatsapp({
                   value={mensaje}
                   onChange={(e) => setMensaje(e.target.value)}
                 />
-                <a href={datos.enlace} target="_blank" rel="noreferrer" className="mt-1 inline-block text-xs text-acento underline">
+                <a href={datos.enlace} target="_blank" rel="noreferrer" className="mt-1 inline-block text-xs text-acentoTexto underline">
                   Ver lo que abrira el socio
                 </a>
               </div>

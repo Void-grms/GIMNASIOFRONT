@@ -29,7 +29,7 @@ export default function FormularioCliente() {
       });
       if (!activo.current) return;
       guardarToken('socio', r.access_token);
-      router.replace(r.debeCambiarPin ? '/portal/perfil?cambiar=1' : '/portal/mi');
+      router.replace(r.debeCambiarPin ? '/portal/perfil?cambiar=1' : '/portal/hoy');
     } catch (err: unknown) {
       if (!activo.current) return;
       setError(errorDeAcceso(err));

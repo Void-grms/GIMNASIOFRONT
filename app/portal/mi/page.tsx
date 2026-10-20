@@ -71,7 +71,7 @@ export default function MiCredencial() {
         const p: any = await api('/portal/presence', { sesion: 'socio' });
         if (!vivo) return;
         if (dentroAntes.current === false && p.dentro) {
-          router.push('/portal/progreso?hoy=1');
+          router.push('/portal/entrenar?hoy=1');
           return;
         }
         dentroAntes.current = p.dentro;
@@ -132,16 +132,16 @@ export default function MiCredencial() {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={foto} alt="Tu foto" className="h-full w-full object-cover" />
             ) : (
-              <span className="font-bold text-zinc-500">{panel.nombres?.[0]}</span>
+              <span className="font-bold text-tenue">{panel.nombres?.[0]}</span>
             )}
           </Link>
           <div>
-            <p className="text-sm text-zinc-400">Hola,</p>
+            <p className="text-sm text-secundario">Hola,</p>
             <h1 className="text-2xl font-bold leading-tight">{panel.nombres}</h1>
           </div>
         </div>
         <button
-          className="text-sm text-zinc-500 hover:text-white"
+          className="text-sm text-tenue hover:text-tinta"
           onClick={() => {
             cerrarSesion('socio');
             router.replace('/portal');
@@ -166,18 +166,18 @@ export default function MiCredencial() {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={qr} alt="Tu codigo de ingreso" className="w-full max-w-[19rem] rounded-xl bg-white p-3" />
         ) : (
-          <div className="flex h-72 w-full items-center justify-center text-zinc-600">
+          <div className="flex h-72 w-full items-center justify-center text-tenue">
             Generando codigo...
           </div>
         )}
-        <p className="mt-3 text-center text-sm text-zinc-500">
+        <p className="mt-3 text-center text-sm text-tenue">
           Cambia solo cada 30 segundos. Sube el brillo de tu pantalla y acercalo al lector.
         </p>
       </div>
 
       <div className="tarjeta">
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-zinc-400">{panel.plan ?? 'Sin membresia'}</span>
+          <span className="text-sm text-secundario">{panel.plan ?? 'Sin membresia'}</span>
           <span className={`text-sm font-semibold ${COLOR[panel.estado]}`}>
             {panel.diasRestantes === null
               ? 'Acercate a recepcion'
@@ -186,10 +186,10 @@ export default function MiCredencial() {
               : `Vencio hace ${Math.abs(panel.diasRestantes)} dia(s)`}
           </span>
         </div>
-        {panel.vence && <p className="mt-1 text-sm text-zinc-500">Vence el {fechaCorta(panel.vence)}</p>}
+        {panel.vence && <p className="mt-1 text-sm text-tenue">Vence el {fechaCorta(panel.vence)}</p>}
         {panel.limiteAsistencias != null && <div className="mt-4 border-t border-borde pt-3">
           <p className="font-bold cifra">{panel.asistenciasRestantes ?? Math.max(0, panel.limiteAsistencias - (panel.asistenciasUsadas ?? 0))} de {panel.limiteAsistencias} asistencias disponibles</p>
-          <p className="mt-1 text-xs leading-relaxed text-zinc-400">Válidas durante esta membresía. Se descuenta una por día; salir y volver el mismo día no descuenta otra.</p>
+          <p className="mt-1 text-xs leading-relaxed text-secundario">Válidas durante esta membresía. Se descuenta una por día; salir y volver el mismo día no descuenta otra.</p>
           {cupoAgotado && !panel.dentro && <p className="aviso-ojo mt-3">Ya usaste las asistencias de tu plan. Los reingresos del mismo día siguen incluidos; para un nuevo día, renueva en recepción o desde aquí.</p>}
         </div>}
         {vencido && renovacion?.estado !== 'pendiente' && (
@@ -210,7 +210,7 @@ export default function MiCredencial() {
 
       {panel.dentro ? (
         <div className="grid grid-cols-[1fr_auto] gap-3">
-          <Link href="/portal/progreso?hoy=1" className="boton-grande">
+          <Link href="/portal/entrenar?hoy=1" className="boton-grande">
             Entrenar hoy
           </Link>
           <button className="boton-suave rounded-2xl px-5" onClick={alternarPresencia}>
@@ -223,18 +223,18 @@ export default function MiCredencial() {
         </button>
       )}
       {panel.dentro && (
-        <p className="-mt-2 text-center text-sm text-zinc-500">
+        <p className="-mt-2 text-center text-sm text-tenue">
           Estas dentro del gimnasio. Marca tu salida al irte.
         </p>
       )}
       {panel.casillero && (
         <div className="flex items-center justify-between rounded-2xl border border-acento/30 bg-acento/[0.07] px-4 py-3">
-          <span className="text-sm text-zinc-300">Tu casillero</span>
-          <span className="text-2xl font-black text-acento cifra">N.° {panel.casillero}</span>
+          <span className="text-sm text-secundario">Tu casillero</span>
+          <span className="text-2xl font-black text-acentoTexto cifra">N.° {panel.casillero}</span>
         </div>
       )}
       {esperando && !panel.dentro && (
-        <p className="-mt-2 flex items-center justify-center gap-2 text-center text-sm text-zinc-400">
+        <p className="-mt-2 flex items-center justify-center gap-2 text-center text-sm text-secundario">
           <span className="h-2 w-2 animate-latir rounded-full bg-acento" />
           Esperando que recepcion confirme tu ingreso…
         </p>
@@ -254,11 +254,11 @@ export default function MiCredencial() {
       <div className="grid grid-cols-2 gap-4">
         <div className="tarjeta text-center">
           <p className="text-4xl font-black tracking-tight cifra">{panel.racha}</p>
-          <p className="text-sm text-zinc-500">dias seguidos</p>
+          <p className="text-sm text-tenue">dias seguidos</p>
         </div>
         <div className="tarjeta text-center">
           <p className="text-4xl font-black tracking-tight cifra">{panel.asistenciasMes}</p>
-          <p className="text-sm text-zinc-500">visitas este mes</p>
+          <p className="text-sm text-tenue">visitas este mes</p>
         </div>
       </div>
 
@@ -273,7 +273,7 @@ export default function MiCredencial() {
               {panel.pagos.map((p: any) => (
                 <li key={p.id} className="flex justify-between p-3 text-sm">
                   <span>{fechaCorta(p.fecha)}</span>
-                  <span className="text-zinc-500">{p.metodo}</span>
+                  <span className="text-tenue">{p.metodo}</span>
                   <span className="font-semibold cifra">{soles(p.monto)}</span>
                 </li>
               ))}

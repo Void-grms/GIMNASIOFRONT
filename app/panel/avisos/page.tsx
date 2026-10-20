@@ -67,14 +67,14 @@ export default function Avisos() {
         <div className="tarjeta p-0">
           <ul className="divide-y divide-borde">
             {historial.length === 0 && (
-              <li className="p-4 text-sm text-zinc-500">Todavia no enviaste ninguno.</li>
+              <li className="p-4 text-sm text-tenue">Todavia no enviaste ninguno.</li>
             )}
             {historial.map((h) => (
               <li key={h.id} className="flex justify-between p-3 text-sm">
                 <span>
                   {h.member.nombres} {h.member.apellidos}
                 </span>
-                <span className="text-zinc-500">
+                <span className="text-tenue">
                   {h.tipo.replace('_', ' ')} · {fechaCorta(h.enviadoAt)}
                 </span>
               </li>
@@ -101,13 +101,13 @@ function Grupo({
     <section>
       <h2 className="text-lg font-semibold">
         {titulo}
-        <span className="ml-2 text-sm font-normal text-zinc-500">{avisos.length}</span>
+        <span className="ml-2 text-sm font-normal text-tenue">{avisos.length}</span>
       </h2>
-      <p className="mb-3 text-sm text-zinc-500">{descripcion}</p>
+      <p className="mb-3 text-sm text-tenue">{descripcion}</p>
 
       <div className="tarjeta p-0">
         {avisos.length === 0 ? (
-          <p className="p-5 text-sm text-zinc-500">Nadie en esta lista.</p>
+          <p className="p-5 text-sm text-tenue">Nadie en esta lista.</p>
         ) : (
           <ul className="divide-y divide-borde">
             {avisos.map((a) => (
@@ -117,9 +117,9 @@ function Grupo({
                     <Link href={`/panel/socios/${a.memberId}`} className="font-medium hover:underline">
                       {a.nombre}
                     </Link>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-tenue">
                       {a.plan} · vence {fechaCorta(a.vence)}
-                      {a.yaAvisado && <span className="ml-2 text-zinc-600">ya avisado</span>}
+                      {a.yaAvisado && <span className="ml-2 text-tenue">ya avisado</span>}
                     </p>
                   </div>
                   <button
@@ -130,7 +130,7 @@ function Grupo({
                     {a.whatsapp ? 'Abrir WhatsApp' : 'Sin telefono'}
                   </button>
                 </div>
-                <p className="rounded-lg bg-black/40 p-3 text-sm text-zinc-400">{a.mensaje}</p>
+                <p className="rounded-lg bg-fondo/70 p-3 text-sm text-secundario">{a.mensaje}</p>
               </li>
             ))}
           </ul>

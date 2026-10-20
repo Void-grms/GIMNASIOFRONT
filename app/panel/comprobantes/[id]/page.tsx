@@ -52,7 +52,7 @@ export default function VerComprobante() {
       `}</style>
 
       <div className="no-imprimir mb-4 flex flex-wrap items-center justify-between gap-3">
-        <a href="/panel/comprobantes" className="text-sm text-zinc-400 hover:text-white">
+        <a href="/panel/comprobantes" className="text-sm text-secundario hover:text-tinta">
           Volver
         </a>
         <div className="flex items-center gap-2">

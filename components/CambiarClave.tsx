@@ -39,7 +39,7 @@ export function CambiarClave() {
     <section className="tarjeta space-y-4">
       <div>
         <h2 className="text-lg font-semibold">Tu contrasena</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Si todavia usas la clave inicial, cambiala hoy. Minimo 8 caracteres.
         </p>
       </div>

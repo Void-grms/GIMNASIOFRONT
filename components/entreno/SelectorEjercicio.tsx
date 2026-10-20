@@ -118,19 +118,19 @@ export function SelectorEjercicio({
       <button
         type="button"
         onClick={() => elegir(e)}
-        className={`flex min-h-12 flex-1 items-center justify-between gap-3 px-4 text-left text-[15px] hover:bg-white/[0.05] ${
-          e.id === valor ? 'text-acento' : 'text-zinc-100'
+        className={`flex min-h-12 flex-1 items-center justify-between gap-3 px-4 text-left text-[15px] hover:bg-neutral/[0.05] ${
+          e.id === valor ? 'text-acentoTexto' : 'text-tinta'
         }`}
       >
         <span className="min-w-0 truncate">{e.nombre}</span>
-        {e.propio && <span className="shrink-0 rounded-md bg-acento/15 px-1.5 py-0.5 text-[10px] font-bold uppercase text-acento">tuyo</span>}
+        {e.propio && <span className="shrink-0 rounded-md bg-acento/15 px-1.5 py-0.5 text-[10px] font-bold uppercase text-acentoTexto">tuyo</span>}
       </button>
       {e.propio && (
         <button
           type="button"
           aria-label={`Quitar ${e.nombre}`}
           onClick={() => borrar(e)}
-          className="px-3 text-zinc-600 hover:text-vencido"
+          className="px-3 text-tenue hover:text-vencido"
         >
           ✕
         </button>
@@ -144,7 +144,7 @@ export function SelectorEjercicio({
         <button
           type="button"
           onClick={() => setAbierto(true)}
-          className="w-full rounded-xl border border-dashed border-bordeFuerte px-4 py-3 text-sm font-semibold text-acento hover:border-acento"
+          className="w-full rounded-xl border border-dashed border-bordeFuerte px-4 py-3 text-sm font-semibold text-acentoTexto hover:border-acento"
         >
           + {etiqueta}
         </button>
@@ -152,18 +152,18 @@ export function SelectorEjercicio({
       <button
         type="button"
         onClick={() => setAbierto(true)}
-        className="flex w-full items-center justify-between gap-3 rounded-xl border border-borde bg-black/40 px-4 py-3 text-left transition hover:border-bordeFuerte"
+        className="flex w-full items-center justify-between gap-3 rounded-xl border border-borde bg-fondo/70 px-4 py-3 text-left transition hover:border-bordeFuerte"
       >
         <span className="min-w-0">
           <span className="block truncate text-base font-bold">{elegido?.nombre ?? 'Elegir ejercicio'}</span>
           {elegido && (
-            <span className="block text-xs text-zinc-500">
+            <span className="block text-xs text-tenue">
               {NOMBRE_GRUPO[elegido.grupo] ?? elegido.grupo}
               {elegido.propio ? ' · creado por ti' : ''}
             </span>
           )}
         </span>
-        <span className="shrink-0 text-sm font-semibold text-acento">Cambiar</span>
+        <span className="shrink-0 text-sm font-semibold text-acentoTexto">Cambiar</span>
       </button>
       )}
 
@@ -175,7 +175,7 @@ export function SelectorEjercicio({
               <div className="space-y-3 border-b border-borde p-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-black">Elige el ejercicio</h2>
-                  <button className="text-sm text-zinc-500 hover:text-white" onClick={() => setAbierto(false)}>
+                  <button className="text-sm text-tenue hover:text-tinta" onClick={() => setAbierto(false)}>
                     Cerrar
                   </button>
                 </div>
@@ -196,7 +196,7 @@ export function SelectorEjercicio({
                       type="button"
                       onClick={() => setFiltro(g)}
                       className={`shrink-0 rounded-full border px-3 py-1 text-xs font-semibold ${
-                        filtro === g ? 'border-acento bg-acento text-black' : 'border-borde text-zinc-400'
+                        filtro === g ? 'border-acento bg-acento text-black' : 'border-borde text-secundario'
                       }`}
                     >
                       {g ? NOMBRE_GRUPO[g] ?? g : zonas.length ? 'De hoy' : 'Todas'}
@@ -210,8 +210,8 @@ export function SelectorEjercicio({
                   <div className="border-b border-borde bg-acento/[0.06] p-4">
                     {!creando ? (
                       <button type="button" className="w-full text-left" onClick={() => setCreando(true)}>
-                        <span className="block font-bold text-acento">+ Crear «{texto.trim()}»</span>
-                        <span className="block text-xs text-zinc-500">No esta en la lista: agregalo a tus ejercicios.</span>
+                        <span className="block font-bold text-acentoTexto">+ Crear «{texto.trim()}»</span>
+                        <span className="block text-xs text-tenue">No esta en la lista: agregalo a tus ejercicios.</span>
                       </button>
                     ) : (
                       <div className="space-y-3">
@@ -225,7 +225,7 @@ export function SelectorEjercicio({
                               type="button"
                               onClick={() => setZonaNueva(g)}
                               className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
-                                zonaNueva === g ? 'border-acento bg-acento/15 text-acento' : 'border-borde text-zinc-400'
+                                zonaNueva === g ? 'border-acento bg-acento/15 text-acentoTexto' : 'border-borde text-secundario'
                               }`}
                             >
                               {NOMBRE_GRUPO[g] ?? g}
@@ -254,10 +254,10 @@ export function SelectorEjercicio({
                   </div>
                 ))}
                 {grupos.length === 0 && q.length < 3 && (
-                  <p className="p-6 text-center text-sm text-zinc-500">Escribe el nombre para buscarlo o crearlo.</p>
+                  <p className="p-6 text-center text-sm text-tenue">Escribe el nombre para buscarlo o crearlo.</p>
                 )}
                 {zonas.length > 0 && !filtro && !q && (
-                  <button type="button" className="w-full p-4 text-sm text-zinc-500 underline" onClick={() => buscador.current?.focus()}>
+                  <button type="button" className="w-full p-4 text-sm text-tenue underline" onClick={() => buscador.current?.focus()}>
                     ¿No esta? Escribe su nombre arriba para crearlo
                   </button>
                 )}

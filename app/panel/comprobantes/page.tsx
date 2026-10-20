@@ -8,11 +8,11 @@ const hoyTexto = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Ameri
 const esInterno = (c: any) => c.tipo === 'recibo' || !c.estadoSunat || c.estadoSunat === 'no_aplica';
 
 const ESTADO: Record<string, string> = {
-  no_aplica: 'text-zinc-500',
+  no_aplica: 'text-tenue',
   pendiente: 'text-porvencer',
   aceptado: 'text-vigente',
   rechazado: 'text-vencido',
-  enviado: 'text-zinc-300',
+  enviado: 'text-secundario',
 };
 
 export default function Comprobantes() {
@@ -74,7 +74,7 @@ export default function Comprobantes() {
 
       <ul className="space-y-2 sm:hidden">
         {lista.length === 0 && (
-          <li className="tarjeta text-sm text-zinc-500">Sin comprobantes en el rango.</li>
+          <li className="tarjeta text-sm text-tenue">Sin comprobantes en el rango.</li>
         )}
         {lista.map((c) => (
           <li key={c.id} className={`tarjeta p-4 ${c.anulado ? 'opacity-50' : ''}`}>
@@ -88,9 +88,9 @@ export default function Comprobantes() {
               </Link>
               <span className="font-black cifra">{soles(c.total)}</span>
             </div>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-tenue">
               {c.clienteNombre} · <span className="cifra">{hora(c.emitidoAt)}</span> ·{' '}
-              <span className={ESTADO[c.estadoSunat] || 'text-zinc-500'}>
+              <span className={ESTADO[c.estadoSunat] || 'text-tenue'}>
                 {c.anulado ? 'Anulado en el sistema' : esInterno(c) ? 'Sin valor tributario' : c.estadoSunat.replace('_', ' ')}
               </span>
             </p>
@@ -100,7 +100,7 @@ export default function Comprobantes() {
 
       <div className="tarjeta hidden p-0 sm:block">
         <table className="w-full text-sm">
-          <thead className="text-left text-zinc-500">
+          <thead className="text-left text-tenue">
             <tr>
               <th className="p-3 font-medium">Comprobante</th>
               <th className="p-3 font-medium">Cliente</th>
@@ -113,7 +113,7 @@ export default function Comprobantes() {
           <tbody className="divide-y divide-borde">
             {lista.length === 0 && (
               <tr>
-                <td className="p-4 text-zinc-500" colSpan={6}>
+                <td className="p-4 text-tenue" colSpan={6}>
                   Sin comprobantes en el rango.
                 </td>
               </tr>
@@ -132,16 +132,16 @@ export default function Comprobantes() {
                 </td>
                 <td className="p-3">
                   {c.clienteNombre}
-                  {c.clienteNumDoc && <span className="text-zinc-500"> · {c.clienteNumDoc}</span>}
+                  {c.clienteNumDoc && <span className="text-tenue"> · {c.clienteNumDoc}</span>}
                 </td>
-                <td className="p-3 text-zinc-400 cifra">{hora(c.emitidoAt)}</td>
-                <td className={`p-3 ${ESTADO[c.estadoSunat] || 'text-zinc-500'}`}>
+                <td className="p-3 text-secundario cifra">{hora(c.emitidoAt)}</td>
+                <td className={`p-3 ${ESTADO[c.estadoSunat] || 'text-tenue'}`}>
                   {esInterno(c) ? 'Sin valor tributario' : c.estadoSunat.replace('_', ' ')}
                 </td>
                 <td className="p-3 text-right font-semibold cifra">{soles(c.total)}</td>
                 <td className="p-3 text-right">
                   {!c.anulado && esInterno(c) && (
-                    <button className="text-sm text-zinc-500 hover:text-vencido" onClick={() => anular(c.id)}>
+                    <button className="text-sm text-tenue hover:text-vencido" onClick={() => anular(c.id)}>
                       Anular
                     </button>
                   )}

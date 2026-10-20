@@ -195,7 +195,7 @@ export function FormularioCobro({
           ))}
         </select>
         {errorPlanes && <div className="aviso-mal mt-2" role="alert"><p>{errorPlanes}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => setRevisionPlanes((v) => v + 1)}>Volver a cargar los planes</button></div>}
-        {oferta && <div className="mt-2 space-y-1 text-sm leading-relaxed text-zinc-400">
+        {oferta && <div className="mt-2 space-y-1 text-sm leading-relaxed text-secundario">
           <p>{oferta.limiteAsistencias == null ? 'Asistencias sin límite' : `${oferta.limiteAsistencias} asistencias en total`} durante {oferta.duracionDias} días desde el inicio.</p>
           {oferta.limiteAsistencias != null && <p className="text-xs">Se descuenta una asistencia por día. Volver a entrar el mismo día no descuenta otra.</p>}
           {oferta.descripcion && <p className="text-xs">{oferta.descripcion}</p>}
@@ -232,8 +232,8 @@ export function FormularioCobro({
               }}
               className={`flex-1 rounded-xl border px-3 py-2 text-sm capitalize transition ${
                 tipoComprobante === t
-                  ? 'border-acento bg-acento/10 text-acento'
-                  : 'border-borde text-zinc-400 hover:text-white'
+                  ? 'border-acento bg-acento/10 text-acentoTexto'
+                  : 'border-borde text-secundario hover:text-tinta'
               }`}
             >
               {t === 'recibo' ? 'Recibo interno' : t}
@@ -241,7 +241,7 @@ export function FormularioCobro({
           ))}
         </div>
         {!ajustes?.emiteFactura && (
-          <p className="mt-2 text-sm text-zinc-500">
+          <p className="mt-2 text-sm text-tenue">
             El regimen actual no permite emitir factura. Se cambia en Ajustes.
           </p>
         )}
@@ -299,11 +299,11 @@ export function FormularioCobro({
         </p>
       )}
 
-      {cargandoPreview && <p role="status" className="text-sm text-zinc-400">Calculando importe y fechas…</p>}
+      {cargandoPreview && <p role="status" className="text-sm text-secundario">Calculando importe y fechas…</p>}
       {errorPreview && <div className="aviso-mal" role="alert"><p>{errorPreview}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => setRevisionPreview((v) => v + 1)}>Volver a calcular</button></div>}
       {previewVigente && (
-        <div className="rounded-xl bg-black/40 p-4 text-sm">
-          <p className="text-zinc-400">Quedaria vigente</p>
+        <div className="rounded-xl bg-fondo/70 p-4 text-sm">
+          <p className="text-secundario">Quedaria vigente</p>
           <p className="mt-1 font-medium">
             {fechaCorta(preview.inicio)} — {fechaCorta(preview.vence)}
           </p>
@@ -312,22 +312,22 @@ export function FormularioCobro({
           <dl className="mt-3 space-y-1 border-t border-borde pt-3">
             {aplicaIgv ? (
               <>
-                <div className="flex justify-between text-zinc-400">
+                <div className="flex justify-between text-secundario">
                   <dt>Valor de venta</dt>
                   <dd className="cifra">{soles(desglose.gravado)}</dd>
                 </div>
-                <div className="flex justify-between text-zinc-400">
+                <div className="flex justify-between text-secundario">
                   <dt>IGV ({Math.round(ajustes.igvTasa * 100)}%)</dt>
                   <dd className="cifra">{soles(desglose.igv)}</dd>
                 </div>
               </>
             ) : (
-              <div className="flex justify-between text-zinc-500">
+              <div className="flex justify-between text-tenue">
                 <dt>Operacion sin IGV</dt>
                 <dd>{ajustes?.regimen === 'nrus' ? 'Nuevo RUS' : '—'}</dd>
               </div>
             )}
-            <div className="flex justify-between border-t border-borde pt-2 text-lg font-bold text-zinc-100">
+            <div className="flex justify-between border-t border-borde pt-2 text-lg font-bold text-tinta">
               <dt>Total</dt>
               <dd className="cifra">{soles(total)}</dd>
             </div>
@@ -335,7 +335,7 @@ export function FormularioCobro({
         </div>
       )}
 
-      <label className="flex items-start gap-2 text-sm text-zinc-300">
+      <label className="flex items-start gap-2 text-sm text-secundario">
         <input
           type="checkbox"
           className="mt-1"
@@ -345,7 +345,7 @@ export function FormularioCobro({
         />
         <span>
           El socio leyo y acepta las{' '}
-          <Link href="/terminos" target="_blank" className="text-acento underline">
+          <Link href="/terminos" target="_blank" className="text-acentoTexto underline">
             condiciones de la membresia
           </Link>
           . Quedan registradas con el pago.
@@ -360,7 +360,7 @@ export function FormularioCobro({
           <p className="font-medium capitalize">
             {emitido.tipo} {emitido.serie}-{String(emitido.numero).padStart(6, '0')}
           </p>
-          <p className="text-zinc-400">
+          <p className="text-secundario">
             {emitido.estadoSunat === 'no_aplica'
               ? 'Recibo interno guardado, sin valor tributario ni envío a SUNAT.'
               : `SUNAT: ${emitido.estadoSunat}`}
@@ -368,7 +368,7 @@ export function FormularioCobro({
           <Link
             href={`/panel/comprobantes/${emitido.id}`}
             target="_blank"
-            className="mt-2 inline-block text-acento underline"
+            className="mt-2 inline-block text-acentoTexto underline"
           >
             Ver e imprimir
           </Link>
@@ -377,7 +377,7 @@ export function FormularioCobro({
 
       {pagoId && (
         <div className="space-y-2 rounded-xl border border-[#25D366]/30 bg-[#25D366]/[0.06] p-3">
-          <p className="text-sm text-zinc-300">
+          <p className="text-sm text-secundario">
             Puedes compartir su constancia de pago y la fecha de vencimiento por WhatsApp.
           </p>
           <EnviarWhatsapp paymentId={pagoId} />

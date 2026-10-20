@@ -28,25 +28,25 @@ export function PaginaLegal({
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
-      <Link href="/" className="text-sm text-zinc-400 hover:text-white">
+      <Link href="/" className="text-sm text-secundario hover:text-tinta">
         Volver al inicio
       </Link>
 
       <h1 className="mt-4 text-3xl font-black">{titulo}</h1>
       {ajustes?.[campoVersion] && (
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-1 text-sm text-tenue">
           Version {ajustes[campoVersion]}
           {ajustes.razonSocial ? ` · ${ajustes.razonSocial}` : ''}
         </p>
       )}
 
-      <div className="mt-8 whitespace-pre-wrap leading-relaxed text-zinc-300">
+      <div className="mt-8 whitespace-pre-wrap leading-relaxed text-secundario">
         {ajustes?.[campoTexto] || 'Cargando...'}
       </div>
 
-      <p className="mt-10 border-t border-borde pt-6 text-sm text-zinc-500">
+      <p className="mt-10 border-t border-borde pt-6 text-sm text-tenue">
         Si algo de esto no te parece, puedes dejar tu registro en el{' '}
-        <Link href="/reclamaciones" className="text-acento underline">
+        <Link href="/reclamaciones" className="text-acentoTexto underline">
           libro de reclamaciones
         </Link>
         .

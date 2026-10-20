@@ -133,7 +133,7 @@ export default function Recepcion() {
     <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]" onClick={enfocar}>
       <div className="space-y-5">
         <div className="flex items-end justify-between gap-3">
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-tenue">
             Para dejar la pantalla puesta todo el dia, usa el modo quiosco.
           </p>
           <Link href="/quiosco" className="boton-suave shrink-0">
@@ -161,7 +161,7 @@ export default function Recepcion() {
 
         <div className="min-h-[13rem]">
           {ultimo?.desdeCelular && (
-            <p className="rotulo mb-2 flex items-center gap-2 text-acento">
+            <p className="rotulo mb-2 flex items-center gap-2 text-acentoTexto">
               <span className="h-2 w-2 rounded-full bg-acento" />
               Leido con la camara del celular
             </p>
@@ -175,7 +175,7 @@ export default function Recepcion() {
               segundos={8}
             />
           ) : (
-            <div className="tarjeta flex h-52 items-center justify-center border-dashed text-zinc-600">
+            <div className="tarjeta flex h-52 items-center justify-center border-dashed text-tenue">
               Listo para el siguiente socio
             </div>
           )}
@@ -194,7 +194,7 @@ export default function Recepcion() {
           <div className="tarjeta p-0">
             <ul className="divide-y divide-borde">
               {recientes.length === 0 && (
-                <li className="p-4 text-sm text-zinc-500">Todavia no hay movimientos hoy.</li>
+                <li className="p-4 text-sm text-tenue">Todavia no hay movimientos hoy.</li>
               )}
               {recientes.map((r) => (
                 <li key={r.id} className="flex items-center gap-3 p-3 text-sm">
@@ -208,10 +208,10 @@ export default function Recepcion() {
                     }
                   />
                   <span className="font-medium">{r.socio?.nombreCompleto ?? 'Desconocido'}</span>
-                  <span className="text-zinc-500">
+                  <span className="text-tenue">
                     {r.resultado === 'permitido' ? r.tipo : r.motivo}
                   </span>
-                  <span className="ml-auto text-zinc-500 cifra">{hora(r.hora)}</span>
+                  <span className="ml-auto text-tenue cifra">{hora(r.hora)}</span>
                 </li>
               ))}
             </ul>
@@ -227,7 +227,7 @@ export default function Recepcion() {
             Llegando ahora
           </h2>
           {llegadas.length === 0 && (
-            <div className="tarjeta text-sm text-zinc-500">
+            <div className="tarjeta text-sm text-tenue">
               Cuando un socio toque &quot;Estoy entrando&quot; en su celular, aparece aqui para que
               confirmes.
             </div>
@@ -259,23 +259,23 @@ export default function Recepcion() {
         <section>
           <h2 className="rotulo mb-2">
             Dentro ahora
-            <span className="ml-2 text-acento">{dentro.length}</span>
+            <span className="ml-2 text-acentoTexto">{dentro.length}</span>
           </h2>
           <div className="tarjeta p-0">
             <ul className="divide-y divide-borde">
               {dentro.length === 0 && (
-                <li className="p-4 text-sm text-zinc-500">No hay nadie en el local.</li>
+                <li className="p-4 text-sm text-tenue">No hay nadie en el local.</li>
               )}
               {dentro.map((d) => (
                 <li key={d.socio.id} className="flex items-center gap-3 p-3 text-sm">
                   <span className="punto-vigente" />
                   <span className="truncate font-medium">{d.socio.nombreCompleto}</span>
                   {d.casillero && (
-                    <span className="shrink-0 rounded-md bg-acento/15 px-1.5 py-0.5 text-xs font-bold text-acento cifra" title="Casillero">
+                    <span className="shrink-0 rounded-md bg-acento/15 px-1.5 py-0.5 text-xs font-bold text-acentoTexto cifra" title="Casillero">
                       C{d.casillero}
                     </span>
                   )}
-                  <span className="ml-auto shrink-0 text-zinc-500 cifra">desde {hora(d.desde)}</span>
+                  <span className="ml-auto shrink-0 text-tenue cifra">desde {hora(d.desde)}</span>
                 </li>
               ))}
             </ul>

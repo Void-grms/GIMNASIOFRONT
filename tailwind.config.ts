@@ -10,17 +10,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        fondo: '#09090A',
-        superficie: '#121215',
-        elevado: '#17171B',
-        borde: 'rgba(255,255,255,0.08)',
-        bordeFuerte: 'rgba(255,255,255,0.16)',
+        fondo: 'rgb(var(--color-fondo) / <alpha-value>)',
+        superficie: 'rgb(var(--color-superficie) / <alpha-value>)',
+        elevado: 'rgb(var(--color-elevado) / <alpha-value>)',
+        borde: 'rgb(var(--color-borde) / <alpha-value>)',
+        bordeFuerte: 'rgb(var(--color-borde-fuerte) / <alpha-value>)',
+        tinta: 'rgb(var(--color-tinta) / <alpha-value>)',
+        secundario: 'rgb(var(--color-secundario) / <alpha-value>)',
+        tenue: 'rgb(var(--color-tenue) / <alpha-value>)',
+        neutral: 'rgb(var(--color-neutral) / <alpha-value>)',
+        acentoTexto: 'rgb(var(--color-acento-texto) / <alpha-value>)',
         acento: '#FAD234',
         acentoClaro: '#FFE477',
         acentoFuerte: '#E0B81C',
-        vigente: '#22c55e',
-        porvencer: '#FB923C',
-        vencido: '#ef4444',
+        vigente: 'rgb(var(--color-vigente) / <alpha-value>)',
+        porvencer: 'rgb(var(--color-porvencer) / <alpha-value>)',
+        vencido: 'rgb(var(--color-vencido) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['var(--fuente-archivo)', 'system-ui', '-apple-system', 'sans-serif'],
@@ -33,7 +38,7 @@ export default {
       boxShadow: {
         acento: '0 14px 34px -14px rgba(250,210,52,0.6)',
         acentoFuerte: '0 20px 46px -14px rgba(250,210,52,0.8)',
-        tarjeta: '0 8px 24px -14px rgba(0,0,0,0.8)',
+        tarjeta: 'var(--sombra-tarjeta)',
       },
       transitionTimingFunction: {
         suave: 'cubic-bezier(0.22, 1, 0.36, 1)',

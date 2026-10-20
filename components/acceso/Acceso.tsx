@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ApiError } from '@/lib/api';
 import s from './Acceso.module.css';
+import { SelectorTema } from '@/components/tema/SelectorTema';
 
 export function IconoAcceso({ tipo, size = 20 }: { tipo: 'flecha' | 'persona' | 'personal' | 'ojo' | 'oculto' | 'aviso' | 'llave'; size?: number }) {
   const paths = {
@@ -44,6 +45,7 @@ export function AccesoLayout({ tipo, children }: { tipo: 'cliente' | 'personal';
           <Marca className={s.mobileBrand} />
           <Link href="/" className={s.back}><span aria-hidden="true">←</span> Volver al inicio</Link>
         </header>
+        <div className={s.apariencia}><SelectorTema compacto /></div>
         <div className={s.wrap}>
           <nav aria-label="Tipo de acceso" className={s.switch}>
             <Link href="/portal" className={s.switchLink} aria-current={cliente ? 'page' : undefined}><IconoAcceso tipo="persona" size={17} /> Clientes</Link>

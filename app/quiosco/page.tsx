@@ -26,7 +26,11 @@ export default function Quiosco() {
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const enfocar = useCallback(() => inputRef.current?.focus(), []);
+  const enfocar = useCallback(() => {
+    // El lector espera el foco, pero permite al personal elegir la apariencia.
+    if (document.activeElement instanceof HTMLElement && document.activeElement.closest('.selector-tema-compacto')) return;
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     if (!leerToken('staff')) {
@@ -72,14 +76,14 @@ export default function Quiosco() {
   return (
     <main
       className="flex min-h-screen flex-col bg-fondo p-6 sm:p-10"
-      onClick={enfocar}
+      onClick={() => inputRef.current?.focus()}
       onKeyDown={enfocar}
     >
-      <header className="flex items-center justify-between text-zinc-600">
-        <span className="text-lg font-black tracking-tight text-zinc-400">Acceso</span>
+      <header className="flex items-center justify-between text-tenue">
+        <span className="text-lg font-black tracking-tight text-secundario">Acceso</span>
         <div className="flex items-center gap-4">
           <span className="text-lg tabular-nums">{reloj}</span>
-          <Link href="/panel/recepcion" className="text-sm hover:text-zinc-300">
+          <Link href="/panel/recepcion" className="text-sm hover:text-secundario">
             Salir del quiosco
           </Link>
         </div>
@@ -101,8 +105,8 @@ export default function Quiosco() {
       <div className="flex flex-1 items-center justify-center">
         {!ultimo ? (
           <div className="text-center">
-            <p className="text-4xl font-black text-zinc-300 sm:text-6xl">Acerca tu codigo</p>
-            <p className="mt-4 text-xl text-zinc-600 sm:text-2xl">
+            <p className="text-4xl font-black text-secundario sm:text-6xl">Acerca tu codigo</p>
+            <p className="mt-4 text-xl text-tenue sm:text-2xl">
               O dile tu código o DNI a recepción
             </p>
             {error && <p className="mt-6 text-xl text-vencido">{error}</p>}
@@ -111,12 +115,12 @@ export default function Quiosco() {
           <div
             className={`flex w-full max-w-4xl items-center gap-8 rounded-3xl border-4 p-8 ${estilo!.borde} ${estilo!.fondo}`}
           >
-            <div className="flex h-48 w-48 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-black/40 sm:h-64 sm:w-64">
+            <div className="flex h-48 w-48 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-fondo/70 sm:h-64 sm:w-64">
               {foto ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={foto} alt="" className="h-full w-full object-cover" />
               ) : (
-                <span className="text-7xl font-black text-zinc-700">
+                <span className="text-7xl font-black text-tenue">
                   {ultimo.socio?.nombres?.[0] ?? '?'}
                 </span>
               )}
@@ -134,13 +138,13 @@ export default function Quiosco() {
                 {ultimo.socio?.nombreCompleto ?? 'Codigo no reconocido'}
               </p>
               {ultimo.socio && (
-                <p className="mt-2 text-lg text-zinc-400 cifra">
+                <p className="mt-2 text-lg text-secundario cifra">
                   {ultimo.socio.codigoERP ? `Código ${ultimo.socio.codigoERP} · ` : ''}
                   {ultimo.socio.dni ? `DNI ${ultimo.socio.dni}` : 'DNI por completar'}
                 </p>
               )}
               {ultimo.socio?.diasRestantes !== null && ultimo.socio?.diasRestantes !== undefined && (
-                <p className="mt-2 text-2xl text-zinc-300">
+                <p className="mt-2 text-2xl text-secundario">
                   {ultimo.socio.estado === 'vencido' && ultimo.socio.diasRestantes >= 0
                     ? 'Membresía registrada como vencida'
                     : ultimo.socio.diasRestantes >= 0
@@ -148,9 +152,9 @@ export default function Quiosco() {
                       : `Vencio hace ${Math.abs(ultimo.socio.diasRestantes)} dia(s)`}
                 </p>
               )}
-              {ultimo.motivo && <p className="mt-2 text-2xl text-zinc-300">{ultimo.motivo}</p>}
+              {ultimo.motivo && <p className="mt-2 text-2xl text-secundario">{ultimo.motivo}</p>}
               {ultimo.checkInId && (
-                <p className="mt-4 text-xl text-zinc-500">{hora(new Date())}</p>
+                <p className="mt-4 text-xl text-tenue">{hora(new Date())}</p>
               )}
             </div>
           </div>

@@ -37,7 +37,7 @@ export default function Invitados() {
           ['Conversion', `${datos.tasaConversion}%`],
         ].map(([t, v]) => (
           <div key={t as string} className="tarjeta-viva">
-            <p className="text-sm text-zinc-400">{t}</p>
+            <p className="text-sm text-secundario">{t}</p>
             <p className="mt-2 text-3xl font-black tracking-tight cifra">{v as any}</p>
           </div>
         ))}
@@ -46,7 +46,7 @@ export default function Invitados() {
       <div className="tarjeta p-0">
         <ul className="divide-y divide-borde">
           {datos.invitados.length === 0 && (
-            <li className="p-5 text-sm text-zinc-500">
+            <li className="p-5 text-sm text-tenue">
               Todavia nadie trajo a un invitado. El pase se registra desde la ficha del socio.
             </li>
           )}
@@ -61,7 +61,7 @@ export default function Invitados() {
                     </span>
                   )}
                 </p>
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-tenue">
                   DNI {g.dni} · invitado por{' '}
                   <Link href={`/panel/socios/${g.anfitrionId}`} className="hover:underline">
                     {g.anfitrion}

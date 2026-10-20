@@ -39,7 +39,7 @@ export default function Ranking() {
     <main className="mx-auto max-w-md space-y-6 px-4 py-8">
       <header>
         <h1 className="text-2xl font-bold">Retos de {datos.mes}</h1>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           {datos.diasRestantes === 0 ? 'Ultimo dia del mes' : `Quedan ${datos.diasRestantes} dia(s)`}
         </p>
       </header>
@@ -55,15 +55,15 @@ export default function Ranking() {
               }`}
             >
               <div className="flex items-start justify-between gap-2">
-                <p className={`font-bold ${r.logrado ? 'text-acento' : ''}`}>{r.titulo}</p>
+                <p className={`font-bold ${r.logrado ? 'text-acentoTexto' : ''}`}>{r.titulo}</p>
                 {r.logrado && <span aria-label="Logrado">🏆</span>}
               </div>
-              <p className="mt-0.5 text-xs text-zinc-500">{r.detalle}</p>
+              <p className="mt-0.5 text-xs text-tenue">{r.detalle}</p>
               <p className="mt-3 text-2xl font-black cifra">
                 {r.valor}
-                <span className="text-sm font-semibold text-zinc-500">/{r.meta}</span>
+                <span className="text-sm font-semibold text-tenue">/{r.meta}</span>
               </p>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/50">
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-fondo/70">
                 <div
                   className={`h-full rounded-full ${r.logrado ? 'bg-acento' : 'bg-zinc-400'}`}
                   style={{ width: `${avance}%` }}
@@ -80,8 +80,8 @@ export default function Ranking() {
           <ul className="space-y-1 text-sm">
             {datos.misRecords.map((r: any) => (
               <li key={r.ejercicio} className="flex justify-between gap-3">
-                <span className="text-zinc-300">{r.ejercicio}</span>
-                <span className="cifra text-zinc-500">
+                <span className="text-secundario">{r.ejercicio}</span>
+                <span className="cifra text-tenue">
                   {r.antes} → <span className="font-bold text-vigente">{r.ahora} kg</span>
                 </span>
               </li>
@@ -100,7 +100,7 @@ export default function Ranking() {
               key={valor}
               onClick={() => setTabla(valor as any)}
               className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition ${
-                tabla === valor ? 'bg-acento text-black' : 'text-zinc-400 hover:text-white'
+                tabla === valor ? 'bg-acento text-black' : 'text-secundario hover:text-tinta'
               }`}
             >
               {texto}
@@ -109,13 +109,13 @@ export default function Ranking() {
         </div>
 
         {actual.yo ? (
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-secundario">
             Vas en el puesto <span className="font-bold text-white cifra">{actual.yo.puesto}</span> de{' '}
             <span className="cifra">{actual.yo.de}</span> con{' '}
             <span className="font-bold text-white cifra">{actual.yo.valor}</span> {unidad}.
           </p>
         ) : (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-tenue">
             {tabla === 'asistencia'
               ? 'Todavia no tienes visitas este mes. La primera cuenta.'
               : 'Supera un peso que ya anotaste antes y entras aqui.'}
@@ -124,16 +124,16 @@ export default function Ranking() {
 
         <div className="tarjeta p-0">
           <ol className="divide-y divide-borde">
-            {actual.top.length === 0 && <li className="p-4 text-sm text-zinc-500">Nadie todavia. Se el primero.</li>}
+            {actual.top.length === 0 && <li className="p-4 text-sm text-tenue">Nadie todavia. Se el primero.</li>}
             {actual.top.map((f: any, i: number) => (
               <li
                 key={i}
                 className={`flex items-center gap-3 px-4 py-3 text-sm ${f.yo ? 'bg-acento/[0.08]' : ''}`}
               >
-                <span className="w-7 text-center font-black text-zinc-500 cifra">
+                <span className="w-7 text-center font-black text-tenue cifra">
                   {MEDALLA[f.puesto] || f.puesto}
                 </span>
-                <span className={`flex-1 truncate ${f.yo ? 'font-bold text-acento' : ''}`}>
+                <span className={`flex-1 truncate ${f.yo ? 'font-bold text-acentoTexto' : ''}`}>
                   {f.nombre}
                   {f.yo && ' (tu)'}
                 </span>
@@ -142,7 +142,7 @@ export default function Ranking() {
             ))}
           </ol>
         </div>
-        <p className="text-xs text-zinc-600">
+        <p className="text-xs text-tenue">
           {datos.oculto
             ? 'Apareces como "Anonimo". '
             : 'En el ranking solo se ve tu nombre y la inicial de tu apellido. '}

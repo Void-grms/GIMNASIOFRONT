@@ -18,7 +18,7 @@ const M = { arriba: 16, derecha: 18, abajo: 26, izquierda: 46 };
 export function GraficoLinea({
   puntos,
   unidad = 'kg',
-  color = '#d7ff3e',
+  color = 'rgb(var(--color-acento-texto))',
   titulo,
 }: {
   puntos: Punto[];
@@ -52,7 +52,7 @@ export function GraficoLinea({
 
   if (!escala) {
     return (
-      <div className="flex h-48 items-center justify-center text-sm text-zinc-600">
+      <div className="flex h-48 items-center justify-center text-sm text-tenue">
         Todavia no hay datos para mostrar.
       </div>
     );
@@ -64,7 +64,7 @@ export function GraficoLinea({
 
   return (
     <div ref={contenedor} className="relative">
-      {titulo && <p className="mb-1 text-sm text-zinc-400">{titulo}</p>}
+      {titulo && <p className="mb-1 text-sm text-secundario">{titulo}</p>}
 
       <svg
         viewBox={`0 0 ${ANCHO} ${ALTO}`}
@@ -88,10 +88,10 @@ export function GraficoLinea({
               x2={ANCHO - M.derecha}
               y1={escala.y(v)}
               y2={escala.y(v)}
-              stroke="#26262b"
+              stroke="rgb(var(--color-borde))"
               strokeWidth={1}
             />
-            <text x={M.izquierda - 8} y={escala.y(v) + 4} textAnchor="end" fontSize="11" fill="#71717a">
+            <text x={M.izquierda - 8} y={escala.y(v) + 4} textAnchor="end" fontSize="11" fill="rgb(var(--color-tenue))">
               {Math.round(v * 10) / 10}
             </text>
           </g>
@@ -108,7 +108,7 @@ export function GraficoLinea({
             cy={escala.y(p.valor)}
             r={activo === i ? 6 : 4}
             fill={color}
-            stroke="#141417"
+            stroke="rgb(var(--color-superficie))"
             strokeWidth={2}
           />
         ))}
@@ -119,17 +119,17 @@ export function GraficoLinea({
             x2={escala.x(activo)}
             y1={M.arriba}
             y2={ALTO - M.abajo}
-            stroke="#3f3f46"
+            stroke="rgb(var(--color-borde-fuerte))"
             strokeWidth={1}
           />
         )}
 
         {/* El primero y el ultimo dan la referencia temporal sin amontonar. */}
-        <text x={M.izquierda} y={ALTO - 8} fontSize="11" fill="#71717a">
+        <text x={M.izquierda} y={ALTO - 8} fontSize="11" fill="rgb(var(--color-tenue))">
           {puntos[0].etiqueta}
         </text>
         {puntos.length > 1 && (
-          <text x={ANCHO - M.derecha} y={ALTO - 8} fontSize="11" fill="#71717a" textAnchor="end">
+          <text x={ANCHO - M.derecha} y={ALTO - 8} fontSize="11" fill="rgb(var(--color-tenue))" textAnchor="end">
             {ultimo.etiqueta}
           </text>
         )}
@@ -143,7 +143,7 @@ export function GraficoLinea({
           <p className="font-semibold">
             {puntos[activo].valor} {unidad}
           </p>
-          <p className="text-zinc-500">{puntos[activo].etiqueta}</p>
+          <p className="text-tenue">{puntos[activo].etiqueta}</p>
         </div>
       )}
     </div>

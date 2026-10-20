@@ -52,7 +52,7 @@ export default function Dashboard() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-porvencer">
             Estado del sistema
           </h2>
-          <ul className="mt-2 space-y-1 text-sm text-zinc-300">
+          <ul className="mt-2 space-y-1 text-sm text-secundario">
             {salud.alertas.map((a: string) => (
               <li key={a}>· {a}</li>
             ))}
@@ -66,7 +66,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {tarjetas.map((t) => (
           <div key={t.titulo} className="tarjeta-viva">
-            <p className="text-sm text-zinc-400">{t.titulo}</p>
+            <p className="text-sm text-secundario">{t.titulo}</p>
             <p className="mt-2 text-2xl font-black tracking-tight cifra sm:text-3xl">{t.valor}</p>
           </div>
         ))}
@@ -75,11 +75,11 @@ export default function Dashboard() {
       <section>
         <h2 className="mb-3 text-lg font-semibold">
           Vencen esta semana
-          <span className="ml-2 text-sm font-normal text-zinc-500">{stats.porVencer.length}</span>
+          <span className="ml-2 text-sm font-normal text-tenue">{stats.porVencer.length}</span>
         </h2>
         <div className="tarjeta p-0">
           {stats.porVencer.length === 0 ? (
-            <p className="p-5 text-sm text-zinc-500">Nadie vence en los proximos 7 dias.</p>
+            <p className="p-5 text-sm text-tenue">Nadie vence en los proximos 7 dias.</p>
           ) : (
             <ul className="divide-y divide-borde">
               {stats.porVencer.map((s: any) => (
@@ -88,7 +88,7 @@ export default function Dashboard() {
                     <Link href={`/panel/socios/${s.memberId}`} className="font-medium hover:underline">
                       {s.nombre}
                     </Link>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-tenue">
                       {s.plan} · vence {fechaCorta(s.vence)}
                     </p>
                   </div>
@@ -112,15 +112,15 @@ export default function Dashboard() {
       <section>
         <h2 className="mb-1 text-lg font-semibold">
           Pagaron pero no vienen
-          <span className="ml-2 text-sm font-normal text-zinc-500">{riesgo.length}</span>
+          <span className="ml-2 text-sm font-normal text-tenue">{riesgo.length}</span>
         </h2>
-        <p className="mb-3 text-sm text-zinc-500">
+        <p className="mb-3 text-sm text-tenue">
           Socios con membresia vigente y mas de 10 dias sin asistir. Esta es la lista de llamadas de
           la semana.
         </p>
         <div className="tarjeta p-0">
           {riesgo.length === 0 ? (
-            <p className="p-5 text-sm text-zinc-500">Nadie en riesgo. Buena senal.</p>
+            <p className="p-5 text-sm text-tenue">Nadie en riesgo. Buena senal.</p>
           ) : (
             <ul className="divide-y divide-borde">
               {riesgo.map((s) => (
@@ -129,7 +129,7 @@ export default function Dashboard() {
                     <Link href={`/panel/socios/${s.memberId}`} className="font-medium hover:underline">
                       {s.nombre}
                     </Link>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-tenue">
                       {s.diasSinVenir === null
                         ? 'Nunca ha venido'
                         : `${s.diasSinVenir} dias sin venir`}
@@ -155,7 +155,7 @@ export default function Dashboard() {
       {ranking && (
         <section>
           <h2 className="mb-1 text-lg font-semibold">Ranking de {ranking.mes}</h2>
-          <p className="mb-3 text-sm text-zinc-500">
+          <p className="mb-3 text-sm text-tenue">
             Para felicitar en el mostrador. Los socios ven el suyo en el portal, con nombres cortos.
           </p>
           <div className="grid gap-4 md:grid-cols-2">
@@ -166,15 +166,15 @@ export default function Dashboard() {
               <div key={titulo} className="tarjeta p-0">
                 <p className="border-b border-borde px-4 py-3 text-sm font-semibold">{titulo}</p>
                 <ol className="divide-y divide-borde">
-                  {filas.length === 0 && <li className="p-4 text-sm text-zinc-500">Todavia nadie este mes.</li>}
+                  {filas.length === 0 && <li className="p-4 text-sm text-tenue">Todavia nadie este mes.</li>}
                   {filas.slice(0, 5).map((f: any) => (
                     <li key={f.id} className="flex items-center gap-3 px-4 py-2.5 text-sm">
-                      <span className="w-5 text-center font-black text-zinc-500 cifra">{f.puesto}</span>
+                      <span className="w-5 text-center font-black text-tenue cifra">{f.puesto}</span>
                       <Link href={`/panel/socios/${f.id}`} className="min-w-0 flex-1 truncate hover:underline">
                         {f.nombre}
                       </Link>
                       <span className="shrink-0 font-bold cifra">
-                        {f.valor} <span className="font-normal text-zinc-500">{unidad}</span>
+                        {f.valor} <span className="font-normal text-tenue">{unidad}</span>
                       </span>
                     </li>
                   ))}
@@ -187,7 +187,7 @@ export default function Dashboard() {
 
       <section>
         <h2 className="mb-1 text-lg font-semibold">Retencion por cohorte</h2>
-        <p className="mb-3 text-sm text-zinc-500">
+        <p className="mb-3 text-sm text-tenue">
           Es el unico numero que distingue un gimnasio que crece de uno que solo reemplaza a los que
           se van.
         </p>
@@ -206,9 +206,9 @@ export default function Dashboard() {
                 <div key={m.plan}>
                   <div className="mb-1 flex justify-between text-sm">
                     <span>{m.plan}</span>
-                    <span className="text-zinc-400">{soles(m.monto)}</span>
+                    <span className="text-secundario">{soles(m.monto)}</span>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-black/50">
+                  <div className="h-2 overflow-hidden rounded-full bg-fondo/70">
                     <div
                       className="h-full rounded-full bg-acento"
                       style={{ width: `${(m.monto / total) * 100}%` }}

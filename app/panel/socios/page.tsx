@@ -52,20 +52,20 @@ export default function Socios() {
 
       <div className="tarjeta p-0">
         <ul className="divide-y divide-borde">
-          {socios.length === 0 && <li className="p-5 text-sm text-zinc-500">Sin resultados.</li>}
+          {socios.length === 0 && <li className="p-5 text-sm text-tenue">Sin resultados.</li>}
           {socios.map((s) => (
             <li key={s.id}>
-              <Link href={`/panel/socios/${s.id}`} className="flex items-center gap-3 p-4 hover:bg-white/5">
+              <Link href={`/panel/socios/${s.id}`} className="flex items-center gap-3 p-4 hover:bg-neutral/5">
                 <span className={COLOR[s.estado]} />
                 <div className="min-w-0">
                   <p className="truncate font-medium">{s.nombreCompleto}</p>
-                  <p className="text-sm text-zinc-500 cifra">
+                  <p className="text-sm text-tenue cifra">
                     {s.codigoERP ? `Código ${s.codigoERP} · ` : ''}
                     {s.dni ? `DNI ${s.dni}` : 'DNI por completar'}
                     {s.plan ? ` · ${s.plan}` : ' · sin membresia'}
                   </p>
                 </div>
-                <span className="ml-auto shrink-0 text-sm text-zinc-500">
+                <span className="ml-auto shrink-0 text-sm text-tenue">
                   {s.vence ? `vence ${fechaCorta(s.vence)}` : '—'}
                 </span>
               </Link>
@@ -120,14 +120,14 @@ function FormularioSocio({ onListo }: { onListo: () => void }) {
         <h3 className="text-lg font-semibold">
           {creado.nombres} {creado.apellidos} quedo registrado
         </h3>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-secundario">
           Este es el PIN para entrar al portal. Anotalo y entregaselo: no se vuelve a mostrar, y el
           socio tendra que cambiarlo la primera vez que entre.
         </p>
-        <p className="rounded-xl bg-black/50 py-4 text-center text-4xl font-black tracking-[0.4em]">
+        <p className="rounded-xl bg-fondo/70 py-4 text-center text-4xl font-black tracking-[0.4em]">
           {creado.pinInicial}
         </p>
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-secundario">
           Válido por 24 horas{creado.vence ? `, hasta el ${fechaCorta(creado.vence)} a las ${hora(creado.vence)}` : ''}.
         </p>
         <button className="boton w-full" onClick={onListo}>
@@ -153,7 +153,7 @@ function FormularioSocio({ onListo }: { onListo: () => void }) {
           />
         </div>
         <div>
-          <label className="etiqueta">Celular <span className="text-zinc-600">(opcional)</span></label>
+          <label className="etiqueta">Celular <span className="text-tenue">(opcional)</span></label>
           <input
             className="campo cifra"
             type="tel"
@@ -192,7 +192,7 @@ function FormularioSocio({ onListo }: { onListo: () => void }) {
         </div>
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-zinc-300">
+      <label className="flex items-center gap-2 text-sm text-secundario">
         <input
           type="checkbox"
           checked={datos.esUniversitario}
@@ -201,17 +201,17 @@ function FormularioSocio({ onListo }: { onListo: () => void }) {
         Verifique su carne universitario vigente
       </label>
 
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-tenue">
         Se generará un PIN temporal para su portal. Tendrá que cambiarlo al primer ingreso.
       </p>
 
       {/* Consentimiento expreso, especifico e informado (Ley 29733). Sin esto
           el alta no procede: el backend tambien lo rechaza. */}
-      <div className="rounded-xl border border-borde bg-black/30 p-4">
-        <p className="mb-3 max-h-40 overflow-auto whitespace-pre-wrap text-sm text-zinc-400">
+      <div className="rounded-xl border border-borde bg-fondo/70 p-4">
+        <p className="mb-3 max-h-40 overflow-auto whitespace-pre-wrap text-sm text-secundario">
           {ajustes?.consentimientoTexto || 'Cargando el texto de consentimiento...'}
         </p>
-        <label className="flex items-start gap-2 text-sm text-zinc-200">
+        <label className="flex items-start gap-2 text-sm text-tinta">
           <input
             type="checkbox"
             className="mt-1"

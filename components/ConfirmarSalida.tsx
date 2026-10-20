@@ -52,10 +52,10 @@ export function ConfirmarSalida({
         onClick={onCerrar}
       />
       <div className="absolute inset-x-0 bottom-0 mx-auto max-w-md animate-subir rounded-t-3xl border-t border-borde bg-superficie px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3">
-        <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-white/15" />
+        <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-neutral/15" />
         <h2 className="text-2xl font-black tracking-tight">¿Ya te vas?</h2>
         {desde && (
-          <p className="mt-1.5 text-sm text-zinc-400">
+          <p className="mt-1.5 text-sm text-secundario">
             Entraste a las <span className="cifra">{hora(desde)}</span> · llevas{' '}
             <span className="cifra">{duracion(desde)}</span> entrenando.
           </p>
