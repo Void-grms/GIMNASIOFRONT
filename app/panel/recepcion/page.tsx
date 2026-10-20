@@ -30,14 +30,14 @@ export default function Recepcion() {
   /** Movimientos ya mostrados; null hasta la primera carga para no revivir los viejos. */
   const vistos = useRef<Set<string> | null>(null);
 
-  // Devuelve el foco al campo del lector, salvo que alguien este escribiendo
-  // en otro campo o dentro de un dialogo (el mensaje de WhatsApp, por ejemplo).
+  // Devuelve el foco al lector sin interrumpir campos, diálogos o controles
+  // que se están usando con el teclado.
   const enfocar = useCallback(() => {
     const activo = document.activeElement as HTMLElement | null;
     if (
       activo &&
       activo !== inputRef.current &&
-      (activo.closest('[role="dialog"]') || /^(INPUT|TEXTAREA|SELECT)$/.test(activo.tagName))
+      (activo.closest('[role="dialog"], dialog, button, a[href], summary') || /^(INPUT|TEXTAREA|SELECT)$/.test(activo.tagName))
     ) {
       return;
     }
@@ -134,7 +134,7 @@ export default function Recepcion() {
       <div className="space-y-5">
         <div className="flex items-end justify-between gap-3">
           <p className="text-sm text-tenue">
-            Para dejar la pantalla puesta todo el dia, usa el modo quiosco.
+            Para dejar la pantalla puesta todo el día, usa el modo quiosco.
           </p>
           <Link href="/quiosco" className="boton-suave shrink-0">
             Modo quiosco
@@ -163,7 +163,7 @@ export default function Recepcion() {
           {ultimo?.desdeCelular && (
             <p className="rotulo mb-2 flex items-center gap-2 text-acentoTexto">
               <span className="h-2 w-2 rounded-full bg-acento" />
-              Leido con la camara del celular
+              Leído con la cámara del celular
             </p>
           )}
           {ultimo ? (
@@ -189,7 +189,7 @@ export default function Recepcion() {
 
         <section>
           <h2 className="rotulo mb-2">
-            Ultimos movimientos
+            Últimos movimientos
           </h2>
           <div className="tarjeta p-0">
             <ul className="divide-y divide-borde">

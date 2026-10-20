@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { SelectorTema } from "@/components/tema/SelectorTema";
 import styles from "./HomeNavigation.module.css";
 
 const sections = [
@@ -92,6 +93,7 @@ export default function HomeNavigation({ name }: { name: string }) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [ready, setReady] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     setReady(true);
@@ -112,6 +114,36 @@ export default function HomeNavigation({ name }: { name: string }) {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    let frame = 0;
+    const updateSection = () => {
+      frame = 0;
+      const readingLine = Math.min(window.innerHeight * 0.35, 260);
+      let current = "";
+      let currentTop = -Infinity;
+      for (const section of sections) {
+        const element = document.querySelector(section.href);
+        const top = element?.getBoundingClientRect().top;
+        if (top != null && top <= readingLine && top > currentTop) {
+          current = section.href;
+          currentTop = top;
+        }
+      }
+      setActiveSection(current);
+    };
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateSection);
+    };
+    updateSection();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, []);
+
   function openMenu() {
     dialogRef.current?.showModal();
     setMenuOpen(true);
@@ -130,12 +162,15 @@ export default function HomeNavigation({ name }: { name: string }) {
     <header className={styles.header} data-ready={ready}>
       <div className={styles.utilityBar}>
         <div className={styles.utilityInner}>
-          <span>Acceso exclusivo para personal</span>
-          <a href="/login" className={styles.adminLink}>
-            <ShieldIcon />
-            Administración
-            <span aria-hidden="true">↗</span>
-          </a>
+          <SelectorTema compacto className={styles.themeControl} />
+          <div className={styles.staffUtility}>
+            <span>Acceso exclusivo para personal</span>
+            <a href="/login" className={styles.adminLink}>
+              <ShieldIcon />
+              Administración
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -147,7 +182,7 @@ export default function HomeNavigation({ name }: { name: string }) {
 
         <nav className={styles.desktopNav} aria-label="Navegación principal">
           {sections.map((section) => (
-            <a key={section.href} href={section.href}>
+            <a key={section.href} href={section.href} aria-current={activeSection === section.href ? "location" : undefined}>
               {section.label}
             </a>
           ))}
@@ -239,7 +274,7 @@ export default function HomeNavigation({ name }: { name: string }) {
 
         <nav className={styles.mobileNav} aria-label="Navegación principal">
           {sections.map((section) => (
-            <a key={section.href} href={section.href} onClick={closeMenu}>
+            <a key={section.href} href={section.href} onClick={closeMenu} aria-current={activeSection === section.href ? "location" : undefined}>
               {section.label}
               <ArrowIcon />
             </a>
@@ -254,6 +289,10 @@ export default function HomeNavigation({ name }: { name: string }) {
             <ArrowIcon />
           </a>
           <span>Tu membresía, tus rutinas y tu progreso.</span>
+        </div>
+
+        <div className={styles.mobileTheme}>
+          <SelectorTema compacto />
         </div>
 
         <div className={styles.staffAccess}>

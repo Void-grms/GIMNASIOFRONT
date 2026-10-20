@@ -9,7 +9,8 @@
   z-index: 40;
   width: 100%;
   color: var(--nav-white);
-  background: var(--nav-ink);
+  background: rgb(var(--color-superficie) / .94);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid rgb(var(--color-borde));
 }
 
@@ -45,11 +46,26 @@
 .utilityInner {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 20px;
   min-height: 44px;
   color: var(--nav-muted);
   font-size: 11px;
+}
+
+.staffUtility {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.themeControl {
+  min-height: 40px;
+  font-size: 11px;
+}
+
+.themeControl select {
+  min-height: 36px;
 }
 
 .adminLink {
@@ -129,9 +145,10 @@
   justify-content: center;
   gap: 8px;
   padding: 0 16px;
-  border: 1px solid rgb(250 210 52 / 62%);
-  border-radius: 999px;
-  color: var(--nav-accent);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #171a20;
+  background: var(--color-marca);
   font-size: 13px;
   font-weight: 650;
   white-space: nowrap;
@@ -142,8 +159,8 @@
 }
 
 .portalLink:hover {
-  border-color: var(--nav-accent);
-  background: rgb(250 210 52 / 9%);
+  border-color: transparent;
+  background: #ffe477;
 }
 
 .portalDesktopLabel {
@@ -159,7 +176,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid rgb(var(--color-borde));
-  border-radius: 50%;
+  border-radius: 10px;
   background: transparent;
   color: var(--nav-white);
   cursor: pointer;
@@ -239,6 +256,10 @@
   color: var(--nav-accent);
 }
 
+.mobileNav a[aria-current="location"] {
+  color: var(--nav-accent);
+}
+
 .mobileNav svg {
   flex-shrink: 0;
   color: var(--nav-muted);
@@ -273,7 +294,7 @@
   justify-content: center;
   gap: 10px;
   padding: 10px 14px;
-  border-radius: 999px;
+  border-radius: 10px;
   color: #101214;
   background: var(--color-marca);
   font-size: 14px;
@@ -292,9 +313,17 @@
   align-items: center;
   justify-content: space-between;
   column-gap: 16px;
-  margin-top: 26px;
+  margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid rgb(var(--color-borde));
+}
+
+.mobileTheme {
+  padding-top: 22px;
+}
+
+.mobileTheme > div {
+  justify-content: space-between;
 }
 
 .staffAccess > span {
@@ -349,7 +378,7 @@
 
   .portalLink {
     gap: 6px;
-    padding-inline: 12px;
+    padding-inline: 10px;
     font-size: 12px;
   }
 
@@ -374,7 +403,7 @@
   }
 
   .mainBar {
-    min-height: 76px;
+    min-height: 80px;
     gap: 28px;
   }
 
@@ -401,6 +430,7 @@
     color: var(--nav-muted);
     font-size: 13px;
     font-weight: 500;
+    position: relative;
     white-space: nowrap;
     text-decoration: none;
     transition: color 150ms ease;
@@ -408,6 +438,27 @@
 
   .desktopNav a:hover {
     color: var(--nav-white);
+  }
+
+  .desktopNav a[aria-current="location"] {
+    color: var(--nav-white);
+  }
+
+  .desktopNav a::after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    border-radius: 2px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-marca);
+    transform: scaleX(0);
+    transition: transform 160ms ease;
+  }
+
+  .desktopNav a[aria-current="location"]::after {
+    transform: scaleX(1);
   }
 
   .header[data-ready="true"] .menuTrigger,

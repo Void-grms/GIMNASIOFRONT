@@ -4,20 +4,20 @@
 
 :root {
   color-scheme: light;
-  --color-fondo: 244 246 249;
+  --color-fondo: 245 246 247;
   --color-superficie: 255 255 255;
-  --color-elevado: 236 239 244;
-  --color-borde: 215 220 228;
+  --color-elevado: 238 240 242;
+  --color-borde: 219 222 226;
   --color-borde-fuerte: 132 145 163;
-  --color-tinta: 24 29 40;
-  --color-secundario: 69 79 95;
-  --color-tenue: 91 101 118;
-  --color-neutral: 24 29 40;
+  --color-tinta: 25 28 33;
+  --color-secundario: 75 81 91;
+  --color-tenue: 98 105 117;
+  --color-neutral: 25 28 33;
   --color-acento-texto: 123 90 0;
   --color-vigente: 21 122 59;
   --color-porvencer: 154 74 6;
   --color-vencido: 194 35 50;
-  --sombra-tarjeta: 0 10px 28px -18px rgb(24 29 40 / .22);
+  --sombra-tarjeta: 0 2px 3px rgb(24 29 40 / .02), 0 8px 24px -16px rgb(24 29 40 / .16);
   --color-marca: #fad234;
   --color-fondo-css: rgb(var(--color-fondo));
   --color-superficie-css: rgb(var(--color-superficie));
@@ -61,6 +61,7 @@
 
 body {
   @apply bg-fondo text-tinta antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 @layer base {
@@ -69,11 +70,9 @@ body {
     outline-offset: 2px;
     border-radius: 8px;
   }
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible {
-    outline: none;
-  }
+  button, a, input, select, textarea, summary { -webkit-tap-highlight-color: transparent; }
+  button, a, select, summary { touch-action: manipulation; }
+  button:not(:disabled), select { cursor: pointer; }
 }
 
 /* Los numeros de un sistema de gimnasio se comparan en columna: tabulares. */
@@ -100,7 +99,7 @@ body {
 
 /* Tarjeta que responde al cursor: para listas y grillas navegables. */
 .tarjeta-viva {
-  @apply tarjeta transition duration-300 ease-suave hover:-translate-y-1
+  @apply tarjeta transition duration-200 ease-suave
          hover:border-bordeFuerte hover:bg-elevado;
 }
 
@@ -114,8 +113,8 @@ body {
 
 .boton {
   @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-acento px-5 py-3
-         font-bold text-black shadow-acento transition duration-200 ease-suave
-         hover:-translate-y-0.5 hover:bg-acentoClaro hover:shadow-acentoFuerte
+         font-bold text-black shadow-sm transition duration-200 ease-suave
+         hover:bg-acentoClaro
          active:translate-y-0 active:scale-[.985]
          disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none
          disabled:hover:translate-y-0;
@@ -124,7 +123,7 @@ body {
 .boton-suave {
   @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-borde
          bg-neutral/[0.04] px-4 py-2.5 font-semibold text-tinta transition duration-200
-         ease-suave hover:-translate-y-0.5 hover:border-bordeFuerte hover:bg-neutral/[0.09]
+         ease-suave hover:border-bordeFuerte hover:bg-neutral/[0.07]
          hover:text-tinta active:translate-y-0
          disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
 }
@@ -202,7 +201,7 @@ body {
 .apariencia-global { display: flex; justify-content: flex-end; align-items: center; min-height: 48px; padding-inline: clamp(16px, 3vw, 40px); background: rgb(var(--color-superficie)); border-bottom: 1px solid rgb(var(--color-borde)); }
 .selector-tema-compacto { display: flex; align-items: center; gap: 10px; color: rgb(var(--color-secundario)); font-size: 12px; }
 .selector-tema-compacto label { display: inline-flex; align-items: center; gap: 8px; }
-.selector-tema-compacto select { min-height: 44px; max-width: 150px; padding: 8px 26px 8px 10px; border-radius: 8px; border: 1px solid transparent; background: rgb(var(--color-superficie)); color: rgb(var(--color-tinta)); font: inherit; cursor: pointer; }
+.selector-tema-compacto select { min-height: 44px; max-width: 150px; padding: 8px 26px 8px 10px; border-radius: 10px; border: 1px solid rgb(var(--color-borde)); background: rgb(var(--color-superficie)); color: rgb(var(--color-tinta)); font: inherit; cursor: pointer; transition: border-color .18s, background .18s; }
 .selector-tema-compacto select:hover { border-color: rgb(var(--color-borde-fuerte)); }
 .selector-tema-compacto select:focus-visible { outline: 2px solid rgb(var(--color-acento-texto)); }
 @media (max-width: 639px) {

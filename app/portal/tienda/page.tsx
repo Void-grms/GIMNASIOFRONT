@@ -131,7 +131,7 @@ export default function Tienda() {
             <p className="text-xs text-tenue">
               Te espera en recepcion hasta las <span className="cifra">{hora(p.venceA)}</span>
             </p>
-            <button className="text-xs text-secundario underline hover:text-vencido" onClick={() => cancelar(p.id)}>
+            <button className="min-h-11 px-2 text-xs text-secundario underline hover:text-vencido" onClick={() => cancelar(p.id)}>
               Cancelar
             </button>
           </div>

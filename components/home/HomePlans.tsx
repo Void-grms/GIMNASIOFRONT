@@ -33,13 +33,18 @@ export default function HomePlans({ whatsappNumero }: { whatsappNumero: string }
       <a href={`https://wa.me/${whatsappNumero}?text=${encodeURIComponent('Hola, quiero conocer las membresías vigentes de Forces Gym.')}`} target="_blank" rel="noreferrer">Consultar membresías</a>
     </div>
   );
-  if (!planes) return <p className={styles.planFeedback} role="status">Cargando membresías vigentes…</p>;
+  if (!planes) return <div aria-busy="true">
+    <p className={styles.planLoadingLabel} role="status">Cargando membresías vigentes…</p>
+    <div className={styles.plansGrid} aria-hidden="true">
+      {[0, 1, 2].map((key) => <div key={key} className={styles.planSkeleton}><span /><strong /><span /><span /><i /></div>)}
+    </div>
+  </div>;
 
   return <div className={styles.plansGrid}>
     {planes.map((plan) => (
       <article key={plan.id} className={`${styles.planCard} ${plan.esPromocion ? styles.featuredPlan : ''}`}>
         <div className={styles.planTop}><h3>{plan.nombre}</h3>{plan.esPromocion && <span>PROMOCIÓN</span>}</div>
-        {plan.descripcion && <p className={styles.planDescription}>{plan.descripcion}</p>}
+        <p className={styles.planDescription}>{plan.descripcion}</p>
         <p className={styles.price}><span>S/</span> {precio(plan.precio)}<small>por {plan.duracionDias} {plan.duracionDias === 1 ? 'día' : 'días'}</small></p>
         <ul>
           <li><Check />{plan.limiteAsistencias == null ? 'Asistencias sin límite durante la vigencia' : `${plan.limiteAsistencias} asistencias en total durante ${plan.duracionDias} días`}</li>
