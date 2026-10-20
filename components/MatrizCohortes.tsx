@@ -7,14 +7,15 @@
  * Es una magnitud, asi que la escala es de un solo tono de oscuro a claro. Nada
  * de arcoiris: aqui el color solo dice "mas" o "menos".
  */
-const RAMPA = ['#191b14', '#2b3617', '#44601d', '#7aab27', '#d7ff3e'];
+const RAMPA = [6, 12, 18, 25, 32].map(intensidad =>
+  `color-mix(in srgb, rgb(var(--color-acento-texto)) ${intensidad}%, rgb(var(--color-superficie)))`,
+);
 
 function celda(porcentaje: number) {
   const paso = Math.min(RAMPA.length - 1, Math.floor((porcentaje / 100) * RAMPA.length));
   return {
     fondo: RAMPA[paso],
-    // Sobre los pasos claros el texto oscuro es el unico que se lee.
-    texto: paso >= 3 ? '#0b0b0c' : '#e4e4e7',
+    texto: 'rgb(var(--color-tinta))',
   };
 }
 
@@ -23,7 +24,7 @@ export function MatrizCohortes({ datos }: { datos: any }) {
 
   if (filas.length === 0) {
     return (
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-tenue">
         Todavia no hay meses suficientes para medir retencion.
       </p>
     );
@@ -36,7 +37,7 @@ export function MatrizCohortes({ datos }: { datos: any }) {
           Porcentaje de socios que seguian activos cada mes despues de su alta
         </caption>
         <thead>
-          <tr className="text-left text-zinc-500">
+          <tr className="text-left text-tenue">
             <th className="p-2 font-medium">Se inscribieron en</th>
             <th className="p-2 text-right font-medium">Nuevos</th>
             {datos.periodos.map((p: number) => (
@@ -50,12 +51,12 @@ export function MatrizCohortes({ datos }: { datos: any }) {
           {filas.map((f: any) => (
             <tr key={f.cohorte}>
               <td className="p-2 font-medium">{f.cohorte}</td>
-              <td className="p-2 text-right text-zinc-400">{f.nuevos}</td>
+              <td className="p-2 text-right text-secundario">{f.nuevos}</td>
               {f.retencion.map((r: any, i: number) => {
                 if (!r) {
                   return (
                     <td key={i} className="p-1">
-                      <div className="rounded-lg border border-dashed border-borde py-2 text-center text-zinc-700">
+                      <div className="rounded-lg border border-dashed border-borde py-2 text-center text-tenue">
                         —
                       </div>
                     </td>
@@ -79,7 +80,7 @@ export function MatrizCohortes({ datos }: { datos: any }) {
         </tbody>
       </table>
 
-      <p className="mt-3 text-sm text-zinc-500">
+      <p className="mt-3 text-sm text-tenue">
         Cada fila es el mes en que se inscribieron. Las columnas dicen que porcentaje seguia con
         membresia vigente ese mes, uno, dos y tres meses despues.
       </p>

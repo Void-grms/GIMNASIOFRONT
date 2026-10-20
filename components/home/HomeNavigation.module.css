@@ -1,16 +1,16 @@
 .header {
-  --nav-ink: #101214;
-  --nav-surface: #191c20;
-  --nav-accent: #fad234;
-  --nav-white: #f6f6f2;
-  --nav-muted: #b4b6ba;
+  --nav-ink: rgb(var(--color-fondo));
+  --nav-surface: rgb(var(--color-superficie));
+  --nav-accent: rgb(var(--color-acento-texto));
+  --nav-white: rgb(var(--color-tinta));
+  --nav-muted: rgb(var(--color-secundario));
   position: sticky;
   top: 0;
   z-index: 40;
   width: 100%;
   color: var(--nav-white);
   background: var(--nav-ink);
-  border-bottom: 1px solid rgb(246 246 242 / 12%);
+  border-bottom: 1px solid rgb(var(--color-borde));
 }
 
 .header a,
@@ -32,8 +32,8 @@
 
 .utilityBar {
   display: none;
-  background: #0c0e10;
-  border-bottom: 1px solid rgb(246 246 242 / 7%);
+  background: rgb(var(--color-superficie));
+  border-bottom: 1px solid rgb(var(--color-borde));
 }
 
 .utilityInner,
@@ -158,7 +158,7 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(246 246 242 / 18%);
+  border: 1px solid rgb(var(--color-borde));
   border-radius: 50%;
   background: transparent;
   color: var(--nav-white);
@@ -211,7 +211,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border-bottom: 1px solid rgb(246 246 242 / 14%);
+  border-bottom: 1px solid rgb(var(--color-borde));
 }
 
 .mobileNav {
@@ -226,7 +226,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border-bottom: 1px solid rgb(246 246 242 / 12%);
+  border-bottom: 1px solid rgb(var(--color-borde));
   color: var(--nav-white);
   font-size: clamp(26px, 6vw, 40px);
   font-weight: 600;
@@ -247,7 +247,7 @@
 .memberAccess {
   margin-top: auto;
   padding: 22px;
-  border: 1px solid rgb(246 246 242 / 12%);
+  border: 1px solid rgb(var(--color-borde));
   border-radius: 16px;
   background: var(--nav-surface);
 }
@@ -274,8 +274,8 @@
   gap: 10px;
   padding: 10px 14px;
   border-radius: 999px;
-  color: var(--nav-ink);
-  background: var(--nav-accent);
+  color: #101214;
+  background: var(--color-marca);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -294,7 +294,7 @@
   column-gap: 16px;
   margin-top: 26px;
   padding-top: 12px;
-  border-top: 1px solid rgb(246 246 242 / 12%);
+  border-top: 1px solid rgb(var(--color-borde));
 }
 
 .staffAccess > span {
@@ -307,7 +307,7 @@
   flex-wrap: wrap;
   gap: 0 20px;
   padding: 0 clamp(20px, 4.5vw, 72px) 12px;
-  border-top: 1px solid rgb(246 246 242 / 12%);
+  border-top: 1px solid rgb(var(--color-borde));
 }
 
 .fallbackNav a {

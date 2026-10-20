@@ -81,7 +81,7 @@ export default function FichaSocio() {
           <summary className="rotulo cursor-pointer">
             {ficha.fotoUrl ? 'Cambiar foto' : 'Tomar foto del socio'}
           </summary>
-          <p className="mb-3 mt-3 text-sm text-zinc-500">
+          <p className="mb-3 mt-3 text-sm text-tenue">
             La foto permite comparar la cara con la pantalla al escanear. Sin ella, el codigo se
             puede prestar sin que nadie lo note.
           </p>
@@ -105,19 +105,19 @@ export default function FichaSocio() {
           <div className="tarjeta p-0">
             <ul className="divide-y divide-borde">
               {ficha.historial.length === 0 && (
-                <li className="p-4 text-sm text-zinc-500">Todavia no compro ninguna.</li>
+                <li className="p-4 text-sm text-tenue">Todavia no compro ninguna.</li>
               )}
               {ficha.historial.map((m: any) => (
                 <li key={m.id} className="flex items-center justify-between p-4 text-sm">
                   <div>
                     <p className="font-medium">{m.planNombre || m.plan.nombre}</p>
-                    <p className="text-zinc-500">
+                    <p className="text-tenue">
                       {fechaCorta(m.fechaInicio.slice(0, 10))} — {fechaCorta(m.fechaFin.slice(0, 10))}
                     </p>
-                    {m.limiteAsistencias != null && <p className="mt-1 text-xs text-zinc-400">{m.asistenciasUsadas ?? 0} de {m.limiteAsistencias} asistencias utilizadas</p>}
+                    {m.limiteAsistencias != null && <p className="mt-1 text-xs text-secundario">{m.asistenciasUsadas ?? 0} de {m.limiteAsistencias} asistencias utilizadas</p>}
                   </div>
                   <span className="flex flex-col items-end gap-1.5">
-                    <span className={m.estado === 'anulada' ? 'text-vencido' : 'text-zinc-300'}>
+                    <span className={m.estado === 'anulada' ? 'text-vencido' : 'text-secundario'}>
                       {soles(m.precioPagado)}
                     </span>
                     {m.estado !== 'anulada' && m.payments?.[0]?.id && (
@@ -137,7 +137,7 @@ export default function FichaSocio() {
           <div className="tarjeta p-0">
             <ul className="divide-y divide-borde">
               {ficha.socio.checkIns.length === 0 && (
-                <li className="p-4 text-sm text-zinc-500">Sin visitas registradas.</li>
+                <li className="p-4 text-sm text-tenue">Sin visitas registradas.</li>
               )}
               {ficha.socio.checkIns.map((c: any) => (
                 <li key={c.id} className="flex items-center gap-3 p-3 text-sm">
@@ -147,7 +147,7 @@ export default function FichaSocio() {
                     }`}
                   />
                   {fechaCorta(c.timestamp)} · {hora(c.timestamp)} · {c.tipo}
-                  <span className="ml-auto text-zinc-500">{c.motivo || c.metodo}</span>
+                  <span className="ml-auto text-tenue">{c.motivo || c.metodo}</span>
                 </li>
               ))}
             </ul>
@@ -161,7 +161,7 @@ export default function FichaSocio() {
               Pase de invitado
             </h2>
             {cupo && (
-              <span className={`text-sm ${cupo.restantes > 0 ? 'text-vigente' : 'text-zinc-500'}`}>
+              <span className={`text-sm ${cupo.restantes > 0 ? 'text-vigente' : 'text-tenue'}`}>
                 {cupo.restantes} de {cupo.limite} disponible(s) este mes
               </span>
             )}
@@ -198,7 +198,7 @@ export default function FichaSocio() {
                 </div>
                 <div>
                   <label className="etiqueta" htmlFor="inv-tel">
-                    Celular <span className="text-zinc-600">(opcional)</span>
+                    Celular <span className="text-tenue">(opcional)</span>
                   </label>
                   <input
                     id="inv-tel"
@@ -215,7 +215,7 @@ export default function FichaSocio() {
               <button className="boton">Registrar invitado</button>
             </form>
           ) : (
-            <p className="mt-2 text-sm text-zinc-500">
+            <p className="mt-2 text-sm text-tenue">
               Ya uso su cupo de este mes. Su acompanante puede entrar con el pase diario.
             </p>
           )}
@@ -226,7 +226,7 @@ export default function FichaSocio() {
           <h2 className="rotulo">
             Datos personales
           </h2>
-          <p className="mt-2 text-sm text-zinc-500">
+          <p className="mt-2 text-sm text-tenue">
             El socio puede pedir una copia de sus datos o su supresion. Los comprobantes de pago se
             conservan igual, porque lo exige la norma tributaria.
           </p>

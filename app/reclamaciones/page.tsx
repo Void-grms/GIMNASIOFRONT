@@ -60,11 +60,11 @@ export default function LibroDeReclamaciones() {
       <main className="mx-auto max-w-lg px-4 py-16">
         <div className="tarjeta space-y-3 text-center">
           <h1 className="text-2xl font-bold">Registro recibido</h1>
-          <p className="text-zinc-400">{resultado.mensaje}</p>
-          <p className="rounded-xl bg-black/40 p-4 text-lg font-black tracking-wider">
+          <p className="text-secundario">{resultado.mensaje}</p>
+          <p className="rounded-xl bg-fondo/70 p-4 text-lg font-black tracking-wider">
             {resultado.codigo}
           </p>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-tenue">
             Guarda este codigo: con el puedes consultar el estado de tu registro.
           </p>
           <Link href="/" className="boton-suave">
@@ -79,7 +79,7 @@ export default function LibroDeReclamaciones() {
     <main className="mx-auto max-w-2xl px-4 py-10">
       <header className="mb-6">
         <h1 className="text-3xl font-black">Libro de reclamaciones</h1>
-        <p className="mt-2 text-zinc-400">
+        <p className="mt-2 text-secundario">
           Conforme a la ley tienes derecho a dejar tu reclamo o queja. Recibiras una respuesta en un
           plazo maximo de 15 dias habiles.
         </p>
@@ -100,11 +100,11 @@ export default function LibroDeReclamaciones() {
                 className={`rounded-xl border p-3 text-left transition ${
                   datos.tipo === valor
                     ? 'border-acento bg-acento/10'
-                    : 'border-borde hover:bg-white/5'
+                    : 'border-borde hover:bg-neutral/5'
                 }`}
               >
                 <span className="block font-medium">{titulo}</span>
-                <span className="text-sm text-zinc-500">{ayuda}</span>
+                <span className="text-sm text-tenue">{ayuda}</span>
               </button>
             ))}
           </div>
@@ -145,7 +145,7 @@ export default function LibroDeReclamaciones() {
             </div>
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-zinc-300">
+          <label className="flex items-center gap-2 text-sm text-secundario">
             <input
               type="checkbox"
               checked={datos.esMenorDeEdad}
@@ -219,9 +219,9 @@ export default function LibroDeReclamaciones() {
 
         {error && <p className="aviso-mal">{error}</p>}
 
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Tus datos se usan unicamente para atender este registro, segun nuestra{' '}
-          <Link href="/privacidad" className="text-acento underline">
+          <Link href="/privacidad" className="text-acentoTexto underline">
             politica de privacidad
           </Link>
           .

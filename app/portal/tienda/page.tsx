@@ -7,10 +7,10 @@ import { api, hora, leerToken, soles, urlArchivo } from '@/lib/api';
 import { Esqueleto } from '@/components/Esqueleto';
 
 const ESTADO: Record<string, { texto: string; clase: string }> = {
-  pendiente: { texto: 'Te espera en recepcion', clase: 'text-acento' },
+  pendiente: { texto: 'Te espera en recepcion', clase: 'text-acentoTexto' },
   entregado: { texto: 'Entregado', clase: 'text-vigente' },
-  cancelado: { texto: 'Cancelado', clase: 'text-zinc-500' },
-  vencido: { texto: 'Vencio sin recoger', clase: 'text-zinc-500' },
+  cancelado: { texto: 'Cancelado', clase: 'text-tenue' },
+  vencido: { texto: 'Vencio sin recoger', clase: 'text-tenue' },
 };
 
 /**
@@ -99,12 +99,12 @@ export default function Tienda() {
     <main className="mx-auto max-w-md space-y-5 px-4 pb-36 pt-8">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Tienda</h1>
-        <Link href="/portal/mi" className="text-sm text-zinc-400 hover:text-white">
+        <Link href="/portal/mi" className="text-sm text-secundario hover:text-tinta">
           Volver
         </Link>
       </header>
 
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-tenue">
         Pide desde aqui y paga en recepcion al recogerlo. Lo que pidas queda apartado por 12 horas.
         {productos?.some((p) => p.esCasillero) && ' El casillero te lo asignan con numero al pagar y se libera cuando marcas tu salida.'}
       </p>
@@ -116,11 +116,11 @@ export default function Tienda() {
         <div key={p.id} className="tarjeta-acento space-y-2">
           <div className="flex items-baseline justify-between">
             <p className="text-lg font-black tracking-tight">
-              Pedido <span className="cifra text-acento">#{p.codigo}</span>
+              Pedido <span className="cifra text-acentoTexto">#{p.codigo}</span>
             </p>
             <p className="font-bold cifra">{soles(p.total)}</p>
           </div>
-          <ul className="text-sm text-zinc-300">
+          <ul className="text-sm text-secundario">
             {p.items.map((i: any) => (
               <li key={i.productId}>
                 {i.cantidad}x {i.producto}
@@ -128,10 +128,10 @@ export default function Tienda() {
             ))}
           </ul>
           <div className="flex items-center justify-between pt-1">
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-tenue">
               Te espera en recepcion hasta las <span className="cifra">{hora(p.venceA)}</span>
             </p>
-            <button className="text-xs text-zinc-400 underline hover:text-vencido" onClick={() => cancelar(p.id)}>
+            <button className="text-xs text-secundario underline hover:text-vencido" onClick={() => cancelar(p.id)}>
               Cancelar
             </button>
           </div>
@@ -144,26 +144,26 @@ export default function Tienda() {
         <div className="tarjeta p-0">
           <ul className="divide-y divide-borde">
             {productos.length === 0 && (
-              <li className="p-5 text-sm text-zinc-500">Todavia no hay productos a la venta.</li>
+              <li className="p-5 text-sm text-tenue">Todavia no hay productos a la venta.</li>
             )}
             {productos.map((p) => {
               const agotado = !p.esServicio && p.disponible <= 0;
               const cantidad = carrito[p.id] || 0;
               return (
                 <li key={p.id} className={`flex items-center gap-3 p-4 ${agotado ? 'opacity-50' : ''}`}>
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-borde bg-black/40">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-borde bg-fondo/70">
                     {p.fotoUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={urlArchivo(p.fotoUrl)!} alt="" loading="lazy" className="h-full w-full object-cover" />
                     ) : (
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="text-zinc-700" aria-hidden="true">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} className="text-tenue" aria-hidden="true">
                         <path d="M6 7h12l-1 13H7zM9 7a3 3 0 0 1 6 0" />
                       </svg>
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">{p.nombre}</p>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-tenue">
                       <span className="cifra">{soles(p.precio)}</span>
                       {p.esServicio ? null : agotado ? (
                         <span className="ml-2 text-vencido">agotado</span>
@@ -211,8 +211,8 @@ export default function Tienda() {
             <ul className="divide-y divide-borde">
               {anteriores.map((p) => (
                 <li key={p.id} className="flex items-center justify-between gap-3 p-3 text-sm">
-                  <span className="min-w-0 truncate text-zinc-300">
-                    <span className="cifra text-zinc-500">#{p.codigo}</span>{' '}
+                  <span className="min-w-0 truncate text-secundario">
+                    <span className="cifra text-tenue">#{p.codigo}</span>{' '}
                     {p.items.map((i: any) => `${i.cantidad}x ${i.producto}`).join(', ')}
                   </span>
                   <span className={`shrink-0 ${ESTADO[p.estado]?.clase}`}>{ESTADO[p.estado]?.texto}</span>

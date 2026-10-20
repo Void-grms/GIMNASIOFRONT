@@ -30,7 +30,7 @@ export function SelectorCasillero({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (libres === null) return <p className="text-sm text-zinc-500">Cargando casilleros…</p>;
+  if (libres === null) return <p className="text-sm text-tenue">Cargando casilleros…</p>;
   if (libres.length === 0) return <p className="aviso-mal">No hay casilleros libres.</p>;
 
   return (
@@ -47,7 +47,7 @@ export function SelectorCasillero({
             className={`h-9 min-w-9 rounded-lg border px-2 text-sm font-bold cifra transition ${
               valor === n
                 ? 'border-acento bg-acento text-black'
-                : 'border-borde text-zinc-300 hover:border-bordeFuerte'
+                : 'border-borde text-secundario hover:border-bordeFuerte'
             }`}
           >
             {n}
@@ -110,12 +110,12 @@ export function GrillaCasilleros() {
       <div className="flex items-center justify-between gap-3">
         <h2 className="rotulo">
           Casilleros
-          <span className="ml-2 text-zinc-400 cifra">
+          <span className="ml-2 text-secundario cifra">
             {ocupados}/{lista.length} ocupados
           </span>
         </h2>
         <button
-          className="text-xs text-zinc-500 underline hover:text-white"
+          className="text-xs text-tenue underline hover:text-tinta"
           onClick={() => {
             setTotal(String(lista.length));
             setConfig((v) => !v);
@@ -149,7 +149,7 @@ export function GrillaCasilleros() {
               className="flex h-[4.5rem] flex-col items-center justify-center rounded-xl border border-vigente/25 bg-vigente/[0.06]"
             >
               <span className="text-lg font-black text-vigente cifra">{c.numero}</span>
-              <span className="text-[10px] text-zinc-500">libre</span>
+              <span className="text-[10px] text-tenue">libre</span>
             </div>
           ) : (
             <button
@@ -158,16 +158,16 @@ export function GrillaCasilleros() {
               title={`${c.socio?.nombreCompleto} · toca para liberar`}
               onClick={() => liberar(c)}
               className={`flex h-[4.5rem] flex-col items-center justify-center rounded-xl border px-1 transition hover:border-bordeFuerte ${
-                c.demorado ? 'border-porvencer/50 bg-porvencer/10' : 'border-borde bg-white/[0.04]'
+                c.demorado ? 'border-porvencer/50 bg-porvencer/10' : 'border-borde bg-neutral/[0.04]'
               }`}
             >
-              <span className={`text-lg font-black cifra ${c.demorado ? 'text-porvencer' : 'text-zinc-200'}`}>
+              <span className={`text-lg font-black cifra ${c.demorado ? 'text-porvencer' : 'text-tinta'}`}>
                 {c.numero}
               </span>
-              <span className="w-full truncate text-center text-[10px] text-zinc-400">
+              <span className="w-full truncate text-center text-[10px] text-secundario">
                 {c.socio?.nombreCompleto.split(' ')[0]}
               </span>
-              <span className="text-[10px] text-zinc-500 cifra">{duracion(c.minutos ?? 0)}</span>
+              <span className="text-[10px] text-tenue cifra">{duracion(c.minutos ?? 0)}</span>
             </button>
           ),
         )}

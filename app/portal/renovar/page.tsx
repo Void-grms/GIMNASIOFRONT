@@ -114,7 +114,7 @@ export default function Renovar() {
         <div className="tarjeta-acento space-y-3 text-center">
           <p className="text-4xl">✓</p>
           <h1 className="text-2xl font-black tracking-tight">Pago enviado</h1>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-secundario">
             Recepcion va a revisar tu Yape y aprobar la renovacion. Veras el cambio en tu credencial;
             no necesitas hacer nada mas.
           </p>
@@ -130,7 +130,7 @@ export default function Renovar() {
     <main className="mx-auto max-w-md space-y-5 px-4 py-8">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Renovar</h1>
-        <Link href="/portal/mi" className="text-sm text-zinc-400 hover:text-white">
+        <Link href="/portal/mi" className="text-sm text-secundario hover:text-tinta">
           Volver
         </Link>
       </header>
@@ -140,7 +140,7 @@ export default function Renovar() {
       {!datos ? (
         !error && <Esqueleto filas={2} />
       ) : !datos.yapeNumero ? (
-        <div className="tarjeta text-sm text-zinc-400">
+        <div className="tarjeta text-sm text-secundario">
           El gimnasio todavia no activo el pago por Yape desde el portal. Por ahora renueva en
           recepcion.
         </div>
@@ -160,33 +160,33 @@ export default function Renovar() {
                 }`}
               >
                 <span className="min-w-0 pr-3">
-                  <span className="block font-bold">{p.nombre}{p.esPromocion && <span className="ml-2 text-xs font-semibold text-acento">Promoción</span>}</span>
-                  <span className="block text-sm text-zinc-500">
+                  <span className="block font-bold">{p.nombre}{p.esPromocion && <span className="ml-2 text-xs font-semibold text-acentoTexto">Promoción</span>}</span>
+                  <span className="block text-sm text-tenue">
                     {p.duracionDias} días desde el inicio · {p.limiteAsistencias == null ? 'Asistencias sin límite' : `${p.limiteAsistencias} asistencias en total`}
                   </span>
-                  {p.descripcion && <span className="mt-1 block text-xs leading-relaxed text-zinc-400">{p.descripcion}</span>}
+                  {p.descripcion && <span className="mt-1 block text-xs leading-relaxed text-secundario">{p.descripcion}</span>}
                 </span>
                 <span className="shrink-0 text-xl font-black cifra">{soles(p.precio)}</span>
               </button>
             ))}
-            {!datos.planes.length && <p className="text-sm text-zinc-400">Por ahora no hay planes disponibles. Consulta en recepción.</p>}
-            {plan?.limiteAsistencias != null && <p className="text-xs leading-relaxed text-zinc-400">Tu plan incluye {plan.limiteAsistencias} asistencias durante {plan.duracionDias} días. Se cuenta una asistencia por día; salir y volver el mismo día no consume otra. No exige días alternos.</p>}
+            {!datos.planes.length && <p className="text-sm text-secundario">Por ahora no hay planes disponibles. Consulta en recepción.</p>}
+            {plan?.limiteAsistencias != null && <p className="text-xs leading-relaxed text-secundario">Tu plan incluye {plan.limiteAsistencias} asistencias durante {plan.duracionDias} días. Se cuenta una asistencia por día; salir y volver el mismo día no consume otra. No exige días alternos.</p>}
           </section>
 
           {!ofertaCambio && plan && <section className="tarjeta space-y-3">
             <p className="rotulo">2 · Yapea {plan ? soles(plan.precio) : ''}</p>
-            <div className="flex items-center justify-between gap-3 rounded-xl bg-black/40 p-3">
+            <div className="flex items-center justify-between gap-3 rounded-xl bg-fondo/70 p-3">
               <div>
                 <p className="text-2xl font-black tracking-wider cifra">
                   {datos.yapeNumero.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')}
                 </p>
-                {datos.yapeTitular && <p className="text-sm text-zinc-500">{datos.yapeTitular}</p>}
+                {datos.yapeTitular && <p className="text-sm text-tenue">{datos.yapeTitular}</p>}
               </div>
               <button type="button" className="boton-suave shrink-0 py-2" onClick={copiar}>
                 {copiado ? 'Copiado' : 'Copiar'}
               </button>
             </div>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-tenue">
               Verifica que el nombre que te muestra Yape coincida antes de pagar.
             </p>
           </section>}
@@ -205,7 +205,7 @@ export default function Renovar() {
             ) : (
               <button
                 type="button"
-                className="flex h-32 w-full flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-bordeFuerte text-sm text-zinc-400"
+                className="flex h-32 w-full flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-bordeFuerte text-sm text-secundario"
                 onClick={() => archivo.current?.click()}
               >
                 <span className="text-2xl">＋</span>
@@ -224,7 +224,7 @@ export default function Renovar() {
             </div>
           </section>
 
-          <label className="flex items-start gap-3 text-sm text-zinc-300">
+          <label className="flex items-start gap-3 text-sm text-secundario">
             <input type="checkbox" className="mt-1" checked={acepta} disabled={!plan || enviando || ofertaCambio} onChange={(e) => setAcepta(e.target.checked)} />
             <span>
               Acepto las{' '}
@@ -235,7 +235,7 @@ export default function Renovar() {
             </span>
           </label>
           {verTerminos && (
-            <pre className="max-h-60 overflow-y-auto whitespace-pre-wrap rounded-xl bg-black/40 p-3 text-xs text-zinc-400">
+            <pre className="max-h-60 overflow-y-auto whitespace-pre-wrap rounded-xl bg-fondo/70 p-3 text-xs text-secundario">
               {datos.terminosTexto}
             </pre>
           )}

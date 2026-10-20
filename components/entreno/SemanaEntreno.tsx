@@ -107,7 +107,7 @@ export function SemanaEntreno() {
           </button>
           <div className="text-center">
             <p className="font-bold">{semana.esActual ? 'Esta semana' : 'Semana'}</p>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-tenue">
               {fechaCorta(semana.desde)} — {fechaCorta(semana.hasta)}
             </p>
           </div>
@@ -135,19 +135,19 @@ export function SemanaEntreno() {
                   abierto === d.diaSemana ? 'border-acento/60 bg-acento/[0.08]' : 'border-borde'
                 } ${d.futuro ? 'opacity-50' : ''}`}
               >
-                <span className={`text-[11px] font-bold ${d.esHoy ? 'text-acento' : 'text-zinc-500'}`}>{LETRA[d.diaSemana]}</span>
+                <span className={`text-[11px] font-bold ${d.esHoy ? 'text-acentoTexto' : 'text-tenue'}`}>{LETRA[d.diaSemana]}</span>
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold cifra ${
-                    entreno ? 'bg-acento text-black' : d.esHoy ? 'border border-acento text-acento' : 'text-zinc-400'
+                    entreno ? 'bg-acento text-black' : d.esHoy ? 'border border-acento text-acentoTexto' : 'text-secundario'
                   }`}
                 >
                   {Number(d.fecha.slice(8))}
                 </span>
-                <span className="line-clamp-2 px-0.5 text-center text-[9.5px] leading-tight text-zinc-400">
+                <span className="line-clamp-2 px-0.5 text-center text-[9.5px] leading-tight text-secundario">
                   {d.grupos.length
                     ? d.grupos.map((g: string) => (NOMBRE_GRUPO[g] ?? g).slice(0, 5)).join(' ')
                     : d.plan?.grupos?.length
-                    ? <span className="text-zinc-600">{d.plan.titulo || 'plan'}</span>
+                    ? <span className="text-tenue">{d.plan.titulo || 'plan'}</span>
                     : ''}
                 </span>
               </button>
@@ -156,13 +156,13 @@ export function SemanaEntreno() {
         </div>
 
         {dia && (
-          <div className="rounded-xl bg-black/30 p-3 text-sm">
+          <div className="rounded-xl bg-fondo/70 p-3 text-sm">
             <p className="font-semibold">
               {DIA[dia.diaSemana]} {Number(dia.fecha.slice(8))}
               {dia.fueAlGym && <span className="ml-2 text-xs font-normal text-vigente">vino al gym</span>}
             </p>
             {dia.plan?.grupos?.length > 0 && (
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-tenue">
                 Tu plan: {dia.plan.titulo || dia.plan.grupos.map((g: string) => NOMBRE_GRUPO[g] ?? g).join(', ')}
               </p>
             )}
@@ -170,13 +170,13 @@ export function SemanaEntreno() {
               <ul className="mt-2 space-y-1">
                 {dia.ejercicios.map((e: any) => (
                   <li key={e.nombre} className="flex justify-between gap-3">
-                    <span className="text-zinc-200">{e.nombre}</span>
-                    <span className="shrink-0 text-zinc-500 cifra">{e.series} series</span>
+                    <span className="text-tinta">{e.nombre}</span>
+                    <span className="shrink-0 text-tenue cifra">{e.series} series</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-1 text-zinc-500">
+              <p className="mt-1 text-tenue">
                 {dia.futuro ? 'Todavia no llega.' : dia.fueAlGym ? 'Vino, pero no anoto ejercicios.' : 'Sin entrenamiento.'}
               </p>
             )}
@@ -195,9 +195,9 @@ export function SemanaEntreno() {
             <div key={titulo} className="tarjeta p-3 text-center">
               <p className="text-2xl font-black tracking-tight cifra">
                 {valor >= 10000 ? `${Math.round(valor / 1000)}k` : valor}
-                <span className="text-xs font-semibold text-zinc-500">{unidad}</span>
+                <span className="text-xs font-semibold text-tenue">{unidad}</span>
               </p>
-              <p className="text-xs text-zinc-500">{titulo}</p>
+              <p className="text-xs text-tenue">{titulo}</p>
               {d !== null && (
                 <p className={`mt-0.5 text-[11px] font-semibold cifra ${d >= 0 ? 'text-vigente' : 'text-porvencer'}`}>
                   {d >= 0 ? '▲' : '▼'} {Math.abs(d)}% vs anterior
@@ -211,12 +211,12 @@ export function SemanaEntreno() {
       <section className="tarjeta space-y-3">
         <div>
           <h2 className="font-semibold">Series por zona</h2>
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-tenue">
             Como guia general, unas 10 series por zona a la semana es una buena base para progresar.
           </p>
         </div>
         {Object.keys(semana.seriesPorGrupo).length === 0 ? (
-          <p className="text-sm text-zinc-500">Todavia no hay series anotadas esta semana.</p>
+          <p className="text-sm text-tenue">Todavia no hay series anotadas esta semana.</p>
         ) : (
           <ul className="space-y-2">
             {ZONAS.filter((z) => semana.seriesPorGrupo[z]).concat(
@@ -225,10 +225,10 @@ export function SemanaEntreno() {
               const n = semana.seriesPorGrupo[z];
               return (
                 <li key={z} className="grid grid-cols-[5.5rem_1fr_2rem] items-center gap-2 text-sm">
-                  <span className="truncate text-zinc-300">{NOMBRE_GRUPO[z] ?? z}</span>
-                  <span className="relative h-2.5 overflow-hidden rounded-full bg-black/50">
+                  <span className="truncate text-secundario">{NOMBRE_GRUPO[z] ?? z}</span>
+                  <span className="relative h-2.5 overflow-hidden rounded-full bg-fondo/70">
                     <span className={`absolute inset-y-0 left-0 rounded-full ${n >= 10 ? 'bg-acento' : 'bg-zinc-400'}`} style={{ width: `${(n / maxSeries) * 100}%` }} />
-                    <span className="absolute inset-y-0 w-px bg-white/30" style={{ left: `${(10 / maxSeries) * 100}%` }} />
+                    <span className="absolute inset-y-0 w-px bg-neutral/30" style={{ left: `${(10 / maxSeries) * 100}%` }} />
                   </span>
                   <span className="text-right font-bold cifra">{n}</span>
                 </li>
@@ -287,7 +287,7 @@ function PlanSemanal({ onGuardado }: { onGuardado: () => void }) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="font-semibold">Mi plan semanal</h2>
-          <p className="text-xs text-zinc-500">Que entrenas cada dia. Es tuyo: cambialo cuando quieras.</p>
+          <p className="text-xs text-tenue">Que entrenas cada dia. Es tuyo: cambialo cuando quieras.</p>
         </div>
         {!editando && (
           <button className="boton-suave shrink-0 py-2" onClick={() => setEditando(true)}>
@@ -300,15 +300,15 @@ function PlanSemanal({ onGuardado }: { onGuardado: () => void }) {
 
       {!editando ? (
         vacio ? (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-tenue">
             Todavia no armaste tu semana. Elige una division clasica (full body, torso/pierna…) o arma la tuya.
           </p>
         ) : (
           <ul className="divide-y divide-borde text-sm">
             {plan.map((d) => (
               <li key={d.diaSemana} className="flex items-center justify-between gap-3 py-2">
-                <span className="w-20 shrink-0 font-semibold text-zinc-300">{DIA[d.diaSemana]}</span>
-                <span className={`min-w-0 flex-1 truncate text-right ${d.grupos.length ? 'text-zinc-200' : 'text-zinc-600'}`}>
+                <span className="w-20 shrink-0 font-semibold text-secundario">{DIA[d.diaSemana]}</span>
+                <span className={`min-w-0 flex-1 truncate text-right ${d.grupos.length ? 'text-tinta' : 'text-tenue'}`}>
                   {d.grupos.length
                     ? `${d.titulo ? d.titulo + ' · ' : ''}${d.grupos.map((g: string) => NOMBRE_GRUPO[g] ?? g).join(', ')}`
                     : 'Descanso'}
@@ -323,7 +323,7 @@ function PlanSemanal({ onGuardado }: { onGuardado: () => void }) {
             <p className="etiqueta">Empezar desde una division clasica</p>
             <div className="flex flex-wrap gap-1.5">
               {PLANTILLAS.map((p) => (
-                <button key={p.nombre} type="button" className="rounded-lg border border-borde px-2.5 py-1.5 text-xs font-semibold text-zinc-300 hover:border-acento hover:text-acento" onClick={() => aplicar(p)}>
+                <button key={p.nombre} type="button" className="rounded-lg border border-borde px-2.5 py-1.5 text-xs font-semibold text-secundario hover:border-acento hover:text-acentoTexto" onClick={() => aplicar(p)}>
                   {p.nombre}
                 </button>
               ))}
@@ -353,7 +353,7 @@ function PlanSemanal({ onGuardado }: { onGuardado: () => void }) {
                         cambiar(d.diaSemana, { grupos: activo ? d.grupos.filter((x: string) => x !== g) : [...d.grupos, g] })
                       }
                       className={`rounded-lg border px-2 py-1 text-xs font-semibold ${
-                        activo ? 'border-acento/50 bg-acento/15 text-acento' : 'border-borde text-zinc-500'
+                        activo ? 'border-acento/50 bg-acento/15 text-acentoTexto' : 'border-borde text-tenue'
                       }`}
                     >
                       {NOMBRE_GRUPO[g] ?? g}

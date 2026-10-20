@@ -140,12 +140,12 @@ export function AccesoSocio({ socio, ajustes, onActualizado }: {
       <div>
         <h2 className="rotulo">Acceso al portal</h2>
         <p className="mt-2 font-semibold">{ESTADOS[socio.estadoPortal] || 'Portal por activar'}</p>
-        <p className="mt-1 text-sm text-zinc-400">
+        <p className="mt-1 text-sm text-secundario">
           Su código de asistencia se conserva. El portal usa su DNI y un PIN propio.
         </p>
-        <Link href="/portal/bienvenida" target="_blank" rel="noreferrer" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-acento underline underline-offset-4 hover:text-acentoClaro">Ver la guía de bienvenida para el socio</Link>
+        <Link href="/portal/bienvenida" target="_blank" rel="noreferrer" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-acentoTexto underline underline-offset-4 hover:text-acentoClaro">Ver la guía de bienvenida para el socio</Link>
         {socio.documentoERP && (
-          <p className="mt-2 text-sm text-zinc-500 cifra">Documento registrado anteriormente: {socio.documentoERP}</p>
+          <p className="mt-2 text-sm text-tenue cifra">Documento registrado anteriormente: {socio.documentoERP}</p>
         )}
         {socio.pinTemporalHasta && socio.estadoPortal === 'pin_temporal' && (
           <p className="mt-2 text-sm text-porvencer">
@@ -182,10 +182,10 @@ export function AccesoSocio({ socio, ajustes, onActualizado }: {
                 setActivacion(null);
               }}
             />
-            <p className="mt-1 text-xs text-zinc-500">9 dígitos o +51. Opcional para entregar el PIN en recepción.</p>
+            <p className="mt-1 text-xs text-tenue">9 dígitos o +51. Opcional para entregar el PIN en recepción.</p>
           </div>
         </div>
-        <label className="flex items-start gap-2 text-sm text-zinc-200">
+        <label className="flex items-start gap-2 text-sm text-tinta">
           <input className="mt-1" type="checkbox" checked={identidadVerificada}
             onChange={(e) => setIdentidadVerificada(e.target.checked)} />
           <span>Verifiqué en recepción que este DNI pertenece al socio y confirmé sus datos con él.</span>
@@ -196,23 +196,23 @@ export function AccesoSocio({ socio, ajustes, onActualizado }: {
       </form>
 
       {requiereConsentimiento && (
-        <div className="rounded-xl border border-borde bg-black/30 p-4">
-          <p className="mb-3 max-h-40 overflow-auto whitespace-pre-wrap text-sm text-zinc-400">
+        <div className="rounded-xl border border-borde bg-fondo/70 p-4">
+          <p className="mb-3 max-h-40 overflow-auto whitespace-pre-wrap text-sm text-secundario">
             {ajustes?.consentimientoTexto || 'Cargando el texto de consentimiento...'}
           </p>
-          <label className="flex items-start gap-2 text-sm text-zinc-200">
+          <label className="flex items-start gap-2 text-sm text-tinta">
             <input className="mt-1" type="checkbox" checked={consentimiento}
               disabled={!ajustes?.consentimientoTexto || !ajustes?.consentimientoVersion || !ajustes?.consentimientoHuella} onChange={(e) => setConsentimiento(e.target.checked)} />
             <span>El socio leyó este texto y autorizó el tratamiento de sus datos personales
               {ajustes?.consentimientoVersion ? ` (versión ${ajustes.consentimientoVersion})` : ''}.</span>
           </label>
-          <p className="mt-2 text-xs text-zinc-500">Para entregar un PIN, registra su autorización aquí. Con un enlace de activación puede leer y aceptar este texto desde su celular.</p>
+          <p className="mt-2 text-xs text-tenue">Para entregar un PIN, registra su autorización aquí. Con un enlace de activación puede leer y aceptar este texto desde su celular.</p>
         </div>
       )}
 
       {!dniValido && <p className="aviso-ojo">Completa y verifica el DNI antes de habilitar el portal. Su asistencia puede seguir registrándose con su código.</p>}
       {cambiosPendientes && <p className="text-sm text-porvencer">Guarda los datos actualizados antes de preparar el acceso.</p>}
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-tenue">
         Un nuevo PIN temporal reemplaza el anterior y cierra sus sesiones. Un nuevo enlace reemplaza
         los enlaces anteriores; su PIN actual se mantiene hasta que active el nuevo acceso.
         Si ya usa el portal, prepara un acceso cuando solicite recuperarlo.
@@ -225,32 +225,32 @@ export function AccesoSocio({ socio, ajustes, onActualizado }: {
           {ocupado === 'whatsapp' ? 'Preparando...' : 'Preparar activación por WhatsApp'}
         </button>
       </div>
-      {!socio.telefono && <p className="text-sm text-zinc-500">Para WhatsApp, guarda primero su celular. También puedes entregar el PIN en recepción.</p>}
+      {!socio.telefono && <p className="text-sm text-tenue">Para WhatsApp, guarda primero su celular. También puedes entregar el PIN en recepción.</p>}
 
       {pin && (
         <div className="space-y-3 rounded-xl border border-vigente/40 bg-vigente/5 p-4">
           <p className="font-semibold">PIN temporal para DNI {pin.dni}</p>
-          <p className="rounded-xl bg-black/40 py-4 text-center text-4xl font-black tracking-[0.4em] cifra">{pin.pinInicial}</p>
-          <p className="text-sm text-zinc-300">Entrar en el portal con su DNI y este PIN. Es obligatorio cambiarlo al primer ingreso.</p>
-          <p className="text-sm text-zinc-400">Válido por 24 horas, hasta el {fechaCorta(pin.vence)} a las {hora(pin.vence)}. Se muestra solo aquí; entrégalo personalmente.</p>
+          <p className="rounded-xl bg-fondo/70 py-4 text-center text-4xl font-black tracking-[0.4em] cifra">{pin.pinInicial}</p>
+          <p className="text-sm text-secundario">Entrar en el portal con su DNI y este PIN. Es obligatorio cambiarlo al primer ingreso.</p>
+          <p className="text-sm text-secundario">Válido por 24 horas, hasta el {fechaCorta(pin.vence)} a las {hora(pin.vence)}. Se muestra solo aquí; entrégalo personalmente.</p>
           <button className="boton-suave" onClick={() => setPin(null)}>Ya lo entregué · ocultar PIN</button>
         </div>
       )}
 
       {activacion && (
-        <div className="space-y-3 rounded-xl border border-borde bg-black/30 p-4">
+        <div className="space-y-3 rounded-xl border border-borde bg-fondo/70 p-4">
           <p className="font-semibold">Revisar mensaje de activación</p>
-          <p className="text-sm text-zinc-400 cifra">Celular: {socio.telefono} · vence el {fechaCorta(activacion.expiresAt)} a las {hora(activacion.expiresAt)}</p>
+          <p className="text-sm text-secundario cifra">Celular: {socio.telefono} · vence el {fechaCorta(activacion.expiresAt)} a las {hora(activacion.expiresAt)}</p>
           {!activacion.whatsappUrl && <p className="aviso-ojo">Este celular no tiene un formato válido para WhatsApp. Confirma el número con el socio y corrígelo antes de enviar.</p>}
           <label className="etiqueta" htmlFor="acceso-mensaje">Mensaje para el socio</label>
           <textarea id="acceso-mensaje" className="campo min-h-48 resize-y text-sm" value={mensaje}
             onChange={(e) => setMensaje(e.target.value)} />
-          <label className="flex items-start gap-2 text-sm text-zinc-200">
+          <label className="flex items-start gap-2 text-sm text-tinta">
             <input className="mt-1" type="checkbox" checked={telefonoConfirmado}
               onChange={(e) => setTelefonoConfirmado(e.target.checked)} />
             <span>Confirmé este número y el destinatario con el socio. Si comparte celular, comprobé que solo él recibirá su enlace.</span>
           </label>
-          <p className="text-sm text-zinc-500">Se abrirá WhatsApp con el mensaje preparado. El envío lo realizas tú desde WhatsApp.</p>
+          <p className="text-sm text-tenue">Se abrirá WhatsApp con el mensaje preparado. El envío lo realizas tú desde WhatsApp.</p>
           <div className="flex flex-wrap gap-2">
             <button className="boton" disabled={!activacion.whatsappUrl || !telefonoConfirmado || !mensaje.trim()} onClick={abrirWhatsapp}>Abrir WhatsApp</button>
             <button className="boton-suave" onClick={() => { setActivacion(null); setMensaje(''); }}>Cerrar mensaje</button>

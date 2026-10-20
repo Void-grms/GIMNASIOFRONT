@@ -29,14 +29,14 @@ export default function PagoPublico() {
   if (error) {
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-4 p-6 text-center">
-        <p className="text-zinc-400">{error}</p>
+        <p className="text-secundario">{error}</p>
         <Link href="/" className="boton-suave">
           Ir a la pagina del gimnasio
         </Link>
       </main>
     );
   }
-  if (!datos) return <main className="p-6 text-center text-zinc-500">Cargando…</main>;
+  if (!datos) return <main className="p-6 text-center text-tenue">Cargando…</main>;
 
   const c = datos.comprobante;
   const m = datos.membresia;
@@ -55,9 +55,9 @@ export default function PagoPublico() {
         <section className="no-imprimir tarjeta-acento space-y-1">
           <p className="rotulo">Tu membresia</p>
           <p className="text-xl font-black">{m.plan}</p>
-          <p className="text-sm text-zinc-300">
+          <p className="text-sm text-secundario">
             Vigente del <span className="font-semibold">{fechaCorta(m.inicio)}</span> al{' '}
-            <span className="font-semibold text-acento">{fechaCorta(m.vence)}</span>
+            <span className="font-semibold text-acentoTexto">{fechaCorta(m.vence)}</span>
           </p>
           {m.anulada && <p className="aviso-mal mt-2">Esta membresia fue anulada.</p>}
         </section>
@@ -123,7 +123,7 @@ export default function PagoPublico() {
           Mi credencial
         </Link>
       </div>
-      <p className="no-imprimir text-center text-xs text-zinc-600">
+      <p className="no-imprimir text-center text-xs text-tenue">
         Para guardarlo como PDF, elige &quot;Guardar como PDF&quot; al imprimir.
       </p>
     </main>

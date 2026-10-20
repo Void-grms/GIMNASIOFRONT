@@ -46,14 +46,14 @@ export default function Escaner() {
 
   return (
     <div className="mx-auto max-w-md space-y-5">
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-tenue">
         Apunta al QR del socio. La computadora de recepcion lo muestra al instante.
       </p>
 
       <EscanerCamara onLeer={enviar} pausado={procesando || !!resultado} />
 
       <div className="min-h-[9rem]">
-        {procesando && <div className="tarjeta text-center text-zinc-400">Verificando…</div>}
+        {procesando && <div className="tarjeta text-center text-secundario">Verificando…</div>}
         {error && <p className="aviso-mal">{error}</p>}
         {resultado && (
           <div className="space-y-2">

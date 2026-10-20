@@ -81,7 +81,7 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Datos del negocio</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Aparecen en cada comprobante. Sin RUC no se puede emitir boleta ni factura.
         </p>
 
@@ -156,19 +156,19 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Respaldo de la base</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Toda la operacion vive en un archivo en esta PC. Se copia sola cada madrugada y se
           conservan las ultimas 14 copias, pero llevate una a otro lado de vez en cuando.
         </p>
 
         {salud?.respaldo && (
-          <div className="rounded-xl bg-black/40 p-3 text-sm">
+          <div className="rounded-xl bg-fondo/70 p-3 text-sm">
             <p className={salud.respaldo.horasDesde === null || salud.respaldo.horasDesde > 48 ? 'text-porvencer' : 'text-vigente'}>
               {salud.respaldo.horasDesde === null
                 ? 'Todavia no se hizo ningun respaldo'
                 : `Ultimo respaldo hace ${salud.respaldo.horasDesde} hora(s)`}
             </p>
-            <p className="text-zinc-500">{salud.respaldo.copias} copia(s) guardada(s)</p>
+            <p className="text-tenue">{salud.respaldo.copias} copia(s) guardada(s)</p>
           </div>
         )}
 
@@ -207,8 +207,8 @@ export default function Ajustes() {
           <ul className="divide-y divide-borde text-sm">
             {respaldos.slice(0, 5).map((r) => (
               <li key={r.archivo} className="flex justify-between py-2">
-                <span className="text-zinc-400">{fechaCorta(r.fecha)}</span>
-                <span className="text-zinc-500">{Math.round(r.tamano / 1024)} KB</span>
+                <span className="text-secundario">{fechaCorta(r.fecha)}</span>
+                <span className="text-tenue">{Math.round(r.tamano / 1024)} KB</span>
               </li>
             ))}
           </ul>
@@ -226,7 +226,7 @@ export default function Ajustes() {
             value={datos.invitadosPorMes ?? 1}
             onChange={(e) => set('invitadosPorMes', Number(e.target.value))}
           />
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="mt-1 text-sm text-tenue">
             Cada socio puede traer a alguien gratis dentro de este cupo. Un mismo invitado solo
             puede usarlo una vez.
           </p>
@@ -238,7 +238,7 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Renovacion por Yape desde el portal</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           El socio paga a este numero y sube la captura; recepcion la revisa y aprueba. Si lo dejas
           vacio, el portal no ofrece renovar.
         </p>
@@ -274,15 +274,15 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Mensaje de WhatsApp al cobrar</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Despues de cobrar una membresia aparece el boton &quot;Enviar por WhatsApp&quot;. El sistema
           elige solo el texto: bienvenida si es su primera membresia, agradecimiento si renueva.
           Recepcion puede retocarlo antes de enviarlo.
         </p>
         <div className="flex flex-wrap gap-1.5 text-xs">
           {VARIABLES_MENSAJE.map(([v, texto]) => (
-            <span key={v} className="rounded-lg border border-borde px-2 py-1 text-zinc-400" title={texto}>
-              <span className="font-mono text-acento">{v}</span> {texto}
+            <span key={v} className="rounded-lg border border-borde px-2 py-1 text-secundario" title={texto}>
+              <span className="font-mono text-acentoTexto">{v}</span> {texto}
             </span>
           ))}
         </div>
@@ -313,11 +313,11 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Aforo en la pagina web</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           La landing muestra cuantas personas hay entrenando ahora (solo el numero, sin nombres).
           Con un aforo maximo, muestra tambien que tan lleno esta.
         </p>
-        <label className="flex items-center gap-2 text-sm text-zinc-300">
+        <label className="flex items-center gap-2 text-sm text-secundario">
           <input
             type="checkbox"
             checked={datos.mostrarAforo ?? true}
@@ -345,7 +345,7 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Regimen tributario</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Decide si el comprobante desglosa IGV y si se puede emitir factura. Cambiarlo aqui alcanza,
           no hay que tocar el codigo.
         </p>
@@ -381,7 +381,7 @@ export default function Ajustes() {
               value={datos.umbralDocumento}
               onChange={(e) => set('umbralDocumento', Number(e.target.value))}
             />
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-tenue">
               SUNAT lo fija hoy en S/ 700 para las boletas.
             </p>
           </div>
@@ -404,7 +404,7 @@ export default function Ajustes() {
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Emision electronica</h2>
         <a className="boton-suave" href="/panel/facturacion">Configurar y probar SUNAT BETA</a>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Este apartado conserva la conexión opcional con NubeFact. La nueva conexión directa se prepara en Facturación SUNAT. Mientras el proveedor
           diga &quot;ninguno&quot;, los comprobantes se guardan en el sistema sin enviarse.
         </p>
@@ -458,7 +458,7 @@ export default function Ajustes() {
 
       <section className="tarjeta space-y-4">
         <h2 className="text-lg font-semibold">Textos legales</h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           Cada socio queda asociado a la version que acepto. Si cambias el texto, sube la version.
         </p>
 

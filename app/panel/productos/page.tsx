@@ -119,7 +119,7 @@ export default function Productos() {
         <div className="tarjeta p-0">
           <ul className="divide-y divide-borde">
             {productos.length === 0 && (
-              <li className="p-5 text-sm text-zinc-500">Todavia no hay productos.</li>
+              <li className="p-5 text-sm text-tenue">Todavia no hay productos.</li>
             )}
             {productos.map((p) => {
               const bajo = !p.esServicio && p.stock <= p.stockMinimo;
@@ -133,7 +133,7 @@ export default function Productos() {
                       setFotoDe(p.id);
                       archivo.current?.click();
                     }}
-                    className="group relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-bordeFuerte bg-black/40 text-zinc-600 hover:border-acento hover:text-acento"
+                    className="group relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-bordeFuerte bg-fondo/70 text-tenue hover:border-acento hover:text-acentoTexto"
                   >
                     {p.fotoUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -148,9 +148,9 @@ export default function Productos() {
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">
                       {p.nombre}
-                      {!p.activo && <span className="ml-2 text-sm text-zinc-500">(inactivo)</span>}
+                      {!p.activo && <span className="ml-2 text-sm text-tenue">(inactivo)</span>}
                     </p>
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-tenue">
                       {soles(p.precio)}
                       {p.esCasillero ? ' · casillero' : p.esServicio ? ' · servicio' : ` · stock ${p.stock}`}
                       {bajo && <span className="ml-2 text-porvencer">reponer</span>}
@@ -162,7 +162,7 @@ export default function Productos() {
                   <div className="flex w-full items-center justify-between gap-2 sm:ml-auto sm:w-auto sm:justify-end sm:gap-4">
                   {!p.esServicio ? (
                     <div className="flex items-center gap-1" role="group" aria-label="Ajustar inventario">
-                      <span className="mr-1 text-xs text-zinc-500 sm:hidden">Stock</span>
+                      <span className="mr-1 text-xs text-tenue sm:hidden">Stock</span>
                       <button
                         className="boton-suave min-h-9 px-2.5 py-1"
                         aria-label="Restar del inventario"
@@ -216,7 +216,7 @@ export default function Productos() {
           <div className="tarjeta p-0">
             <ul className="divide-y divide-borde">
               {ventas.length === 0 && (
-                <li className="p-4 text-sm text-zinc-500">Sin ventas todavia.</li>
+                <li className="p-4 text-sm text-tenue">Sin ventas todavia.</li>
               )}
               {ventas.map((v) => (
                 <li key={v.id} className="p-3 text-sm">
@@ -224,7 +224,7 @@ export default function Productos() {
                     <span>{v.socio}</span>
                     <span className="font-medium">{soles(v.total)}</span>
                   </div>
-                  <p className="text-zinc-500">
+                  <p className="text-tenue">
                     {hora(v.fecha)} · {v.metodo} ·{' '}
                     {v.items.map((i: any) => `${i.cantidad}x ${i.producto}`).join(', ')}
                   </p>
@@ -249,7 +249,7 @@ export default function Productos() {
         <h2 className="text-lg font-semibold">Venta rapida</h2>
 
         {!hayCarrito ? (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-tenue">
             Suma productos con el boton + y cobra aqui. Si no pones DNI, la venta queda a nombre de
             un visitante.
           </p>
@@ -381,7 +381,7 @@ function FormularioProducto({ onListo }: { onListo: () => void }) {
         )}
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-zinc-300">
+      <label className="flex items-center gap-2 text-sm text-secundario">
         <input
           type="checkbox"
           checked={datos.esServicio}

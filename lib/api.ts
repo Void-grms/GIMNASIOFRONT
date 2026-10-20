@@ -57,7 +57,11 @@ export async function api<T = any>(
     }
     throw new ApiError(res.status, mensaje);
   }
-  return res.status === 204 ? (null as T) : res.json();
+  if (res.status === 204) return null as T;
+  // Una consulta opcional (por ejemplo la sesión activa) puede responder 200
+  // sin contenido. Es un resultado vacío válido, no un error de conexión.
+  const contenido = await res.text();
+  return contenido.trim() ? JSON.parse(contenido) : null as T;
 }
 
 export const soles = (monto: number) =>

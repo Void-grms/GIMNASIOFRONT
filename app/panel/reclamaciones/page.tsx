@@ -43,11 +43,11 @@ export default function Reclamaciones() {
       <div>
         <h2 className="text-lg font-semibold">
           Libro de reclamaciones
-          <span className="ml-2 text-sm font-normal text-zinc-500">
+          <span className="ml-2 text-sm font-normal text-tenue">
             {pendientes.length} sin responder
           </span>
         </h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-tenue">
           La ley da 15 dias habiles improrrogables para responder cada registro.
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function Reclamaciones() {
 
       <div className="space-y-4">
         {lista.length === 0 && (
-          <div className="tarjeta text-sm text-zinc-500">Todavia no hay reclamos ni quejas.</div>
+          <div className="tarjeta text-sm text-tenue">Todavia no hay reclamos ni quejas.</div>
         )}
 
         {lista.map((r) => (
@@ -65,13 +65,13 @@ export default function Reclamaciones() {
               <div>
                 <p className="font-semibold">
                   {r.codigo}
-                  <span className="ml-2 text-sm font-normal capitalize text-zinc-400">{r.tipo}</span>
+                  <span className="ml-2 text-sm font-normal capitalize text-secundario">{r.tipo}</span>
                 </p>
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-tenue">
                   {r.nombre} · {r.tipoDoc.toUpperCase()} {r.numDoc} · {r.email}
                   {r.telefono ? ` · ${r.telefono}` : ''}
                 </p>
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-tenue">
                   Registrado {fechaCorta(r.createdAt)} · {r.bienTipo}: {r.bienDescripcion}
                   {r.montoReclamado ? ` · ${soles(r.montoReclamado)}` : ''}
                 </p>
@@ -94,18 +94,18 @@ export default function Reclamaciones() {
               </span>
             </div>
 
-            <div className="rounded-xl bg-black/40 p-3 text-sm">
-              <p className="text-zinc-300">{r.detalle}</p>
-              <p className="mt-2 text-zinc-400">
-                <span className="text-zinc-500">Pide: </span>
+            <div className="rounded-xl bg-fondo/70 p-3 text-sm">
+              <p className="text-secundario">{r.detalle}</p>
+              <p className="mt-2 text-secundario">
+                <span className="text-tenue">Pide: </span>
                 {r.pedido}
               </p>
             </div>
 
             {r.estado === 'respondido' ? (
               <div className="rounded-xl border border-vigente/30 bg-vigente/5 p-3 text-sm">
-                <p className="text-zinc-300">{r.respuesta}</p>
-                <p className="mt-1 text-zinc-500">
+                <p className="text-secundario">{r.respuesta}</p>
+                <p className="mt-1 text-tenue">
                   {r.respondidoPor} · {fechaCorta(r.respondidoAt)}
                 </p>
               </div>

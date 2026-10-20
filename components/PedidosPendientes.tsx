@@ -81,12 +81,12 @@ export function PedidosPendientes({
     <section className="space-y-3">
       <h2 className="rotulo">
         Pedidos del portal
-        {pedidos.length > 0 && <span className="ml-2 text-acento">{pedidos.length}</span>}
+        {pedidos.length > 0 && <span className="ml-2 text-acentoTexto">{pedidos.length}</span>}
       </h2>
       {aviso && <p className="aviso-ok">{aviso}</p>}
       {error && <p className="aviso-mal">{error}</p>}
       {pedidos.length === 0 && (
-        <div className="tarjeta text-sm text-zinc-500">
+        <div className="tarjeta text-sm text-tenue">
           Cuando un socio pida algo desde su celular, aparece aqui para cobrarlo al entregarlo.
         </div>
       )}
@@ -94,21 +94,21 @@ export function PedidosPendientes({
         <div key={p.id} className="tarjeta-acento space-y-3">
           <div className="flex items-baseline justify-between gap-3">
             <p className="min-w-0 truncate font-bold">{p.socio?.nombreCompleto}</p>
-            <p className="shrink-0 text-sm text-zinc-500 cifra">
+            <p className="shrink-0 text-sm text-tenue cifra">
               #{p.codigo} · {hora(p.creado)}
             </p>
           </div>
-          <ul className="text-sm text-zinc-300">
+          <ul className="text-sm text-secundario">
             {p.items.map((i: any) => (
               <li key={i.productId} className="flex justify-between">
                 <span>
                   {i.cantidad}x {i.producto}
                 </span>
-                <span className="cifra text-zinc-500">{soles(i.cantidad * i.precioUnitario)}</span>
+                <span className="cifra text-tenue">{soles(i.cantidad * i.precioUnitario)}</span>
               </li>
             ))}
           </ul>
-          {p.nota && <p className="text-sm italic text-zinc-400">“{p.nota}”</p>}
+          {p.nota && <p className="text-sm italic text-secundario">“{p.nota}”</p>}
           {p.items.some((i: any) => i.esCasillero) && (
             <SelectorCasillero
               valor={casillero[p.id] ?? null}
@@ -129,8 +129,8 @@ export function PedidosPendientes({
                   onClick={() => setMetodo({ ...metodo, [p.id]: m })}
                   className={`rounded-lg border px-2.5 py-1 text-xs font-semibold capitalize transition ${
                     elegido
-                      ? 'border-acento/50 bg-acento/15 text-acento'
-                      : 'border-borde text-zinc-400 hover:text-white'
+                      ? 'border-acento/50 bg-acento/15 text-acentoTexto'
+                      : 'border-borde text-secundario hover:text-tinta'
                   }`}
                 >
                   {m}

@@ -65,7 +65,7 @@ export function Plantillas({
         <h2 className="rotulo">Mis plantillas</h2>
         <button
           type="button"
-          className="text-xs font-semibold text-acento hover:underline"
+          className="text-xs font-semibold text-acentoTexto hover:underline"
           onClick={() => setEditando({ nombre: '', items: [] })}
         >
           + Nueva
@@ -85,7 +85,7 @@ export function Plantillas({
               {hechos}/{activa.items.length}
             </span>
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-black/50">
+          <div className="h-1.5 overflow-hidden rounded-full bg-fondo/70">
             <div className="h-full rounded-full bg-acento transition-all" style={{ width: `${(hechos / Math.max(1, activa.items.length)) * 100}%` }} />
           </div>
           <ul className="divide-y divide-borde rounded-xl border border-borde">
@@ -96,7 +96,7 @@ export function Plantillas({
                   <button
                     type="button"
                     onClick={() => onUsar(i)}
-                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-white/[0.04]"
+                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-neutral/[0.04]"
                   >
                     <span
                       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-black ${
@@ -107,10 +107,10 @@ export function Plantillas({
                       ✓
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className={`block truncate text-sm ${hecho ? 'text-zinc-500 line-through' : 'text-zinc-100'}`}>{i.nombre}</span>
-                      {i.nota && <span className="block truncate text-xs text-zinc-500">📝 {i.nota}</span>}
+                      <span className={`block truncate text-sm ${hecho ? 'text-tenue line-through' : 'text-tinta'}`}>{i.nombre}</span>
+                      {i.nota && <span className="block truncate text-xs text-tenue">📝 {i.nota}</span>}
                     </span>
-                    <span className="shrink-0 text-xs text-zinc-500 cifra">
+                    <span className="shrink-0 text-xs text-tenue cifra">
                       {i.series} × {i.repeticiones}
                     </span>
                   </button>
@@ -140,15 +140,15 @@ export function Plantillas({
               className="w-40 shrink-0 rounded-2xl border border-borde bg-superficie p-3 text-left transition hover:border-acento/50"
             >
               <span className="block truncate font-bold">{p.nombre}</span>
-              <span className="block truncate text-xs text-zinc-500">
+              <span className="block truncate text-xs text-tenue">
                 {p.items.length} ejercicios · {p.grupos.map((g: string) => NOMBRE_GRUPO[g] ?? g).join(', ')}
               </span>
-              <span className="mt-2 block text-xs font-semibold text-acento">Cargar ›</span>
+              <span className="mt-2 block text-xs font-semibold text-acentoTexto">Cargar ›</span>
             </button>
           ))}
         </div>
       ) : (
-        <p className="rounded-xl border border-dashed border-borde px-4 py-3 text-sm text-zinc-500">
+        <p className="rounded-xl border border-dashed border-borde px-4 py-3 text-sm text-tenue">
           Guarda tus sesiones (por ejemplo &quot;Mi dia de pecho&quot;) y cargalas enteras con un toque.
         </p>
       )}
@@ -235,7 +235,7 @@ function EditorPlantilla({
       <div className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[92vh] max-w-md animate-subir flex-col rounded-t-3xl border-t border-borde bg-superficie pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-between border-b border-borde p-4">
           <h2 className="text-lg font-black">{inicial.id ? 'Editar plantilla' : 'Nueva plantilla'}</h2>
-          <button className="text-sm text-zinc-500 hover:text-white" onClick={onCerrar}>
+          <button className="text-sm text-tenue hover:text-tinta" onClick={onCerrar}>
             Cerrar
           </button>
         </div>
@@ -254,18 +254,18 @@ function EditorPlantilla({
 
           <div className="space-y-2">
             <p className="etiqueta">Ejercicios ({items.length})</p>
-            {items.length === 0 && <p className="text-sm text-zinc-500">Agrega los ejercicios en el orden en que los haces.</p>}
+            {items.length === 0 && <p className="text-sm text-tenue">Agrega los ejercicios en el orden en que los haces.</p>}
             {items.map((i, k) => (
               <div key={`${i.exerciseId}-${k}`} className="space-y-2 rounded-xl border border-borde p-3">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 text-center text-sm font-bold text-zinc-500 cifra">{k + 1}</span>
+                  <span className="w-5 text-center text-sm font-bold text-tenue cifra">{k + 1}</span>
                   <span className="min-w-0 flex-1 truncate text-sm font-semibold">{nombreDe(i.exerciseId)}</span>
-                  <button type="button" aria-label="Subir" disabled={k === 0} className="px-1.5 text-zinc-500 disabled:opacity-20" onClick={() => mover(k, -1)}>↑</button>
-                  <button type="button" aria-label="Bajar" disabled={k === items.length - 1} className="px-1.5 text-zinc-500 disabled:opacity-20" onClick={() => mover(k, 1)}>↓</button>
-                  <button type="button" aria-label="Quitar" className="px-1.5 text-zinc-500 hover:text-vencido" onClick={() => setItems(items.filter((_, j) => j !== k))}>✕</button>
+                  <button type="button" aria-label="Subir" disabled={k === 0} className="px-1.5 text-tenue disabled:opacity-20" onClick={() => mover(k, -1)}>↑</button>
+                  <button type="button" aria-label="Bajar" disabled={k === items.length - 1} className="px-1.5 text-tenue disabled:opacity-20" onClick={() => mover(k, 1)}>↓</button>
+                  <button type="button" aria-label="Quitar" className="px-1.5 text-tenue hover:text-vencido" onClick={() => setItems(items.filter((_, j) => j !== k))}>✕</button>
                 </div>
                 <div className="grid grid-cols-2 gap-2 pl-7">
-                  <label className="text-xs text-zinc-500">
+                  <label className="text-xs text-tenue">
                     Series
                     <input
                       type="number"
@@ -276,7 +276,7 @@ function EditorPlantilla({
                       onChange={(e) => cambiar(k, { series: Number(e.target.value) })}
                     />
                   </label>
-                  <label className="text-xs text-zinc-500">
+                  <label className="text-xs text-tenue">
                     Reps
                     <input
                       className="campo mt-1 px-3 py-1.5 text-sm"

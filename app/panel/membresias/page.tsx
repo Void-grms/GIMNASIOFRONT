@@ -100,7 +100,7 @@ export default function Membresias() {
   if (!esAdmin) return (
     <div className="tarjeta max-w-xl space-y-3">
       <h2 className="text-lg font-bold">Administración de membresías</h2>
-      <p className="text-sm text-zinc-400">Solo el administrador puede crear o cambiar planes. Para cobrar una membresía, abre la ficha del socio.</p>
+      <p className="text-sm text-secundario">Solo el administrador puede crear o cambiar planes. Para cobrar una membresía, abre la ficha del socio.</p>
       <Link className="boton-suave" href="/panel/socios">Ir a socios</Link>
     </div>
   );
@@ -110,7 +110,7 @@ export default function Membresias() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-2xl">
           <h2 className="text-xl font-extrabold tracking-tight">Planes del gimnasio</h2>
-          <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">Define cuánto cuesta cada membresía, su vigencia y cuántas asistencias incluye. Los planes activos aparecen al cobrar, en el portal y en la web.</p>
+          <p className="mt-1.5 text-sm leading-relaxed text-secundario">Define cuánto cuesta cada membresía, su vigencia y cuántas asistencias incluye. Los planes activos aparecen al cobrar, en el portal y en la web.</p>
         </div>
         {!formulario && <button type="button" className="boton w-full sm:w-auto" onClick={() => abrir({ ...NUEVO })}>Añadir membresía</button>}
       </div>
@@ -136,7 +136,7 @@ export default function Membresias() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h3 id="interdiaria-titulo" className="font-bold">Interdiaria · Entrena a tu ritmo</h3>
-                <p className="mt-1 text-sm text-zinc-400">S/ 60 · 12 asistencias durante 30 días desde el inicio. Sin días de la semana fijos.</p>
+                <p className="mt-1 text-sm text-secundario">S/ 60 · 12 asistencias durante 30 días desde el inicio. Sin días de la semana fijos.</p>
               </div>
               <button type="button" className="boton-suave w-full sm:w-auto" onClick={() => abrir({ ...INTERDIARIA })}>Usar como base</button>
             </div>
@@ -155,15 +155,15 @@ export default function Membresias() {
                 </select>
               </div>
             </div>
-            <p className="text-xs leading-relaxed text-zinc-500">Los planes desactivados y los importados del sistema anterior se conservan en el historial. Los importados son de consulta; puedes crear una copia para ofrecerlos de nuevo.</p>
+            <p className="text-xs leading-relaxed text-tenue">Los planes desactivados y los importados del sistema anterior se conservan en el historial. Los importados son de consulta; puedes crear una copia para ofrecerlos de nuevo.</p>
             {cargando ? <Esqueleto filas={3} /> : !error && encontrados.length === 0 ? (
               <div className="tarjeta py-10 text-center">
                 <h3 className="font-bold">{busqueda ? 'No encontramos esa membresía' : `No hay planes ${filtro === 'inactivos' ? 'inactivos' : filtro === 'activos' ? 'activos' : 'registrados'}`}</h3>
-                <p className="mt-2 text-sm text-zinc-400">{busqueda ? 'Prueba otro nombre o cambia el filtro.' : 'Añade una membresía para definir su precio y condiciones.'}</p>
+                <p className="mt-2 text-sm text-secundario">{busqueda ? 'Prueba otro nombre o cambia el filtro.' : 'Añade una membresía para definir su precio y condiciones.'}</p>
               </div>
             ) : !error && (
               <>
-                <p className="text-sm text-zinc-400" role="status">{encontrados.length} {encontrados.length === 1 ? 'membresía' : 'membresías'} · {filtro === 'activos' ? 'disponibles para vender' : filtro === 'inactivos' ? 'fuera de venta' : 'en el catálogo'}</p>
+                <p className="text-sm text-secundario" role="status">{encontrados.length} {encontrados.length === 1 ? 'membresía' : 'membresías'} · {filtro === 'activos' ? 'disponibles para vender' : filtro === 'inactivos' ? 'fuera de venta' : 'en el catálogo'}</p>
                 <div className="grid gap-4 xl:grid-cols-2">
                   {visibles.map((plan) => (
                     <article key={plan.id} className={`tarjeta flex min-w-0 flex-col ${!plan.activo ? 'border-dashed' : ''}`}>
@@ -171,19 +171,19 @@ export default function Membresias() {
                         <div className="min-w-0 flex-1">
                           <h3 className="break-words text-lg font-extrabold leading-tight">{plan.nombre}</h3>
                           <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
-                            <span className={`rounded-md px-2 py-1 ${plan.activo ? 'bg-vigente/10 text-vigente' : 'bg-white/[0.06] text-zinc-400'}`}>{plan.activo ? 'Activo' : 'Inactivo'}</span>
-                            {plan.esPromocion && <span className="rounded-md bg-acento/10 px-2 py-1 text-acento">Promoción</span>}
-                            {plan.historico && <span className="rounded-md bg-white/[0.06] px-2 py-1 text-zinc-400">Histórico importado</span>}
-                            {plan.requiereEvidencia && <span className="rounded-md bg-white/[0.06] px-2 py-1 text-zinc-300">Carné universitario</span>}
+                            <span className={`rounded-md px-2 py-1 ${plan.activo ? 'bg-vigente/10 text-vigente' : 'bg-neutral/[0.06] text-secundario'}`}>{plan.activo ? 'Activo' : 'Inactivo'}</span>
+                            {plan.esPromocion && <span className="rounded-md bg-acento/10 px-2 py-1 text-acentoTexto">Promoción</span>}
+                            {plan.historico && <span className="rounded-md bg-neutral/[0.06] px-2 py-1 text-secundario">Histórico importado</span>}
+                            {plan.requiereEvidencia && <span className="rounded-md bg-neutral/[0.06] px-2 py-1 text-secundario">Carné universitario</span>}
                           </div>
                         </div>
                         <p className="text-2xl font-black tracking-tight cifra">{soles(plan.precio)}</p>
                       </div>
                       <dl className="mt-5 grid grid-cols-2 divide-x divide-borde border-y border-borde py-3">
-                        <div className="pr-3"><dt className="text-xs text-zinc-500">Vigencia desde el inicio</dt><dd className="mt-1 font-bold cifra">{plan.duracionDias} {plan.duracionDias === 1 ? 'día' : 'días'}</dd></div>
-                        <div className="pl-4"><dt className="text-xs text-zinc-500">Asistencias incluidas</dt><dd className="mt-1 font-bold cifra">{plan.limiteAsistencias == null ? 'Sin límite' : `${plan.limiteAsistencias} en toda la vigencia`}</dd></div>
+                        <div className="pr-3"><dt className="text-xs text-tenue">Vigencia desde el inicio</dt><dd className="mt-1 font-bold cifra">{plan.duracionDias} {plan.duracionDias === 1 ? 'día' : 'días'}</dd></div>
+                        <div className="pl-4"><dt className="text-xs text-tenue">Asistencias incluidas</dt><dd className="mt-1 font-bold cifra">{plan.limiteAsistencias == null ? 'Sin límite' : `${plan.limiteAsistencias} en toda la vigencia`}</dd></div>
                       </dl>
-                      {plan.descripcion && <p className="mt-3 break-words text-sm leading-relaxed text-zinc-400">{plan.descripcion}</p>}
+                      {plan.descripcion && <p className="mt-3 break-words text-sm leading-relaxed text-secundario">{plan.descripcion}</p>}
                       <div className="mt-auto flex flex-wrap gap-2 pt-5">
                         {plan.historico ? <button type="button" className="boton-suave flex-1" onClick={() => abrir({ ...plan, nombre: `${plan.nombre} (copia)`.slice(0, 100), activo: true })}>Crear copia</button> : <>
                           <button type="button" className="boton-suave flex-1" onClick={() => abrir({ ...plan }, plan)} disabled={!!cambiando} aria-label={`Editar ${plan.nombre}`}>Editar plan</button>
@@ -194,7 +194,7 @@ export default function Membresias() {
                   ))}
                 </div>
                 {paginas > 1 && <nav aria-label="Páginas de membresías" className="flex flex-wrap items-center justify-between gap-3 border-t border-borde pt-4">
-                  <p className="text-sm text-zinc-400 cifra">Página {paginaActual} de {paginas}</p>
+                  <p className="text-sm text-secundario cifra">Página {paginaActual} de {paginas}</p>
                   <div className="flex gap-2"><button type="button" className="boton-suave" disabled={paginaActual === 1} onClick={() => setPagina(paginaActual - 1)}>Anterior</button><button type="button" className="boton-suave" disabled={paginaActual === paginas} onClick={() => setPagina(paginaActual + 1)}>Siguiente</button></div>
                 </nav>}
               </>
@@ -248,26 +248,26 @@ function FormularioPlan({ plan, inicial, onCancelar, onGuardado }: {
 
   return (
     <form onSubmit={guardar} className="tarjeta max-w-3xl space-y-6" aria-labelledby="editar-plan-titulo">
-      <div><h3 ref={titulo} tabIndex={-1} id="editar-plan-titulo" className="text-xl font-bold">{plan ? `Editar ${plan.nombre}` : 'Añadir membresía'}</h3><p className="mt-2 text-sm leading-relaxed text-zinc-400">Los cambios se aplican a nuevas ventas. Las membresías ya vendidas conservan el precio, la vigencia y las asistencias contratadas.</p></div>
+      <div><h3 ref={titulo} tabIndex={-1} id="editar-plan-titulo" className="text-xl font-bold">{plan ? `Editar ${plan.nombre}` : 'Añadir membresía'}</h3><p className="mt-2 text-sm leading-relaxed text-secundario">Los cambios se aplican a nuevas ventas. Las membresías ya vendidas conservan el precio, la vigencia y las asistencias contratadas.</p></div>
       {error && <p role="alert" className="aviso-mal">{error}</p>}
       <fieldset disabled={guardando} className="space-y-5">
         <legend className="sr-only">Precio y condiciones de la membresía</legend>
         <div><label htmlFor="plan-nombre" className="etiqueta">Nombre de la membresía</label><input id="plan-nombre" className="campo" required minLength={2} maxLength={100} value={datos.nombre} autoComplete="off" placeholder="Ejemplo: Interdiaria o Promoción de verano" onChange={(e) => setDatos({ ...datos, nombre: e.target.value })} /></div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div><label htmlFor="plan-precio" className="etiqueta">Precio total (S/)</label><input id="plan-precio" className="campo cifra" type="number" inputMode="decimal" required min={0} max={100000} step="0.01" value={datos.precio} onChange={(e) => setDatos({ ...datos, precio: Number(e.target.value) })} /><p className="mt-1.5 text-xs text-zinc-500">Importe que pagará el socio.</p></div>
-          <div><label htmlFor="plan-dias" className="etiqueta">Vigencia en días</label><input id="plan-dias" className="campo cifra" type="number" inputMode="numeric" required min={1} max={3660} step={1} value={datos.duracionDias} onChange={(e) => setDatos({ ...datos, duracionDias: Number(e.target.value) })} /><p className="mt-1.5 text-xs text-zinc-500">Se cuenta desde el inicio de cada membresía.</p></div>
+          <div><label htmlFor="plan-precio" className="etiqueta">Precio total (S/)</label><input id="plan-precio" className="campo cifra" type="number" inputMode="decimal" required min={0} max={100000} step="0.01" value={datos.precio} onChange={(e) => setDatos({ ...datos, precio: Number(e.target.value) })} /><p className="mt-1.5 text-xs text-tenue">Importe que pagará el socio.</p></div>
+          <div><label htmlFor="plan-dias" className="etiqueta">Vigencia en días</label><input id="plan-dias" className="campo cifra" type="number" inputMode="numeric" required min={1} max={3660} step={1} value={datos.duracionDias} onChange={(e) => setDatos({ ...datos, duracionDias: Number(e.target.value) })} /><p className="mt-1.5 text-xs text-tenue">Se cuenta desde el inicio de cada membresía.</p></div>
         </div>
-        <div className="rounded-xl border border-borde bg-black/20 p-4">
+        <div className="rounded-xl border border-borde bg-fondo/70 p-4">
           <label htmlFor="plan-limitado" className="flex cursor-pointer items-start gap-3 text-sm font-semibold"><input id="plan-limitado" type="checkbox" className="mt-0.5 h-4 w-4 accent-[#FAD234]" checked={limitado} onChange={(e) => setLimitado(e.target.checked)} /><span>Limitar las asistencias incluidas</span></label>
-          {limitado ? <div className="mt-4"><label htmlFor="plan-asistencias" className="etiqueta">Asistencias en toda la vigencia</label><input id="plan-asistencias" className="campo cifra max-w-48" type="number" inputMode="numeric" required min={1} max={3660} step={1} value={limite} onChange={(e) => setLimite(e.target.value)} /><p className="mt-2 text-sm leading-relaxed text-zinc-400">Incluye {limite || '—'} asistencias durante {datos.duracionDias || '—'} días. Se descuenta una por día de ingreso; salir y volver el mismo día no descuenta otra. No exige días alternos.</p></div> : <p className="mt-2 pl-7 text-sm text-zinc-400">El socio puede asistir sin un cupo de entradas durante la vigencia.</p>}
+          {limitado ? <div className="mt-4"><label htmlFor="plan-asistencias" className="etiqueta">Asistencias en toda la vigencia</label><input id="plan-asistencias" className="campo cifra max-w-48" type="number" inputMode="numeric" required min={1} max={3660} step={1} value={limite} onChange={(e) => setLimite(e.target.value)} /><p className="mt-2 text-sm leading-relaxed text-secundario">Incluye {limite || '—'} asistencias durante {datos.duracionDias || '—'} días. Se descuenta una por día de ingreso; salir y volver el mismo día no descuenta otra. No exige días alternos.</p></div> : <p className="mt-2 pl-7 text-sm text-secundario">El socio puede asistir sin un cupo de entradas durante la vigencia.</p>}
         </div>
-        <div><label htmlFor="plan-descripcion" className="etiqueta">Descripción y condiciones <span className="text-zinc-500">(opcional)</span></label><textarea id="plan-descripcion" className="campo min-h-24" maxLength={1000} value={datos.descripcion || ''} onChange={(e) => setDatos({ ...datos, descripcion: e.target.value })} placeholder="Describe qué incluye el plan y cualquier condición para el socio." /></div>
+        <div><label htmlFor="plan-descripcion" className="etiqueta">Descripción y condiciones <span className="text-tenue">(opcional)</span></label><textarea id="plan-descripcion" className="campo min-h-24" maxLength={1000} value={datos.descripcion || ''} onChange={(e) => setDatos({ ...datos, descripcion: e.target.value })} placeholder="Describe qué incluye el plan y cualquier condición para el socio." /></div>
         <div className="space-y-4">
-          <label htmlFor="plan-promo" className="flex cursor-pointer items-start gap-3"><input id="plan-promo" className="mt-0.5 h-4 w-4 accent-[#FAD234]" type="checkbox" checked={!!datos.esPromocion} onChange={(e) => setDatos({ ...datos, esPromocion: e.target.checked })} /><span><span className="block text-sm font-semibold">Marcar como promoción</span><span className="mt-1 block text-xs text-zinc-400">Se identifica como promoción en el catálogo. Desactívala cuando termine la oferta.</span></span></label>
-          <label htmlFor="plan-evidencia" className="flex cursor-pointer items-start gap-3"><input id="plan-evidencia" className="mt-0.5 h-4 w-4 accent-[#FAD234]" type="checkbox" checked={!!datos.requiereEvidencia} onChange={(e) => setDatos({ ...datos, requiereEvidencia: e.target.checked })} /><span><span className="block text-sm font-semibold">Requiere carné universitario vigente</span><span className="mt-1 block text-xs text-zinc-400">Recepción debe validar el carné del socio antes de vender este plan.</span></span></label>
-          <label htmlFor="plan-activo" className="flex cursor-pointer items-start gap-3"><input id="plan-activo" className="mt-0.5 h-4 w-4 accent-[#FAD234]" type="checkbox" checked={datos.activo} onChange={(e) => setDatos({ ...datos, activo: e.target.checked })} /><span><span className="block text-sm font-semibold">Disponible para vender y mostrar en la web</span><span className="mt-1 block text-xs text-zinc-400">Al desactivarlo, las membresías que ya compraron los socios siguen vigentes.</span></span></label>
+          <label htmlFor="plan-promo" className="flex cursor-pointer items-start gap-3"><input id="plan-promo" className="mt-0.5 h-4 w-4 accent-[#FAD234]" type="checkbox" checked={!!datos.esPromocion} onChange={(e) => setDatos({ ...datos, esPromocion: e.target.checked })} /><span><span className="block text-sm font-semibold">Marcar como promoción</span><span className="mt-1 block text-xs text-secundario">Se identifica como promoción en el catálogo. Desactívala cuando termine la oferta.</span></span></label>
+          <label htmlFor="plan-evidencia" className="flex cursor-pointer items-start gap-3"><input id="plan-evidencia" className="mt-0.5 h-4 w-4 accent-[#FAD234]" type="checkbox" checked={!!datos.requiereEvidencia} onChange={(e) => setDatos({ ...datos, requiereEvidencia: e.target.checked })} /><span><span className="block text-sm font-semibold">Requiere carné universitario vigente</span><span className="mt-1 block text-xs text-secundario">Recepción debe validar el carné del socio antes de vender este plan.</span></span></label>
+          <label htmlFor="plan-activo" className="flex cursor-pointer items-start gap-3"><input id="plan-activo" className="mt-0.5 h-4 w-4 accent-[#FAD234]" type="checkbox" checked={datos.activo} onChange={(e) => setDatos({ ...datos, activo: e.target.checked })} /><span><span className="block text-sm font-semibold">Disponible para vender y mostrar en la web</span><span className="mt-1 block text-xs text-secundario">Al desactivarlo, las membresías que ya compraron los socios siguen vigentes.</span></span></label>
         </div>
-        <div className="max-w-56"><label htmlFor="plan-orden" className="etiqueta">Orden en el catálogo</label><input id="plan-orden" className="campo cifra" type="number" inputMode="numeric" required min={0} max={10000} step={1} value={datos.orden} onChange={(e) => setDatos({ ...datos, orden: Number(e.target.value) })} /><p className="mt-1.5 text-xs text-zinc-500">Los números menores aparecen primero.</p></div>
+        <div className="max-w-56"><label htmlFor="plan-orden" className="etiqueta">Orden en el catálogo</label><input id="plan-orden" className="campo cifra" type="number" inputMode="numeric" required min={0} max={10000} step={1} value={datos.orden} onChange={(e) => setDatos({ ...datos, orden: Number(e.target.value) })} /><p className="mt-1.5 text-xs text-tenue">Los números menores aparecen primero.</p></div>
       </fieldset>
       <div className="flex flex-col gap-3 border-t border-borde pt-5 sm:flex-row"><button type="submit" className="boton" disabled={guardando}>{guardando ? 'Guardando…' : plan ? 'Guardar cambios' : 'Añadir membresía'}</button><button type="button" className="boton-suave" disabled={guardando} onClick={onCancelar}>Cancelar</button></div>
     </form>

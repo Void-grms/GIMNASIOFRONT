@@ -202,7 +202,7 @@ export default function Facturacion() {
     return (
       <div className="tarjeta max-w-xl">
         <h2 className="text-xl font-bold">Facturación electrónica</h2>
-        <p className="mt-3 text-zinc-400">
+        <p className="mt-3 text-secundario">
           Solo el administrador puede configurar y probar la conexión con SUNAT.
         </p>
       </div>
@@ -225,16 +225,16 @@ export default function Facturacion() {
   return (
     <div className="max-w-6xl space-y-6">
       <header className="space-y-2">
-        <p className="text-sm font-bold text-acento">
+        <p className="text-sm font-bold text-acentoTexto">
           SUNAT · Entorno de pruebas
         </p>
         <h2 className="text-2xl font-black tracking-tight">
           Prepara tu emisión electrónica
         </h2>
-        <p className="max-w-3xl text-sm leading-relaxed text-zinc-400">
+        <p className="max-w-3xl text-sm leading-relaxed text-secundario">
           Configura el emisor y prueba una boleta antes de usar comprobantes
           reales. Los cobros del gimnasio se consultan en{' '}
-          <Link className="text-acento underline" href="/panel/comprobantes">
+          <Link className="text-acentoTexto underline" href="/panel/comprobantes">
             Comprobantes
           </Link>
           .
@@ -247,7 +247,7 @@ export default function Facturacion() {
         <strong className="block text-porvencer">
           PRUEBA — SIN VALIDEZ TRIBUTARIA
         </strong>
-        <p className="mt-2 text-zinc-300">
+        <p className="mt-2 text-secundario">
           Este laboratorio envía datos ficticios a SUNAT BETA. No cobra, no
           cambia membresías y no consume la numeración real. Una aceptación de
           prueba no habilita la emisión fiscal del gimnasio.
@@ -271,7 +271,7 @@ export default function Facturacion() {
           <h3 id="prueba-titulo" className="text-lg font-bold">
             1. Envía un comprobante de prueba
           </h3>
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-2 text-sm text-secundario">
             {config.ruc
               ? 'Se usará el RUC guardado y un cliente ficticio.'
               : 'Puedes empezar con el emisor ficticio de demostración, sin ingresar datos del negocio.'}{' '}
@@ -280,9 +280,9 @@ export default function Facturacion() {
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div className="rounded-xl border border-borde bg-black/20 p-4">
+          <div className="rounded-xl border border-borde bg-fondo/70 p-4">
             <p className="text-sm font-semibold">Servicio ficticio · S/60</p>
-            <dl className="mt-3 space-y-1 text-sm text-zinc-400">
+            <dl className="mt-3 space-y-1 text-sm text-secundario">
               <div className="flex justify-between gap-3">
                 <dt>Valor de venta</dt>
                 <dd>{soles(50.85)}</dd>
@@ -291,7 +291,7 @@ export default function Facturacion() {
                 <dt>IGV de prueba (18%)</dt>
                 <dd>{soles(9.15)}</dd>
               </div>
-              <div className="flex justify-between gap-3 border-t border-borde pt-2 font-bold text-white">
+              <div className="flex justify-between gap-3 border-t border-borde pt-2 font-bold text-tinta">
                 <dt>Total ficticio</dt>
                 <dd>{soles(60)}</dd>
               </div>
@@ -324,7 +324,7 @@ export default function Facturacion() {
                   ? 'Recuperar el mismo intento'
                   : 'Crear prueba y enviar a SUNAT BETA'}
             </button>
-            <p className="text-xs leading-relaxed text-zinc-500">
+            <p className="text-xs leading-relaxed text-tenue">
               Si la conexión se interrumpe, recupera el mismo intento. El botón
               conserva su identificador para evitar duplicarlo.
             </p>
@@ -349,7 +349,7 @@ export default function Facturacion() {
             <h3 id="historial-pruebas" className="text-lg font-bold">
               Resultados de las pruebas
             </h3>
-            <p className="mt-1 text-sm text-zinc-400">
+            <p className="mt-1 text-sm text-secundario">
               La aceptación requiere una constancia de recepción (CDR) con
               código 0.
             </p>
@@ -367,7 +367,7 @@ export default function Facturacion() {
           </button>
         </div>
         {!docs.length ? (
-          <p className="rounded-xl border border-dashed border-borde p-5 text-sm text-zinc-400">
+          <p className="rounded-xl border border-dashed border-borde p-5 text-sm text-secundario">
             Todavía no hay pruebas. Crea la primera para revisar el XML firmado
             y la respuesta de SUNAT BETA.
           </p>
@@ -384,7 +384,7 @@ export default function Facturacion() {
                       {d.tipo === 'boleta' ? 'Boleta' : 'Factura'} {d.serie}-
                       {d.numero}
                     </h4>
-                    <p className="mt-1 text-xs text-zinc-500">
+                    <p className="mt-1 text-xs text-tenue">
                       {new Date(d.emitidoAt).toLocaleString('es-PE', {
                         timeZone: 'America/Lima',
                       })}{' '}
@@ -397,16 +397,16 @@ export default function Facturacion() {
                     {ESTADOS[d.estado] || d.estado}
                   </span>
                 </div>
-                <p className="mt-3 break-words text-sm leading-relaxed text-zinc-400">
+                <p className="mt-3 break-words text-sm leading-relaxed text-secundario">
                   {d.codigo && (
-                    <strong className="text-zinc-200">
+                    <strong className="text-tinta">
                       Código {d.codigo} ·{' '}
                     </strong>
                   )}
                   {d.mensaje}
                 </p>
                 {d.ticket && (
-                  <p className="mt-2 break-all text-xs text-zinc-500">
+                  <p className="mt-2 break-all text-xs text-tenue">
                     Ticket: {d.ticket}. Recibir un ticket no significa
                     aceptación.
                   </p>
@@ -480,7 +480,7 @@ export default function Facturacion() {
           <h3 id="emisor-titulo" className="text-lg font-bold">
             2. Datos del emisor
           </h3>
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-2 text-sm text-secundario">
             Copia los datos de tu ficha RUC. Validar los dígitos no consulta el
             padrón ni confirma el régimen. Si dejas el RUC vacío, los ensayos
             usan el emisor ficticio.
@@ -535,7 +535,7 @@ export default function Facturacion() {
               <option value="rmt">MYPE Tributario</option>
               <option value="general">Régimen General</option>
             </select>
-            <p className="mt-2 text-xs leading-relaxed text-zinc-500">
+            <p className="mt-2 text-xs leading-relaxed text-tenue">
               El RUC 10 corresponde a persona natural; no determina el régimen
               ni si la operación está gravada, exonerada o inafecta.
             </p>
@@ -545,7 +545,7 @@ export default function Facturacion() {
           <summary className="cursor-pointer text-sm font-semibold">
             Preparar credenciales SOL (opcional)
           </summary>
-          <p className="mt-3 text-xs leading-relaxed text-zinc-400">
+          <p className="mt-3 text-xs leading-relaxed text-secundario">
             Las pruebas usan las credenciales públicas del servicio BETA. Las
             siguientes claves se guardan cifradas y no se envían en los ensayos
             ni se validan todavía. No compartas tu clave por chat.
@@ -577,7 +577,7 @@ export default function Facturacion() {
               />
             </div>
           </div>
-          <p className="mt-2 text-xs text-zinc-500">
+          <p className="mt-2 text-xs text-tenue">
             Deja los campos vacíos para conservar las claves existentes.
           </p>
         </details>
@@ -597,7 +597,7 @@ export default function Facturacion() {
           <h3 id="certificado-titulo" className="text-lg font-bold">
             3. Certificado digital
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+          <p className="mt-2 text-sm leading-relaxed text-secundario">
             Para ensayar se genera un certificado autofirmado de prueba. No
             necesitas comprar uno para empezar. Puedes preparar tu archivo
             PFX/P12; leerlo no valida su registro en SUNAT ni la titularidad del
@@ -609,7 +609,7 @@ export default function Facturacion() {
             <p className="break-words font-semibold">
               {config.certificado.subject}
             </p>
-            <p className="mt-2 text-zinc-400">
+            <p className="mt-2 text-secundario">
               Vigente hasta{' '}
               {new Date(config.certificado.validTo).toLocaleDateString('es-PE')}
             </p>
@@ -679,12 +679,12 @@ export default function Facturacion() {
         <h3 className="text-lg font-bold">
           Emisión real: todavía deshabilitada
         </h3>
-        <p className="text-sm leading-relaxed text-zinc-400">
+        <p className="text-sm leading-relaxed text-secundario">
           La ficha aportada sirve para preparar el alta. Antes de conectar
           ventas reales hay que completar y comprobar estos puntos. Ningún botón
           de esta pantalla envía comprobantes al servicio productivo.
         </p>
-        <ul className="list-disc space-y-2 pl-5 text-sm text-zinc-400">
+        <ul className="list-disc space-y-2 pl-5 text-sm text-secundario">
           {config.pendientesProduccion.map((p: string) => (
             <li key={p}>{p}</li>
           ))}

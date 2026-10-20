@@ -17,7 +17,7 @@ const COLORES: Record<
     borde: 'border-vigente/40',
     texto: 'text-vigente',
     fondo: 'bg-vigente/[0.14]',
-    degradado: 'bg-[linear-gradient(120deg,rgba(34,197,94,.1),#121215_58%)]',
+    degradado: 'bg-[linear-gradient(120deg,rgba(34,197,94,.1),rgb(var(--color-superficie))_58%)]',
     etiqueta: 'Puede pasar',
   },
   por_vencer: {
@@ -25,7 +25,7 @@ const COLORES: Record<
     borde: 'border-porvencer/40',
     texto: 'text-porvencer',
     fondo: 'bg-porvencer/[0.14]',
-    degradado: 'bg-[linear-gradient(120deg,rgba(251,146,60,.1),#121215_58%)]',
+    degradado: 'bg-[linear-gradient(120deg,rgba(251,146,60,.1),rgb(var(--color-superficie))_58%)]',
     etiqueta: 'Por vencer',
   },
   vencido: {
@@ -33,7 +33,7 @@ const COLORES: Record<
     borde: 'border-vencido/40',
     texto: 'text-vencido',
     fondo: 'bg-vencido/[0.14]',
-    degradado: 'bg-[linear-gradient(120deg,rgba(239,68,68,.1),#121215_58%)]',
+    degradado: 'bg-[linear-gradient(120deg,rgba(239,68,68,.1),rgb(var(--color-superficie))_58%)]',
     etiqueta: 'Vencida',
   },
   sin_membresia: {
@@ -41,7 +41,7 @@ const COLORES: Record<
     borde: 'border-vencido/40',
     texto: 'text-vencido',
     fondo: 'bg-vencido/[0.14]',
-    degradado: 'bg-[linear-gradient(120deg,rgba(239,68,68,.1),#121215_58%)]',
+    degradado: 'bg-[linear-gradient(120deg,rgba(239,68,68,.1),rgb(var(--color-superficie))_58%)]',
     etiqueta: 'Sin membresia',
   },
 };
@@ -66,7 +66,7 @@ export function TarjetaSocio({
     return (
       <div className="franja-vencido animate-entrar rounded-2xl border border-vencido/40 bg-vencido/[0.08] p-6">
         <p className="text-2xl font-black tracking-tight text-vencido">Codigo no reconocido</p>
-        <p className="mt-1.5 text-sm text-zinc-300">{motivo}</p>
+        <p className="mt-1.5 text-sm text-secundario">{motivo}</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export function TarjetaSocio({
       <span className={`absolute bottom-0 left-0 top-0 w-1 ${marco.franja}`} />
 
       <div
-        className={`flex shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-borde bg-black/45 ${
+        className={`flex shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-borde bg-fondo/70 ${
           compacta ? 'h-14 w-14' : 'h-[124px] w-[124px]'
         }`}
       >
@@ -92,7 +92,7 @@ export function TarjetaSocio({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={foto} alt={socio.nombreCompleto} className="h-full w-full object-cover" />
         ) : (
-          <span className={`font-black text-zinc-700 ${compacta ? 'text-lg' : 'text-4xl'}`}>
+          <span className={`font-black text-tenue ${compacta ? 'text-lg' : 'text-4xl'}`}>
             {socio.nombres?.[0]}
             {socio.apellidos?.[0]}
           </span>
@@ -111,7 +111,7 @@ export function TarjetaSocio({
           {tipo && !denegado && (
             <span
               className={`rounded-[9px] px-[11px] py-[5px] text-[13px] font-extrabold tracking-[0.06em] ${
-                tipo === 'entrada' ? 'bg-vigente/20 text-vigente' : 'bg-white/10 text-zinc-300'
+                tipo === 'entrada' ? 'bg-vigente/20 text-vigente' : 'bg-neutral/10 text-secundario'
               }`}
             >
               {tipo === 'entrada' ? 'ENTRA' : 'SALE'}
@@ -119,7 +119,7 @@ export function TarjetaSocio({
           )}
         </div>
 
-        <p className="mt-1.5 text-sm text-zinc-400 cifra">
+        <p className="mt-1.5 text-sm text-secundario cifra">
           {socio.codigoERP ? `Código ${socio.codigoERP} · ` : ''}
           {socio.dni ? `DNI ${socio.dni}` : 'DNI por completar'}
           {socio.plan ? ` · ${socio.plan}` : ''}
@@ -130,7 +130,7 @@ export function TarjetaSocio({
             {denegado ? 'No puede pasar' : cupoAgotado && resultado !== 'permitido' ? 'Sin nuevas asistencias' : estilo.etiqueta}
           </span>
           {socio.diasRestantes !== null && socio.diasRestantes !== undefined && (
-            <span className="text-[13.5px] text-zinc-300 cifra">
+            <span className="text-[13.5px] text-secundario cifra">
               {socio.estado === 'vencido' && socio.diasRestantes >= 0
                 ? 'Membresía registrada como vencida'
                 : socio.diasRestantes >= 0
@@ -139,15 +139,15 @@ export function TarjetaSocio({
             </span>
           )}
           {socio.dentro && !tipo && (
-            <span className="rounded-[9px] bg-white/10 px-2.5 py-1 text-[13.5px] text-zinc-300">
+            <span className="rounded-[9px] bg-neutral/10 px-2.5 py-1 text-[13.5px] text-secundario">
               Esta dentro
             </span>
           )}
         </div>
 
-        {socio.limiteAsistencias != null && <p className={`mt-3 text-sm font-semibold cifra ${cupoAgotado ? 'text-porvencer' : 'text-zinc-300'}`}>{socio.asistenciasRestantes ?? Math.max(0, socio.limiteAsistencias - (socio.asistenciasUsadas ?? 0))} de {socio.limiteAsistencias} asistencias disponibles{cupoAgotado ? ' · Los reingresos del mismo día siguen incluidos' : ''}</p>}
+        {socio.limiteAsistencias != null && <p className={`mt-3 text-sm font-semibold cifra ${cupoAgotado ? 'text-porvencer' : 'text-secundario'}`}>{socio.asistenciasRestantes ?? Math.max(0, socio.limiteAsistencias - (socio.asistenciasUsadas ?? 0))} de {socio.limiteAsistencias} asistencias disponibles{cupoAgotado ? ' · Los reingresos del mismo día siguen incluidos' : ''}</p>}
 
-        {motivo && <p className="mt-2.5 text-sm text-zinc-300">{motivo}</p>}
+        {motivo && <p className="mt-2.5 text-sm text-secundario">{motivo}</p>}
       </div>
 
       {segundos ? (

@@ -45,10 +45,10 @@ export default function Rutinas() {
       <section className="space-y-3">
         <h2 className="rotulo">
           Pedidas desde el portal
-          {solicitudes.length > 0 && <span className="ml-2 text-acento">{solicitudes.length}</span>}
+          {solicitudes.length > 0 && <span className="ml-2 text-acentoTexto">{solicitudes.length}</span>}
         </h2>
         {solicitudes.length === 0 && (
-          <div className="tarjeta text-sm text-zinc-500">
+          <div className="tarjeta text-sm text-tenue">
             Cuando un socio nuevo pida una rutina desde su celular, aparece aqui.
           </div>
         )}
@@ -78,16 +78,16 @@ export default function Rutinas() {
 
       <section className="space-y-3">
         <h2 className="rotulo">
-          Rutinas en curso <span className="ml-1 text-zinc-400">{activas.length}</span>
+          Rutinas en curso <span className="ml-1 text-secundario">{activas.length}</span>
         </h2>
         <div className="tarjeta p-0">
           <ul className="divide-y divide-borde">
-            {activas.length === 0 && <li className="p-4 text-sm text-zinc-500">Nadie tiene rutina guiada ahora.</li>}
+            {activas.length === 0 && <li className="p-4 text-sm text-tenue">Nadie tiene rutina guiada ahora.</li>}
             {activas.map((a) => (
               <li key={a.id} className="flex flex-wrap items-center gap-3 p-4">
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{a.socio.nombreCompleto}</p>
-                  <p className="text-sm text-zinc-500">
+                  <p className="text-sm text-tenue">
                     {a.rutina?.nombre} · hasta {fechaCorta(a.hasta?.slice(0, 10))}
                   </p>
                 </div>
@@ -137,15 +137,15 @@ export default function Rutinas() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="font-bold">{p.nombre}</p>
-                  {p.descripcion && <p className="text-sm text-zinc-500">{p.descripcion}</p>}
+                  {p.descripcion && <p className="text-sm text-tenue">{p.descripcion}</p>}
                 </div>
-                <span className="shrink-0 text-xs text-zinc-500">{p.activos} en curso</span>
+                <span className="shrink-0 text-xs text-tenue">{p.activos} en curso</span>
               </div>
               <ul className="space-y-2 text-sm">
                 {p.dias.map((d: any) => (
                   <li key={d.diaSemana}>
-                    <span className="font-semibold text-acento">{d.nombreDia}:</span> {d.titulo}
-                    <span className="block text-xs text-zinc-500">
+                    <span className="font-semibold text-acentoTexto">{d.nombreDia}:</span> {d.titulo}
+                    <span className="block text-xs text-tenue">
                       {d.ejercicios.map((e: any) => `${e.nombre} ${e.series}×${e.repeticiones}`).join(' · ') || 'Sin ejercicios'}
                     </span>
                   </li>
@@ -156,7 +156,7 @@ export default function Rutinas() {
                   Editar
                 </button>
                 <button
-                  className="boton-suave py-2 text-zinc-500"
+                  className="boton-suave py-2 text-tenue"
                   onClick={async () => {
                     if (!window.confirm(`¿Archivar "${p.nombre}"? Las rutinas en curso siguen hasta su fecha.`)) return;
                     await api(`/routines/${p.id}/archive`, { metodo: 'POST' });
@@ -214,10 +214,10 @@ function Asignar({
       {asignacion && (
         <div>
           <p className="font-bold">{asignacion.socio.nombreCompleto}</p>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-tenue">
             Pidio el {fechaCorta(asignacion.desde)} · inscrito el {fechaCorta(asignacion.socio.inscrito)}
           </p>
-          {asignacion.nota && <p className="mt-1 text-sm italic text-zinc-300">“{asignacion.nota}”</p>}
+          {asignacion.nota && <p className="mt-1 text-sm italic text-secundario">“{asignacion.nota}”</p>}
         </div>
       )}
       <div className="grid gap-3 sm:grid-cols-[1fr_1.4fr_7rem_auto] sm:items-end">
@@ -325,7 +325,7 @@ function EditorPlantilla({
       {dias.map((d, i) => {
         const sugeridos = d.grupos.length ? ejercicios.filter((e) => d.grupos.includes(e.grupo)) : ejercicios;
         return (
-          <div key={i} className="space-y-3 rounded-2xl border border-borde bg-black/30 p-4">
+          <div key={i} className="space-y-3 rounded-2xl border border-borde bg-fondo/70 p-4">
             <div className="grid gap-3 sm:grid-cols-[10rem_1fr_auto] sm:items-end">
               <div>
                 <label className="etiqueta">Dia</label>
@@ -372,7 +372,7 @@ function EditorPlantilla({
                         cambiarDia(i, { grupos: activo ? d.grupos.filter((x: string) => x !== g) : [...d.grupos, g] })
                       }
                       className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
-                        activo ? 'border-acento/50 bg-acento/15 text-acento' : 'border-borde text-zinc-400'
+                        activo ? 'border-acento/50 bg-acento/15 text-acentoTexto' : 'border-borde text-secundario'
                       }`}
                     >
                       {NOMBRE_GRUPO[g] ?? g}
@@ -412,7 +412,7 @@ function EditorPlantilla({
                     }
                   />
                   <button
-                    className="px-2 text-zinc-500 hover:text-vencido"
+                    className="px-2 text-tenue hover:text-vencido"
                     aria-label="Quitar ejercicio"
                     onClick={() => cambiarDia(i, { ejercicios: d.ejercicios.filter((_: any, j: number) => j !== k) })}
                   >
@@ -437,7 +437,7 @@ function EditorPlantilla({
                     </option>
                   ))}
               </select>
-              <p className="text-xs text-zinc-600">Columnas: series · repeticiones (p. ej. 10-12).</p>
+              <p className="text-xs text-tenue">Columnas: series · repeticiones (p. ej. 10-12).</p>
             </div>
           </div>
         );

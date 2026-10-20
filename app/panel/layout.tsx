@@ -100,11 +100,11 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   if (!listo) {
     return (
       <div className="flex min-h-screen">
-        <div className="hidden w-[246px] shrink-0 border-r border-borde bg-[#0C0C0E] lg:block" />
+        <div className="hidden w-[246px] shrink-0 border-r border-borde bg-superficie lg:block" />
         <div className="flex-1 space-y-4 p-7">
-          <div className="h-8 w-52 animate-pulse rounded-lg bg-white/[0.05]" />
-          <div className="h-24 animate-pulse rounded-2xl bg-white/[0.04]" />
-          <div className="h-24 animate-pulse rounded-2xl bg-white/[0.04]" />
+          <div className="h-8 w-52 animate-pulse rounded-lg bg-neutral/[0.05]" />
+          <div className="h-24 animate-pulse rounded-2xl bg-neutral/[0.04]" />
+          <div className="h-24 animate-pulse rounded-2xl bg-neutral/[0.04]" />
         </div>
       </div>
     );
@@ -112,26 +112,26 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex min-h-screen items-stretch">
-      <aside className="sticky top-0 hidden h-screen w-[68px] shrink-0 flex-col border-r border-borde bg-[#0C0C0E] md:flex lg:w-[246px]">
+      <aside className="sticky top-0 hidden h-screen w-[68px] shrink-0 flex-col border-r border-borde bg-superficie md:flex lg:w-[246px]">
         <Link href="/panel/recepcion" className="flex items-center gap-2.5 px-4 pb-4 pt-5 lg:px-[18px]">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FAD234" strokeWidth={2.2} strokeLinecap="round" className="shrink-0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" className="shrink-0 text-acentoTexto">
             <path d="M3 9v6M21 9v6M6.5 6.5v11M17.5 6.5v11M6.5 12h11" />
           </svg>
           <span className="hidden min-w-0 lg:block">
-            <span className="block text-[14.5px] font-black leading-tight tracking-tight text-zinc-100">
-              <span className="text-acento">F</span>ORCES <span className="text-acento">GYM</span>
+            <span className="block text-[14.5px] font-black leading-tight tracking-tight text-tinta">
+              <span className="text-acentoTexto">F</span>ORCES <span className="text-acentoTexto">GYM</span>
             </span>
-            <span className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-zinc-600">Panel</span>
+            <span className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-tenue">Panel</span>
           </span>
         </Link>
 
         <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2.5 pb-2.5 pt-1.5">
           {gruposVisibles.map((grupo) => (
             <div key={grupo.titulo} className="contents">
-              <p className="mx-2 mb-1.5 mt-4 hidden text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-700 lg:block">
+              <p className="mx-2 mb-1.5 mt-4 hidden text-[10px] font-bold uppercase tracking-[0.16em] text-tenue lg:block">
                 {grupo.titulo}
               </p>
-              <div className="my-2 h-px bg-white/[0.06] lg:hidden" />
+              <div className="my-2 h-px bg-neutral/[0.06] lg:hidden" />
               {grupo.items.map((item) => {
                 const activo = ruta === item.href;
                 return (
@@ -141,8 +141,8 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                     title={item.texto}
                     className={`relative flex items-center justify-center gap-[11px] rounded-[10px] px-[11px] py-2.5 text-sm font-semibold transition duration-150 lg:justify-start ${
                       activo
-                        ? 'border border-acento/25 bg-acento/[0.11] text-acento'
-                        : 'text-zinc-400 hover:bg-white/[0.05] hover:text-white'
+                        ? 'border border-acento/25 bg-acento/[0.11] text-acentoTexto'
+                        : 'text-secundario hover:bg-neutral/[0.05] hover:text-tinta'
                     }`}
                   >
                     {activo && (
@@ -151,7 +151,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                     {item.icono}
                     <span className="hidden lg:block">{item.texto}</span>
                     {item.insignia ? (
-                      <span className="ml-auto hidden h-[19px] min-w-[19px] items-center justify-center rounded-full bg-porvencer px-1.5 text-[11px] font-extrabold text-black cifra lg:flex">
+                      <span className="ml-auto hidden h-[19px] min-w-[19px] items-center justify-center rounded-full bg-porvencer/15 px-1.5 text-[11px] font-extrabold text-porvencer cifra lg:flex">
                         {item.insignia}
                       </span>
                     ) : null}
@@ -165,7 +165,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         <div className="border-t border-borde px-2.5 pb-4 pt-3">
           <Link
             href="/quiosco"
-            className="flex w-full items-center justify-center gap-2 rounded-[11px] border border-acento/25 bg-acento/[0.08] p-2.5 text-[13px] font-bold text-acento transition hover:border-acento/50 hover:bg-acento/[0.16]"
+            className="flex w-full items-center justify-center gap-2 rounded-[11px] border border-acento/25 bg-acento/[0.08] p-2.5 text-[13px] font-bold text-acentoTexto transition hover:border-acento/50 hover:bg-acento/[0.16]"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.1} strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
               <path d="M4 8V5a1 1 0 0 1 1-1h3M20 8V5a1 1 0 0 0-1-1h-3M4 16v3a1 1 0 0 0 1 1h3M20 16v3a1 1 0 0 1-1 1h-3" />
@@ -178,16 +178,16 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
               {iniciales(usuario?.nombre)}
             </span>
             <span className="hidden min-w-0 flex-1 lg:block">
-              <span className="block truncate text-[13px] font-semibold text-zinc-100">
+              <span className="block truncate text-[13px] font-semibold text-tinta">
                 {usuario?.nombre || 'Personal'}
               </span>
-              <span className="block text-[11px] capitalize text-zinc-600">
+              <span className="block text-[11px] capitalize text-tenue">
                 {usuario?.rol || 'recepcion'}
               </span>
             </span>
             <button
               title="Salir"
-              className="hidden h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-600 transition hover:bg-vencido/15 hover:text-vencido lg:flex"
+              className="hidden h-7 w-7 shrink-0 items-center justify-center rounded-lg text-tenue transition hover:bg-vencido/15 hover:text-vencido lg:flex"
               onClick={() => {
                 cerrarSesion('staff');
                 router.replace('/login');
@@ -204,7 +204,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       <main className="min-w-0 flex-1">
         {/* En el celular no hay barra lateral: esta franja dice donde estas. */}
         <header className="sticky top-0 z-30 flex items-center gap-2.5 border-b border-borde bg-fondo/90 px-4 py-3 backdrop-blur md:hidden">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAD234" strokeWidth={2.2} strokeLinecap="round" className="shrink-0" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" className="shrink-0 text-acentoTexto" aria-hidden="true">
             <path d="M3 9v6M21 9v6M6.5 6.5v11M17.5 6.5v11M6.5 12h11" />
           </svg>
           <h1 className="min-w-0 flex-1 truncate text-base font-black tracking-tight">{titulo}</h1>
@@ -216,7 +216,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
             onClick={() => setMenuMovil(true)}
             aria-label="Abrir menu"
             aria-expanded={menuMovil}
-            className="-mr-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-zinc-300 hover:bg-white/[0.06]"
+            className="-mr-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-secundario hover:bg-neutral/[0.06]"
           >
             <I d="M4 6h16M4 12h16M4 18h16" />
           </button>
@@ -229,7 +229,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
 
       {/* Barra inferior en el celular: las pantallas que recepcion usa todo el
           dia (el escaner incluido), y el resto detras de "Mas". */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-borde bg-[#0C0C0E]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-borde bg-superficie/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
         <div className="grid grid-cols-5">
           {[GRUPOS[0].items[0], GRUPOS[0].items[1], GRUPOS[0].items[2], GRUPOS[1].items[0]].map((item) => {
             const activo = ruta === item.href;
@@ -238,7 +238,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                 key={item.href}
                 href={item.href}
                 className={`flex min-h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold ${
-                  activo ? 'text-acento' : 'text-zinc-500'
+                  activo ? 'text-acentoTexto' : 'text-tenue'
                 }`}
               >
                 {item.icono}
@@ -250,7 +250,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
             type="button"
             onClick={() => setMenuMovil(true)}
             aria-expanded={menuMovil}
-            className="flex min-h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold text-zinc-500"
+            className="flex min-h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold text-tenue"
           >
             <I d="M4 6h16M4 12h16M4 18h16" />
             Mas
@@ -266,8 +266,8 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
             className="absolute inset-0 bg-black/60"
             onClick={() => setMenuMovil(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 max-h-[80vh] animate-subir overflow-y-auto rounded-t-3xl border-t border-borde bg-[#0C0C0E] px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3">
-            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/15" />
+          <div className="absolute inset-x-0 bottom-0 max-h-[80vh] animate-subir overflow-y-auto rounded-t-3xl border-t border-borde bg-superficie px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3">
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-neutral/15" />
             {gruposVisibles.map((grupo) => (
               <div key={grupo.titulo} className="mb-4">
                 <p className="rotulo mb-2 px-2">{grupo.titulo}</p>
@@ -278,8 +278,8 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
                       href={item.href}
                       className={`flex min-h-12 items-center gap-3 rounded-xl border px-3 text-sm font-semibold ${
                         ruta === item.href
-                          ? 'border-acento/30 bg-acento/10 text-acento'
-                          : 'border-borde bg-white/[0.03] text-zinc-300'
+                          ? 'border-acento/30 bg-acento/10 text-acentoTexto'
+                          : 'border-borde bg-neutral/[0.03] text-secundario'
                       }`}
                     >
                       {item.icono}

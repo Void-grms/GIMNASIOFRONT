@@ -87,28 +87,28 @@ export default function ActivarPortal() {
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-10">
       <div className="tarjeta w-full max-w-md space-y-5">
-        <p className="text-xs font-semibold tracking-widest text-acento">FORCES GYM · TU ESPACIO</p>
+        <p className="text-xs font-semibold tracking-widest text-acentoTexto">FORCES GYM · TU ESPACIO</p>
         <h1 className="text-2xl font-bold">{completo ? 'Tu portal está activo' : 'Activa tu portal'}</h1>
         {!completo && (
           <div className="space-y-3">
-            <p className="text-sm leading-relaxed text-zinc-400">Este es el acceso a tu nuevo portal de Forces Gym. Tu código de asistencia se mantiene en recepción; aquí eliges tu PIN personal.</p>
+            <p className="text-sm leading-relaxed text-secundario">Este es el acceso a tu nuevo portal de Forces Gym. Tu código de asistencia se mantiene en recepción; aquí eliges tu PIN personal.</p>
             <details className="rounded-xl border border-borde bg-black/20 p-4">
-              <summary className="cursor-pointer text-sm font-semibold text-acento">Cómo funciona el nuevo acceso</summary>
+              <summary className="cursor-pointer text-sm font-semibold text-acentoTexto">Cómo funciona el nuevo acceso</summary>
               <div className="pt-4"><GuiaActivacion compacta /></div>
             </details>
           </div>
         )}
-        {cargando ? <p role="status" className="text-sm text-zinc-400">Comprobando tu enlace...</p> : completo ? (
+        {cargando ? <p role="status" className="text-sm text-secundario">Comprobando tu enlace...</p> : completo ? (
           <>
-            <p className="text-sm text-zinc-300">Ya puedes entrar con tu DNI y el PIN que elegiste. Tu código para marcar asistencia se mantiene.</p>
+            <p className="text-sm text-secundario">Ya puedes entrar con tu DNI y el PIN que elegiste. Tu código para marcar asistencia se mantiene.</p>
             <Link href="/portal" className="boton w-full">Iniciar sesión</Link>
           </>
         ) : invitacion ? (
           <form onSubmit={activar} className="space-y-4">
             <div>
               <p className="font-semibold">Hola, {invitacion.nombre}</p>
-              <p className="mt-1 text-sm text-zinc-400">Este acceso corresponde al DNI terminado en {invitacion.dniUltimos4}.</p>
-              <p className="mt-1 text-xs text-zinc-500">Enlace de un solo uso, válido hasta el {fechaCorta(invitacion.expiresAt)} a las {hora(invitacion.expiresAt)}.</p>
+              <p className="mt-1 text-sm text-secundario">Este acceso corresponde al DNI terminado en {invitacion.dniUltimos4}.</p>
+              <p className="mt-1 text-xs text-tenue">Enlace de un solo uso, válido hasta el {fechaCorta(invitacion.expiresAt)} a las {hora(invitacion.expiresAt)}.</p>
             </div>
             <div>
               <label className="etiqueta" htmlFor="activar-dni">Confirma tu DNI completo</label>
@@ -130,18 +130,18 @@ export default function ActivarPortal() {
                   onChange={(e) => setPinConfirmacion(e.target.value.replace(/\D/g, ''))} />
               </div>
             </div>
-            <p className="text-sm text-zinc-400">Elige cuatro números. Evita secuencias, números repetidos, tu código de asistencia y los últimos números de tu DNI.</p>
-            <div className="rounded-xl border border-borde bg-black/30 p-4">
-              <p className="mb-3 max-h-40 overflow-auto whitespace-pre-wrap text-sm text-zinc-400">
+            <p className="text-sm text-secundario">Elige cuatro números. Evita secuencias, números repetidos, tu código de asistencia y los últimos números de tu DNI.</p>
+            <div className="rounded-xl border border-borde bg-fondo/70 p-4">
+              <p className="mb-3 max-h-40 overflow-auto whitespace-pre-wrap text-sm text-secundario">
                 {ajustes?.consentimientoTexto || 'No se pudo cargar el texto de consentimiento. Pide ayuda en recepción.'}
               </p>
-              <label className="flex items-start gap-2 text-sm text-zinc-200">
+              <label className="flex items-start gap-2 text-sm text-tinta">
                 <input className="mt-1" type="checkbox" checked={consentimiento}
                   disabled={!ajustes?.consentimientoTexto || !ajustes?.consentimientoVersion || !ajustes?.consentimientoHuella} onChange={(e) => setConsentimiento(e.target.checked)} />
                 <span>Leí este texto y autorizo el tratamiento de mis datos personales
                   {ajustes?.consentimientoVersion ? ` (versión ${ajustes.consentimientoVersion})` : ''}.</span>
               </label>
-              <Link href="/privacidad" target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs text-acento underline">Leer la política de privacidad</Link>
+              <Link href="/privacidad" target="_blank" rel="noreferrer" className="mt-3 inline-block text-xs text-acentoTexto underline">Leer la política de privacidad</Link>
             </div>
             {error && <p role="alert" className="aviso-mal">{error}</p>}
             <button className="boton w-full" disabled={guardando || !consentimiento || !ajustes?.consentimientoTexto || !ajustes?.consentimientoVersion || !ajustes?.consentimientoHuella || dni.length !== 8 || pin.length !== 4 || pinConfirmacion.length !== 4}>
@@ -149,7 +149,7 @@ export default function ActivarPortal() {
             </button>
           </form>
         ) : <p role="alert" className="aviso-mal">{error}</p>}
-        {!completo && <p className="text-sm text-zinc-500">Si el enlace venció o necesitas ayuda, acércate a recepción para verificar tus datos y recibir otro acceso.</p>}
+        {!completo && <p className="text-sm text-tenue">Si el enlace venció o necesitas ayuda, acércate a recepción para verificar tus datos y recibir otro acceso.</p>}
       </div>
     </main>
   );

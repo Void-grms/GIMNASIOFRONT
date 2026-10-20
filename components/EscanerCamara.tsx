@@ -129,7 +129,7 @@ export function EscanerCamara({
       <div className="pointer-events-none absolute inset-[14%] rounded-3xl border-2 border-acento/80 shadow-[0_0_0_9999px_rgba(0,0,0,.45)]" />
 
       {estado !== 'listo' && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/80 p-6 text-center text-sm text-zinc-300">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/80 p-6 text-center text-sm text-[#d4d4d8]">
           {estado === 'iniciando' && 'Abriendo la camara…'}
           {estado === 'sin_permiso' &&
             'No hay permiso para usar la camara. Activalo en los ajustes del navegador para este sitio y recarga.'}

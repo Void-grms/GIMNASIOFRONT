@@ -70,9 +70,9 @@ function Silueta({
             className={`transition-colors duration-300 ${
               resaltar.has(pieza.musculo)
                 ? activo
-                  ? 'fill-acento'
-                  : 'fill-acento/70'
-                : 'fill-zinc-700/70'
+                  ? 'fill-acentoTexto'
+                  : 'fill-acentoTexto/70'
+                : 'fill-bordeFuerte/70'
             }`}
           />
         )),
@@ -107,7 +107,7 @@ export function IconoCardio({ activo = false }: { activo?: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      className={`h-12 w-12 transition-colors ${activo ? 'text-acento' : 'text-zinc-500'}`}
+      className={`h-12 w-12 transition-colors ${activo ? 'text-acentoTexto' : 'text-tenue'}`}
       fill="none"
       stroke="currentColor"
       strokeWidth={1.8}

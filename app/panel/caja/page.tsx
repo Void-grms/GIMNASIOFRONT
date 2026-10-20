@@ -104,7 +104,7 @@ export default function Caja() {
               ['Operaciones', resumen.operaciones],
             ].map(([t, v]) => (
               <div key={t as string} className="tarjeta-viva">
-                <p className="text-sm text-zinc-400">{t}</p>
+                <p className="text-sm text-secundario">{t}</p>
                 <p className="mt-2 text-2xl font-black tracking-tight cifra">{v as any}</p>
               </div>
             ))}
@@ -121,13 +121,13 @@ export default function Caja() {
                   {titulo}
                 </h3>
                 {filas.length === 0 ? (
-                  <p className="text-sm text-zinc-500">Sin movimientos.</p>
+                  <p className="text-sm text-tenue">Sin movimientos.</p>
                 ) : (
                   <ul className="space-y-2 text-sm">
                     {filas.map((f: any) => (
                       <li key={f.nombre} className="flex justify-between">
-                        <span className="text-zinc-300">
-                          {f.nombre} <span className="text-zinc-600">({f.operaciones})</span>
+                        <span className="text-secundario">
+                          {f.nombre} <span className="text-tenue">({f.operaciones})</span>
                         </span>
                         <span className="font-semibold cifra">{soles(f.total)}</span>
                       </li>
@@ -149,7 +149,7 @@ export default function Caja() {
               cada movimiento pasa a ser una tarjeta con sus datos rotulados. */}
           <ul className="space-y-2 sm:hidden">
             {pagos.length === 0 && (
-              <li className="tarjeta text-sm text-zinc-500">Sin movimientos en el rango.</li>
+              <li className="tarjeta text-sm text-tenue">Sin movimientos en el rango.</li>
             )}
             {pagos.map((p) => (
               <li key={p.id} className="tarjeta p-4">
@@ -157,7 +157,7 @@ export default function Caja() {
                   <span className="font-semibold">{p.socio}</span>
                   <span className="font-black cifra">{soles(p.monto)}</span>
                 </div>
-                <p className="mt-1 text-sm text-zinc-500 cifra">
+                <p className="mt-1 text-sm text-tenue cifra">
                   {hora(p.fecha)} · {p.metodo} · {p.detalle}
                 </p>
               </li>
@@ -166,7 +166,7 @@ export default function Caja() {
 
           <div className="tarjeta hidden max-h-[28rem] overflow-auto p-0 sm:block">
             <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-superficie text-left text-zinc-500">
+              <thead className="sticky top-0 bg-superficie text-left text-tenue">
                 <tr>
                   <th className="p-3 font-medium">Hora</th>
                   <th className="p-3 font-medium">Socio</th>
@@ -178,17 +178,17 @@ export default function Caja() {
               <tbody className="divide-y divide-borde">
                 {pagos.length === 0 && (
                   <tr>
-                    <td className="p-4 text-zinc-500" colSpan={5}>
+                    <td className="p-4 text-tenue" colSpan={5}>
                       Sin movimientos en el rango.
                     </td>
                   </tr>
                 )}
                 {pagos.map((p) => (
                   <tr key={p.id}>
-                    <td className="p-3 text-zinc-400 cifra">{hora(p.fecha)}</td>
+                    <td className="p-3 text-secundario cifra">{hora(p.fecha)}</td>
                     <td className="p-3">{p.socio}</td>
-                    <td className="p-3 text-zinc-400">{p.detalle}</td>
-                    <td className="p-3 text-zinc-400">{p.metodo}</td>
+                    <td className="p-3 text-secundario">{p.detalle}</td>
+                    <td className="p-3 text-secundario">{p.metodo}</td>
                     <td className="p-3 text-right font-semibold cifra">{soles(p.monto)}</td>
                   </tr>
                 ))}
@@ -200,9 +200,9 @@ export default function Caja() {
         <div className="space-y-5">
           <div className="tarjeta space-y-4">
             <h2 className="text-lg font-semibold">Arqueo de caja</h2>
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-tenue">
               Cuenta el efectivo del cajon y anotalo. El sistema dice{' '}
-              <span className="text-zinc-300">{soles(resumen?.efectivo ?? 0)}</span>.
+              <span className="text-secundario">{soles(resumen?.efectivo ?? 0)}</span>.
             </p>
             <div>
               <label className="etiqueta" htmlFor="caja-contado">Efectivo contado</label>
@@ -246,7 +246,7 @@ export default function Caja() {
             <div className="tarjeta p-0">
               <ul className="divide-y divide-borde">
                 {cierres.length === 0 && (
-                  <li className="p-4 text-sm text-zinc-500">Todavia no hay cierres.</li>
+                  <li className="p-4 text-sm text-tenue">Todavia no hay cierres.</li>
                 )}
                 {cierres.map((c) => (
                   <li key={c.id} className="p-3 text-sm">
@@ -260,7 +260,7 @@ export default function Caja() {
                         {soles(c.diferencia)}
                       </span>
                     </div>
-                    <p className="text-zinc-500">
+                    <p className="text-tenue">
                       {c.cajero?.nombre ?? '—'} · sistema {soles(c.montoSistema)} · contado{' '}
                       {soles(c.montoContado)}
                     </p>

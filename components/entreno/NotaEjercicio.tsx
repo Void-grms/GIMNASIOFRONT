@@ -80,14 +80,14 @@ export function NotaEjercicio({
       title="Editar nota"
     >
       <span aria-hidden="true">📝</span>
-      <span className="min-w-0 flex-1 text-zinc-200">{nota}</span>
-      <span className="shrink-0 text-xs text-zinc-500">editar</span>
+      <span className="min-w-0 flex-1 text-tinta">{nota}</span>
+      <span className="shrink-0 text-xs text-tenue">editar</span>
     </button>
   ) : (
     <button
       type="button"
       onClick={() => setEditando(true)}
-      className="text-xs text-zinc-500 underline decoration-dotted hover:text-white"
+      className="text-xs text-tenue underline decoration-dotted hover:text-tinta"
     >
       + Agregar nota (asiento, agarre, maquina…)
     </button>
