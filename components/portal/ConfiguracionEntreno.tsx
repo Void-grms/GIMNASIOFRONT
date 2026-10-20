@@ -236,12 +236,9 @@ export function RutinaGuiada({
       <p className="text-xs text-tenue">
         {rutina.dias.map((d: any) => `${d.nombreDia.slice(0, 3)}: ${d.titulo}`).join(' · ')}
       </p>
-      <button className="text-xs text-tenue underline hover:text-tinta" onClick={dejar}>
+      <button className="min-h-11 px-1 text-xs text-tenue underline hover:text-tinta" onClick={dejar}>
         Dejar la rutina guiada
       </button>
     </section>
   );
 }
-
-
-

@@ -20,6 +20,9 @@
 .home :is(section, [id]) {
   scroll-margin-top: 140px;
 }
+.home section[id] {
+  scroll-margin-top: 48px;
+}
 .home :focus-visible {
   outline: 2px solid var(--home-accent);
   outline-offset: 5px;
@@ -30,7 +33,7 @@
   margin-inline: auto;
 }
 .section {
-  padding-block: 108px;
+  padding-block: 96px;
 }
 .skipLink {
   position: fixed;
@@ -52,7 +55,7 @@
   gap: 12px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   line-height: 1.5;
   margin: 0 0 20px;
 }
@@ -65,8 +68,9 @@
   font-family: var(--font-home-display), Impact, sans-serif;
   font-size: clamp(40px, 4.5vw, 64px);
   font-weight: 700;
-  line-height: 1.01;
+  line-height: 1.04;
   letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 .home h2 span {
   color: var(--home-muted);
@@ -81,8 +85,8 @@
   min-height: 54px;
   padding: 16px 23px;
   border: 1px solid transparent;
-  border-radius: 4px;
-  font-size: 13px;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
   transition:
@@ -180,7 +184,7 @@
   max-width: 435px;
   font-size: 15px;
   line-height: 1.8;
-  color: #c5c7c9;
+  color: #d2d5d9;
   text-wrap: pretty;
 }
 .heroActions {
@@ -195,7 +199,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 17px;
-  font-size: 11px;
+  font-size: 12px;
   color: #b4b6ba;
 }
 .heroNote svg {
@@ -281,7 +285,7 @@
 }
 .facts > div > div > span:last-child {
   max-width: 135px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--home-muted);
   line-height: 1.6;
 }
@@ -290,7 +294,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 35px;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 .sectionHeading > p {
   max-width: 315px;
@@ -301,7 +305,7 @@
 }
 .experienceGrid {
   display: grid;
-  grid-template-columns: 1.08fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
 }
 .experienceCard {
@@ -311,7 +315,7 @@
   isolation: isolate;
   min-height: 480px;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 16px;
   background: #25282b;
 }
 .experienceCard > img {
@@ -325,7 +329,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(0deg, #080a0bed 0%, #080a0b80 42%, #080a0b00 80%);
+  background: linear-gradient(0deg, #080a0bf5 0%, #080a0b98 42%, #080a0b00 85%);
 }
 .experienceCopy {
   display: flex;
@@ -337,13 +341,13 @@
 .cardTag {
   align-self: flex-start;
   margin-bottom: auto;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.11em;
   font-weight: 700;
-  padding: 8px 11px;
-  background: #111315b8;
-  border: 1px solid #ffffff45;
-  border-radius: 2px;
+  padding: 8px 12px;
+  background: #111315d6;
+  border: 1px solid #ffffff38;
+  border-radius: 6px;
 }
 .experienceCopy h3 {
   font-family: var(--font-home-display), Impact, sans-serif;
@@ -354,9 +358,9 @@
 }
 .experienceCopy p {
   max-width: 360px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
-  color: #d0d1d2;
+  color: #e0e2e5;
   margin-top: 13px;
 }
 .experienceCopy a {
@@ -368,7 +372,7 @@
   margin-top: 22px;
   border-top: 1px solid #ffffff40;
   padding-top: 15px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 .experienceCopy a svg {
@@ -380,7 +384,7 @@
   background: var(--home-surface);
   margin-top: 24px;
   border: 1px solid var(--home-line);
-  border-radius: 4px;
+  border-radius: 14px;
 }
 .classSchedule > * {
   padding: 26px;
@@ -390,7 +394,7 @@
 }
 .classLabel {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.13em;
   color: var(--home-accent);
   font-weight: 600;
@@ -400,22 +404,24 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
 }
 .photoNote {
   color: var(--home-muted);
   margin-top: 14px;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.6;
 }
 .plansSection {
   background: var(--home-surface);
   color: var(--home-text);
-  padding-block: 100px;
+  padding-block: 96px;
+  border-block: 1px solid var(--home-line);
 }
 .plansSection :focus-visible {
-  outline-color: #675100;
+  outline-color: var(--home-accent);
 }
 .plansSection .eyebrow {
   color: var(--home-muted);
@@ -428,14 +434,14 @@
 }
 .plansGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 20px;
   align-items: stretch;
 }
 .planFeedback {
   padding: 28px;
   border: 1px solid var(--home-line);
-  border-radius: 6px;
+  border-radius: 14px;
   color: var(--home-muted);
   font-size: 14px;
   line-height: 1.7;
@@ -452,13 +458,49 @@
   text-decoration: underline;
   text-underline-offset: 4px;
 }
-.planCard {
-  padding: 30px 26px;
+.planLoadingLabel {
+  margin-bottom: 16px;
+  color: var(--home-muted);
+  font-size: 13px;
+}
+.planSkeleton {
+  min-height: 410px;
   border: 1px solid var(--home-line);
-  border-radius: 6px;
+  border-radius: 16px;
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
-  background: var(--home-bg);
+  gap: 18px;
+}
+.planSkeleton > * {
+  display: block;
+  height: 14px;
+  width: 80%;
+  border-radius: 5px;
+  background: rgb(var(--color-neutral) / .07);
+}
+.planSkeleton > span:first-child {
+  width: 55%;
+  height: 21px;
+}
+.planSkeleton > strong {
+  width: 65%;
+  height: 72px;
+  margin-block: 15px 25px;
+}
+.planSkeleton > i {
+  width: 100%;
+  height: 52px;
+  margin-top: auto;
+}
+.planCard {
+  padding: 32px 28px;
+  border: 1px solid var(--home-line);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  background: var(--home-surface);
+  box-shadow: 0 4px 20px -12px rgb(var(--color-neutral) / .12);
 }
 .featuredPlan {
   --home-accent: #fad234;
@@ -476,7 +518,8 @@
   top: 0;
   left: 26px;
   right: 26px;
-  height: 3px;
+  height: 4px;
+  border-radius: 0 0 3px 3px;
   background: var(--color-marca);
 }
 .planTop {
@@ -493,22 +536,22 @@
   font-weight: 700;
 }
 .planTop > span {
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.06em;
   font-weight: 700;
   background: #fad23420;
   color: var(--home-accent);
   padding: 6px 8px;
-  border-radius: 2px;
+  border-radius: 5px;
 }
 .planDescription {
   overflow-wrap: anywhere;
   color: var(--home-muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   margin-top: 12px;
-  min-height: 42px;
-  max-width: 235px;
+  min-height: 88px;
+  max-width: none;
 }
 .featuredPlan .planDescription {
   color: #b4b6ba;
@@ -535,7 +578,7 @@
 }
 .price small {
   font-family: var(--fuente-archivo), sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--home-muted);
   margin-left: auto;
@@ -554,7 +597,7 @@
 .planCard li {
   display: flex;
   gap: 10px;
-  font-size: 12px;
+  font-size: 13px;
   align-items: flex-start;
   line-height: 1.5;
 }
@@ -572,10 +615,10 @@
   padding-inline: 12px;
   gap: 10px;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 13px;
 }
 .paymentNote {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--home-muted);
   text-align: center;
   margin-top: 28px;
@@ -606,11 +649,11 @@
   min-width: 30px;
 }
 .steps h3 {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
 }
 .steps p {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--home-muted);
   line-height: 1.8;
   margin-top: 8px;
@@ -638,16 +681,16 @@
   margin-block: 23px 27px;
 }
 .portalHelp {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--home-muted);
   margin-top: 16px;
 }
 .portalPreview {
-  background: var(--home-bg);
+  background: var(--home-surface);
   border: 1px solid var(--home-line);
-  border-radius: 12px;
-  box-shadow: 0 25px 60px -40px #000;
-  padding: 26px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px -38px rgb(var(--color-neutral) / .4);
+  padding: 30px;
 }
 .portalPreviewHeader {
   display: flex;
@@ -663,22 +706,22 @@
 }
 .portalPreviewHeader strong {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.05em;
 }
 .portalPreviewHeader div > span {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--home-muted);
   margin-top: 3px;
 }
 .memberTag {
   margin-left: auto;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.08em;
   padding: 7px 9px;
   border: 1px solid var(--home-line);
-  border-radius: 3px;
+  border-radius: 5px;
   color: var(--home-accent);
 }
 .portalFeature {
@@ -689,23 +732,25 @@
   align-items: center;
 }
 .portalFeature > span {
-  height: 36px;
-  width: 36px;
+  height: 44px;
+  width: 44px;
+  flex-shrink: 0;
   display: grid;
   place-items: center;
-  background: rgb(var(--color-neutral) / .03);
+  background: rgb(250 210 52 / .08);
   color: var(--home-accent);
   border: 1px solid var(--home-line);
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 20px;
 }
 .portalFeature h3 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 .portalFeature p {
   color: var(--home-muted);
-  font-size: 10px;
+  font-size: 12px;
+  line-height: 1.6;
   margin-top: 4px;
 }
 .portalAccess {
@@ -715,7 +760,7 @@
   padding-top: 22px;
   margin-top: 5px;
   border-top: 1px solid var(--home-line);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   color: var(--home-muted);
 }
@@ -733,7 +778,7 @@
   position: relative;
   min-height: 405px;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 16px;
 }
 .facade > img {
   object-fit: cover;
@@ -764,7 +809,8 @@
 }
 .facade span {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.7;
   color: #c5c7c9;
   margin-top: 7px;
 }
@@ -785,7 +831,7 @@
   justify-content: space-between;
   padding-block: 13px;
   border-bottom: 1px solid var(--home-line);
-  font-size: 12px;
+  font-size: 14px;
 }
 .locationInfo dt {
   color: var(--home-muted);
@@ -794,7 +840,7 @@
   font-variant-numeric: tabular-nums;
 }
 .locationInfo > p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--home-muted);
 }
 .contactNumber {
@@ -818,7 +864,7 @@
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   min-height: 44px;
 }
 .locationLinks svg {
@@ -834,7 +880,7 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
 }
 .mapDetails summary span,
 .faqList summary span {
@@ -862,15 +908,15 @@
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
   gap: 70px;
-  padding-bottom: 108px;
+  padding-bottom: 96px;
 }
 .faqSection > div > p:not(.eyebrow) {
   color: var(--home-muted);
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 24px;
 }
 .faqSection .textButton {
-  font-size: 11px;
+  font-size: 13px;
 }
 .faqList details {
   border-bottom: 1px solid var(--home-line);
@@ -887,14 +933,14 @@
   padding-block: 19px;
   cursor: pointer;
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .faqList details > p {
   margin-bottom: 24px;
   padding-right: 35px;
   color: var(--home-muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.85;
 }
 .finalCta {
@@ -1056,7 +1102,7 @@
     font-size: 30px;
   }
   .facts > div > div > span:last-child {
-    font-size: 10px;
+    font-size: 11px;
   }
   .planCard {
     padding: 25px 20px;
@@ -1076,8 +1122,17 @@
   .home :is(section, [id]) {
     scroll-margin-top: 98px;
   }
+  .home section[id] {
+    scroll-margin-top: 16px;
+  }
+  .plansGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 760px) {
+  .home section[id] {
+    scroll-margin-top: 36px;
+  }
   .section {
     padding-block: 68px;
   }
@@ -1131,7 +1186,7 @@
   }
   .heroNote {
     color: #c5c7c9;
-    font-size: 10px;
+    font-size: 11px;
   }
   .heroCaption {
     bottom: 100px;
@@ -1173,7 +1228,7 @@
     font-size: 17px;
   }
   .facts > div > div > span:last-child {
-    font-size: 9px;
+    font-size: 10px;
   }
   .sectionHeading {
     display: block;
@@ -1207,6 +1262,7 @@
   .classSchedule > * {
     padding: 20px 24px;
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
     justify-content: space-between;
     align-items: center;
@@ -1217,10 +1273,10 @@
   }
   .classLabel {
     margin: 0;
-    font-size: 9px;
+    font-size: 10px;
   }
   .classSchedule strong {
-    font-size: 10px;
+    font-size: 12px;
   }
   .classSchedule svg {
     width: 14px;
@@ -1298,7 +1354,7 @@
     content: " ";
   }
   .faqList summary {
-    font-size: 12px;
+    font-size: 14px;
   }
   .finalCta {
     padding-block: 48px;
@@ -1356,7 +1412,7 @@
     place-items: center;
     width: 50px;
     border: 1px solid var(--home-line);
-    border-radius: 4px;
+    border-radius: 10px;
   }
 }
 @media (max-width: 380px) {

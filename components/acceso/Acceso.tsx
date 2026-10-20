@@ -30,7 +30,7 @@ export function AccesoLayout({ tipo, children }: { tipo: 'cliente' | 'personal';
     <div className={s.page}>
       <a href="#contenido-acceso" className={s.skip}>Ir al formulario</a>
       <aside className={s.story} aria-label="Forces Gym en Pacasmayo">
-        <Image src="/fachada.webp" alt="" fill priority sizes="(min-width: 1024px) 100vw, 1px" className={s.photo} />
+        <Image src="/fachada.webp" alt="" fill priority sizes="(min-width: 1024px) 45vw, 1px" className={s.photo} />
         <div className={s.shade} />
         <Marca className={s.storyBrand} />
         <div className={s.storyContent}>
@@ -44,8 +44,8 @@ export function AccesoLayout({ tipo, children }: { tipo: 'cliente' | 'personal';
         <header className={s.topbar}>
           <Marca className={s.mobileBrand} />
           <Link href="/" className={s.back}><span aria-hidden="true">←</span> Volver al inicio</Link>
+          <div className={s.apariencia}><SelectorTema compacto /></div>
         </header>
-        <div className={s.apariencia}><SelectorTema compacto /></div>
         <div className={s.wrap}>
           <nav aria-label="Tipo de acceso" className={s.switch}>
             <Link href="/portal" className={s.switchLink} aria-current={cliente ? 'page' : undefined}><IconoAcceso tipo="persona" size={17} /> Clientes</Link>

@@ -35,6 +35,6 @@ export function SelectorTema({ compacto = false, className = '' }: { compacto?: 
 export function AparienciaGlobal() {
   const ruta = usePathname();
   // El portal incorpora el mismo selector dentro de su navegación.
-  if (ruta === '/login' || (ruta?.startsWith('/portal') && ruta !== '/portal/activar' && ruta !== '/portal/bienvenida')) return null;
+  if (ruta === '/' || ruta === '/login' || ruta?.startsWith('/panel') || (ruta?.startsWith('/portal') && ruta !== '/portal/activar' && ruta !== '/portal/bienvenida')) return null;
   return <div className="apariencia-global print:hidden"><SelectorTema compacto /></div>;
 }

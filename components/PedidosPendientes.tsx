@@ -127,7 +127,7 @@ export function PedidosPendientes({
                   role="radio"
                   aria-checked={elegido}
                   onClick={() => setMetodo({ ...metodo, [p.id]: m })}
-                  className={`rounded-lg border px-2.5 py-1 text-xs font-semibold capitalize transition ${
+                  className={`min-h-11 rounded-lg border px-3 py-2 text-xs font-semibold capitalize transition ${
                     elegido
                       ? 'border-acento/50 bg-acento/15 text-acentoTexto'
                       : 'border-borde text-secundario hover:text-tinta'

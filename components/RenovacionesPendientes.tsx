@@ -129,7 +129,7 @@ export function RenovacionesPendientes() {
                 </p>
                 {viendo.operacion && <p className="text-sm text-secundario">Operacion {viendo.operacion}</p>}
               </div>
-              <button className="text-sm text-tenue hover:text-tinta" onClick={cerrar}>
+              <button className="min-h-11 rounded-lg px-3 text-sm text-tenue hover:bg-neutral/5 hover:text-tinta" onClick={cerrar}>
                 Cerrar
               </button>
             </div>

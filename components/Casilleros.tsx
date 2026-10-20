@@ -44,7 +44,7 @@ export function SelectorCasillero({
             role="radio"
             aria-checked={valor === n}
             onClick={() => onCambiar(n)}
-            className={`h-9 min-w-9 rounded-lg border px-2 text-sm font-bold cifra transition ${
+            className={`h-11 min-w-11 rounded-lg border px-2 text-sm font-bold cifra transition ${
               valor === n
                 ? 'border-acento bg-acento text-black'
                 : 'border-borde text-secundario hover:border-bordeFuerte'
@@ -115,7 +115,7 @@ export function GrillaCasilleros() {
           </span>
         </h2>
         <button
-          className="text-xs text-tenue underline hover:text-tinta"
+          className="min-h-11 px-2 text-xs text-tenue underline hover:text-tinta"
           onClick={() => {
             setTotal(String(lista.length));
             setConfig((v) => !v);

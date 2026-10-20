@@ -93,6 +93,13 @@ function Pin() {
     </svg>
   );
 }
+function PortalIcon({ type }: { type: "qr" | "membership" | "progress" }) {
+  return (
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {type === "qr" ? <><rect x="3" y="3" width="6" height="6" rx="1" /><rect x="15" y="3" width="6" height="6" rx="1" /><rect x="3" y="15" width="6" height="6" rx="1" /><path d="M15 15h3v3h3m-6 3v-3m6-3v-3M3 12h6m3-9v6m0 6v6" /></> : type === "membership" ? <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4m10-4v4M3 11h18m-13 5 3 3 5-5" /></> : <><path d="M4 4v16h16M8 14l4-4 3 3 5-7m-5 0h5v5" /></>}
+    </svg>
+  );
+}
 const FAQS = [
   [
     "¿Puedo probar antes de inscribirme?",
@@ -421,21 +428,21 @@ export default function Landing() {
                 <span className={styles.memberTag}>CLIENTES</span>
               </div>
               <div className={styles.portalFeature}>
-                <span aria-hidden="true">↗</span>
+                <span><PortalIcon type="qr" /></span>
                 <div>
                   <h3>Tu credencial QR</h3>
                   <p>Siempre a mano, desde tu celular.</p>
                 </div>
               </div>
               <div className={styles.portalFeature}>
-                <span aria-hidden="true">◷</span>
+                <span><PortalIcon type="membership" /></span>
                 <div>
                   <h3>Tu membresía al día</h3>
                   <p>Consulta cuántos días te quedan.</p>
                 </div>
               </div>
               <div className={styles.portalFeature}>
-                <span aria-hidden="true">↗</span>
+                <span><PortalIcon type="progress" /></span>
                 <div>
                   <h3>Tu progreso, contigo</h3>
                   <p>Lleva el registro de tus entrenamientos.</p>
