@@ -79,13 +79,13 @@ export function TarjetaSocio({
 
   return (
     <div
-      className={`animate-entrar relative flex gap-5 overflow-hidden rounded-[20px] border p-[22px] ${marco.borde} ${marco.degradado}`}
+      className={`animate-entrar relative min-w-0 overflow-hidden rounded-[20px] border ${compacta ? 'flex items-start gap-3 p-4 sm:gap-4 sm:p-5' : 'flex flex-col gap-4 p-4 sm:flex-row sm:gap-5 sm:p-[22px]'} ${marco.borde} ${marco.degradado}`}
     >
       <span className={`absolute bottom-0 left-0 top-0 w-1 ${marco.franja}`} />
 
       <div
         className={`flex shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-borde bg-fondo/70 ${
-          compacta ? 'h-14 w-14' : 'h-[124px] w-[124px]'
+          compacta ? 'h-12 w-12 sm:h-14 sm:w-14' : 'h-16 w-16 sm:h-[124px] sm:w-[124px]'
         }`}
       >
         {foto ? (
@@ -102,8 +102,8 @@ export function TarjetaSocio({
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-[11px]">
           <p
-            className={`font-black leading-[1.05] tracking-[-0.03em] ${
-              compacta ? 'text-lg' : 'text-3xl'
+            className={`min-w-0 max-w-full break-words font-black leading-[1.12] tracking-[-0.03em] ${
+              compacta ? 'text-lg' : 'text-2xl sm:text-3xl'
             }`}
           >
             {socio.nombreCompleto}
@@ -119,14 +119,14 @@ export function TarjetaSocio({
           )}
         </div>
 
-        <p className="mt-1.5 text-sm text-secundario cifra">
+        <p className="mt-1.5 break-words text-sm text-secundario cifra">
           {socio.codigoERP ? `Código ${socio.codigoERP} · ` : ''}
           {socio.dni ? `DNI ${socio.dni}` : 'DNI por completar'}
           {socio.plan ? ` · ${socio.plan}` : ''}
         </p>
 
         <div className="mt-4 flex flex-wrap items-center gap-2.5">
-          <span className={`rounded-[9px] px-3 py-1.5 text-[13.5px] font-bold ${marco.fondo} ${marco.texto}`}>
+          <span className={`max-w-full rounded-[9px] px-3 py-1.5 text-[13.5px] font-bold ${marco.fondo} ${marco.texto}`}>
             {denegado ? 'No puede pasar' : cupoAgotado && resultado !== 'permitido' ? 'Sin nuevas asistencias' : estilo.etiqueta}
           </span>
           {socio.diasRestantes !== null && socio.diasRestantes !== undefined && (

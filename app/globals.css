@@ -93,6 +93,7 @@ body {
 
 /* ── Superficies ─────────────────────────────────────────────────────────── */
 
+@layer components {
 .tarjeta {
   @apply rounded-2xl border border-borde bg-superficie p-5 shadow-tarjeta;
 }
@@ -189,6 +190,7 @@ body {
 .aviso-ok { @apply rounded-xl border border-vigente/25 bg-vigente/10 px-4 py-3 text-sm font-medium text-vigente; }
 .aviso-ojo { @apply rounded-xl border border-porvencer/25 bg-porvencer/10 px-4 py-3 text-sm font-medium text-porvencer; }
 .aviso-mal { @apply rounded-xl border border-vencido/25 bg-vencido/10 px-4 py-3 text-sm font-medium text-vencido; }
+}
 
 /* ── Scrollbar ───────────────────────────────────────────────────────────── */
 

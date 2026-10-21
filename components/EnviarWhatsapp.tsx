@@ -70,7 +70,7 @@ export function EnviarWhatsapp({
         disabled={cargando}
         className={
           compacto
-            ? 'inline-flex items-center gap-1.5 rounded-lg border border-vigente/40 px-2.5 py-1 text-xs font-semibold text-vigente hover:bg-vigente/10'
+            ? 'inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-lg border border-vigente/40 px-2.5 py-2 text-xs font-semibold text-vigente hover:bg-vigente/10'
             : 'inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-2.5 font-bold text-black transition hover:brightness-110 disabled:opacity-60'
         }
       >
@@ -91,13 +91,13 @@ export function EnviarWhatsapp({
             <button type="button" aria-label="Cerrar" className="absolute inset-0 bg-black/75" onClick={() => setDatos(null)} />
             <div className="relative max-h-[92vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-3xl border border-borde bg-superficie p-5 sm:rounded-3xl">
               <div className="flex items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0 flex-1 break-words">
                   <p className="text-lg font-black">{datos.socio}</p>
                   <p className="text-sm text-tenue">
                     {datos.tipo === 'renovacion' ? 'Mensaje de renovacion' : 'Mensaje de bienvenida'}
                   </p>
                 </div>
-                <button className="text-sm text-tenue hover:text-tinta" onClick={() => setDatos(null)}>
+                <button className="min-h-11 shrink-0 rounded-lg px-3 text-sm text-tenue hover:bg-neutral/5 hover:text-tinta" onClick={() => setDatos(null)}>
                   Cerrar
                 </button>
               </div>
