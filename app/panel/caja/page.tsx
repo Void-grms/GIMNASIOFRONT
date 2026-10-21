@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { api, descargar, fechaCorta, hora, soles } from '@/lib/api';
+import { SaldosPendientes } from '@/components/SaldosPendientes';
 
 const METODOS = ['', 'efectivo', 'yape', 'plin', 'tarjeta', 'transferencia'];
 const hoyTexto = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
@@ -66,15 +67,15 @@ export default function Caja() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end gap-3">
-        <div>
+        <div className="min-w-0 max-w-full flex-1 basis-40 sm:flex-none">
           <label className="etiqueta" htmlFor="caja-desde">Desde</label>
-          <input id="caja-desde" type="date" className="campo" value={desde} onChange={(e) => setDesde(e.target.value)} />
+          <input id="caja-desde" type="date" className="campo min-w-0 max-w-full" value={desde} onChange={(e) => setDesde(e.target.value)} />
         </div>
-        <div>
+        <div className="min-w-0 max-w-full flex-1 basis-40 sm:flex-none">
           <label className="etiqueta" htmlFor="caja-hasta">Hasta</label>
-          <input id="caja-hasta" type="date" className="campo" value={hasta} onChange={(e) => setHasta(e.target.value)} />
+          <input id="caja-hasta" type="date" className="campo min-w-0 max-w-full" value={hasta} onChange={(e) => setHasta(e.target.value)} />
         </div>
-        <div>
+        <div className="min-w-0 max-w-full flex-1 basis-40 sm:flex-none">
           <label className="etiqueta" htmlFor="caja-metodo">Metodo</label>
           <select id="caja-metodo" className="campo" value={metodo} onChange={(e) => setMetodo(e.target.value)}>
             {METODOS.map((m) => (
@@ -93,6 +94,8 @@ export default function Caja() {
       </div>
 
       {error && <p className="aviso-mal">{error}</p>}
+
+      <SaldosPendientes />
 
       {resumen && (
         <>

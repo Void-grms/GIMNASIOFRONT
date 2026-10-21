@@ -109,11 +109,16 @@ export function HojaComprobante({
             <span>{soles(c.inafecto)}</span>
           </div>
         )}
-        <div className="flex justify-between border-t border-zinc-400 pt-1 text-lg font-bold">
-          <span>Total</span>
-          <span>{soles(c.total)}</span>
+        <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 border-t border-zinc-400 pt-1 text-lg font-bold">
+          <span>Total de este comprobante</span>
+          <span className="shrink-0">{soles(c.total)}</span>
         </div>
       </div>
+
+      {c.observacion && <section className="mt-4 min-w-0 border-t border-zinc-300 pt-3 text-xs leading-relaxed">
+        <h2 className="font-semibold">Detalle del pago</h2>
+        <p className="mt-1 whitespace-pre-wrap break-words">{c.observacion}</p>
+      </section>}
 
       <footer className={`mt-6 border-t border-zinc-300 pt-3 text-zinc-600 ${esTicket ? 'text-[10px] text-center' : 'text-xs'}`}>
         {interno ? (

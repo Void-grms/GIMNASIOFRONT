@@ -6,7 +6,7 @@
 // segundos que la tarjeta se queda en pantalla, para que recepcion sepa
 // cuanto le falta antes del siguiente socio.
 
-import { fechaCorta, urlArchivo } from '@/lib/api';
+import { fechaCorta, soles, urlArchivo } from '@/lib/api';
 
 const COLORES: Record<
   string,
@@ -73,8 +73,10 @@ export function TarjetaSocio({
 
   const estilo = COLORES[socio.estado] ?? COLORES.sin_membresia;
   const denegado = resultado === 'denegado';
+  const pausa = !!socio.pausaActualmente;
+  const programada = !!socio.inicioProgramado;
   const cupoAgotado = socio.limiteAsistencias != null && socio.asistenciasRestantes === 0;
-  const marco = denegado ? COLORES.vencido : estilo;
+  const marco = denegado ? COLORES.vencido : pausa || programada ? COLORES.por_vencer : estilo;
   const foto = urlArchivo(socio.fotoUrl);
 
   return (
@@ -127,7 +129,7 @@ export function TarjetaSocio({
 
         <div className="mt-4 flex flex-wrap items-center gap-2.5">
           <span className={`max-w-full rounded-[9px] px-3 py-1.5 text-[13.5px] font-bold ${marco.fondo} ${marco.texto}`}>
-            {denegado ? 'No puede pasar' : cupoAgotado && resultado !== 'permitido' ? 'Sin nuevas asistencias' : estilo.etiqueta}
+            {denegado ? 'No puede pasar' : pausa ? 'Membresía congelada' : programada ? 'Inicio programado' : cupoAgotado && resultado !== 'permitido' ? 'Sin nuevas asistencias' : estilo.etiqueta}
           </span>
           {socio.diasRestantes !== null && socio.diasRestantes !== undefined && (
             <span className="text-[13.5px] text-secundario cifra">
@@ -144,6 +146,8 @@ export function TarjetaSocio({
             </span>
           )}
         </div>
+        {(pausa || programada) && <p className="mt-3 text-sm font-semibold text-porvencer">{pausa ? `Congelada${socio.pausaHasta ? ` hasta el ${fechaCorta(socio.pausaHasta)}` : ''}. No permite ingresar durante la pausa.` : `Empieza el ${fechaCorta(socio.inicio)}. Todavía no permite ingresar.`}</p>}
+        {socio.cuenta?.saldo > 0 && <p className="mt-2 text-sm text-secundario">Saldo pendiente: <strong className="cifra">{soles(socio.cuenta.saldo)}</strong>{socio.cuenta.fechaLimiteSaldo ? ` · completar hasta ${fechaCorta(socio.cuenta.fechaLimiteSaldo)}` : ''}. El saldo se controla por separado del ingreso.</p>}
 
         {socio.limiteAsistencias != null && <p className={`mt-3 text-sm font-semibold cifra ${cupoAgotado ? 'text-porvencer' : 'text-secundario'}`}>{socio.asistenciasRestantes ?? Math.max(0, socio.limiteAsistencias - (socio.asistenciasUsadas ?? 0))} de {socio.limiteAsistencias} asistencias disponibles{cupoAgotado ? ' · Los reingresos del mismo día siguen incluidos' : ''}</p>}
 

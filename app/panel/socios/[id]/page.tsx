@@ -9,6 +9,8 @@ import { FormularioCobro } from '@/components/FormularioCobro';
 import { EnviarWhatsapp } from '@/components/EnviarWhatsapp';
 import { Esqueleto } from '@/components/Esqueleto';
 import { AccesoSocio } from '@/components/AccesoSocio';
+import { CuentaMembresia } from '@/components/CuentaMembresia';
+import { MEMBRESIA_ACTUALIZADA } from '@/components/OperacionMembresia';
 
 export default function FichaSocio() {
   const { id } = useParams<{ id: string }>();
@@ -49,6 +51,12 @@ export default function FichaSocio() {
   useEffect(() => {
     cargar().catch((e) => setError(e.message));
   }, [cargar]);
+
+  useEffect(() => {
+    const actualizar = (e: Event) => { if ((e as CustomEvent).detail?.memberId === id) cargar().catch(e => setError(e.message)); };
+    window.addEventListener(MEMBRESIA_ACTUALIZADA, actualizar);
+    return () => window.removeEventListener(MEMBRESIA_ACTUALIZADA, actualizar);
+  }, [cargar, id]);
 
   async function anonimizar() {
     const motivo = window.prompt(
@@ -108,7 +116,8 @@ export default function FichaSocio() {
                 <li className="p-4 text-sm text-tenue">Todavia no compro ninguna.</li>
               )}
               {ficha.historial.map((m: any) => (
-                <li key={m.id} className="flex flex-wrap items-start justify-between gap-3 p-4 text-sm">
+                <li key={m.id} className="min-w-0 p-4 text-sm">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 flex-1 basis-40">
                     <p className="font-medium">{m.planNombre || m.plan.nombre}</p>
                     <p className="text-tenue">
@@ -118,12 +127,14 @@ export default function FichaSocio() {
                   </div>
                   <span className="flex shrink-0 flex-col items-end gap-1.5">
                     <span className={m.estado === 'anulada' ? 'text-vencido' : 'text-secundario'}>
-                      {soles(m.precioPagado)}
+                      {m.estado === 'anulada' ? 'Anulada' : `Precio ${soles(m.cuenta?.total ?? m.precioPagado)}`}
                     </span>
                     {m.estado !== 'anulada' && m.payments?.[0]?.id && (
                       <EnviarWhatsapp paymentId={m.payments[0].id} texto="WhatsApp" compacto />
                     )}
                   </span>
+                  </div>
+                  <CuentaMembresia membresia={m} socio={ficha} ajustes={ajustes} />
                 </li>
               ))}
             </ul>
