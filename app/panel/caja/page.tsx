@@ -140,7 +140,7 @@ export default function Caja() {
         </>
       )}
 
-      <section className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+      <section className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <div>
           <h2 className="rotulo mb-2">
             Movimientos
@@ -153,9 +153,9 @@ export default function Caja() {
             )}
             {pagos.map((p) => (
               <li key={p.id} className="tarjeta p-4">
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="font-semibold">{p.socio}</span>
-                  <span className="font-black cifra">{soles(p.monto)}</span>
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <span className="min-w-0 break-words font-semibold">{p.socio}</span>
+                  <span className="shrink-0 font-black cifra">{soles(p.monto)}</span>
                 </div>
                 <p className="mt-1 text-sm text-tenue cifra">
                   {hora(p.fecha)} · {p.metodo} · {p.detalle}
@@ -164,8 +164,8 @@ export default function Caja() {
             ))}
           </ul>
 
-          <div className="tarjeta hidden max-h-[28rem] overflow-auto p-0 sm:block">
-            <table className="w-full text-sm">
+          <div className="tarjeta hidden max-h-[28rem] overflow-auto p-0 sm:block" role="region" aria-label="Movimientos de caja, tabla desplazable" tabIndex={0}>
+            <table className="w-full min-w-[640px] text-sm">
               <thead className="sticky top-0 bg-superficie text-left text-tenue">
                 <tr>
                   <th className="p-3 font-medium">Hora</th>

@@ -30,7 +30,7 @@ export default function Socios() {
     <div className="space-y-5">
       <div className="flex flex-wrap gap-3">
         <input
-          className="campo flex-1"
+          className="campo min-w-0 flex-1 basis-52"
           placeholder="Buscar por nombre, DNI o código"
           aria-label="Buscar socios por nombre, DNI o código de asistencia"
           value={q}
@@ -55,17 +55,17 @@ export default function Socios() {
           {socios.length === 0 && <li className="p-5 text-sm text-tenue">Sin resultados.</li>}
           {socios.map((s) => (
             <li key={s.id}>
-              <Link href={`/panel/socios/${s.id}`} className="flex items-center gap-3 p-4 hover:bg-neutral/5">
-                <span className={COLOR[s.estado]} />
+              <Link href={`/panel/socios/${s.id}`} className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-3 gap-y-2 p-4 hover:bg-neutral/5 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center">
+                <span className={`${COLOR[s.estado]} mt-1.5 sm:mt-0`} />
                 <div className="min-w-0">
-                  <p className="truncate font-medium">{s.nombreCompleto}</p>
-                  <p className="text-sm text-tenue cifra">
+                  <p className="break-words font-medium">{s.nombreCompleto}</p>
+                  <p className="mt-1 break-words text-sm text-tenue cifra">
                     {s.codigoERP ? `Código ${s.codigoERP} · ` : ''}
                     {s.dni ? `DNI ${s.dni}` : 'DNI por completar'}
                     {s.plan ? ` · ${s.plan}` : ' · sin membresia'}
                   </p>
                 </div>
-                <span className="ml-auto shrink-0 text-sm text-tenue">
+                <span className="col-start-2 text-xs text-tenue sm:col-start-auto sm:text-sm">
                   {s.vence ? `vence ${fechaCorta(s.vence)}` : '—'}
                 </span>
               </Link>

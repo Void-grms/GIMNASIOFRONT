@@ -70,8 +70,8 @@ export default function Avisos() {
               <li className="p-4 text-sm text-tenue">Todavia no enviaste ninguno.</li>
             )}
             {historial.map((h) => (
-              <li key={h.id} className="flex justify-between p-3 text-sm">
-                <span>
+              <li key={h.id} className="flex flex-wrap justify-between gap-2 p-3 text-sm">
+                <span className="min-w-0 break-words">
                   {h.member.nombres} {h.member.apellidos}
                 </span>
                 <span className="text-tenue">

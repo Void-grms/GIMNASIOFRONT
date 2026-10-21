@@ -18,9 +18,9 @@ const NOMBRE = process.env.NEXT_PUBLIC_GIMNASIO_NOMBRE || "FORCES GYM";
 const WHATSAPP = "51978223024";
 const INSTAGRAM = "https://www.instagram.com/forcesgym/";
 const COMO_LLEGAR =
-  "https://www.google.com/maps/place/Forces+Gym/@-7.4006163,-79.5722067,17z";
+  "https://www.google.com/maps?cid=655328178800509240&hl=es";
 const MAPA =
-  "https://www.google.com/maps?q=-7.4006163,-79.5722067&hl=es&z=17&output=embed";
+  "https://www.google.com/maps?cid=655328178800509240&hl=es&z=17&output=embed";
 const whatsapp = (message: string) =>
   `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
 const PRIMER_DIA = whatsapp(

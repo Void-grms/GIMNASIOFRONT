@@ -1,0 +1,6 @@
+.panel { position: absolute; inset: auto 0 0; display: flex; width: 100%; max-width: 512px; max-height: 92dvh; margin-inline: auto; flex-direction: column; overflow: hidden; border: 1px solid rgb(var(--color-borde)); border-radius: 22px 22px 0 0; background: rgb(var(--color-superficie)); box-shadow: 0 25px 50px -12px rgb(0 0 0 / .25); }
+@media (min-width: 640px) { .panel { top: 50%; bottom: auto; max-height: 90dvh; transform: translateY(-50%); border-radius: 22px; } }
+@media (max-height: 500px) {
+  .panel { top: 0; bottom: auto; max-height: 100dvh; display: block; transform: none; border-radius: 0; overflow-y: auto; }
+  .panel .content { overflow: visible; }
+}

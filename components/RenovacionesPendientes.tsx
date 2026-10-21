@@ -101,10 +101,10 @@ export function RenovacionesPendientes() {
           key={r.id}
           type="button"
           onClick={() => abrir(r)}
-          className="tarjeta-acento flex w-full items-center justify-between gap-3 text-left"
+          className="tarjeta-acento flex w-full flex-wrap items-center justify-between gap-3 text-left"
         >
-          <span className="min-w-0">
-            <span className="block truncate font-bold">{r.socio.nombreCompleto}</span>
+          <span className="min-w-0 flex-1 basis-40">
+            <span className="block break-words font-bold">{r.socio.nombreCompleto}</span>
             <span className="block text-sm text-tenue">
               {r.plan} · {hora(r.creado)}
               {r.operacion ? ` · op. ${r.operacion}` : ''}
@@ -122,14 +122,14 @@ export function RenovacionesPendientes() {
           <button type="button" aria-label="Cerrar" className="absolute inset-0 bg-black/75" onClick={cerrar} />
           <div className="relative max-h-[92vh] w-full max-w-lg space-y-4 overflow-y-auto rounded-t-3xl border border-borde bg-superficie p-5 sm:rounded-3xl">
             <div className="flex items-start justify-between gap-3">
-              <div>
+              <div className="min-w-0 flex-1 break-words">
                 <p className="text-lg font-black">{viendo.socio.nombreCompleto}</p>
                 <p className="text-sm text-tenue">
                   DNI {viendo.socio.dni} · {viendo.plan} · <span className="font-bold text-tinta">{soles(viendo.monto)}</span>
                 </p>
                 {viendo.operacion && <p className="text-sm text-secundario">Operacion {viendo.operacion}</p>}
               </div>
-              <button className="min-h-11 rounded-lg px-3 text-sm text-tenue hover:bg-neutral/5 hover:text-tinta" onClick={cerrar}>
+              <button className="min-h-11 shrink-0 rounded-lg px-3 text-sm text-tenue hover:bg-neutral/5 hover:text-tinta" onClick={cerrar}>
                 Cerrar
               </button>
             </div>
@@ -145,7 +145,7 @@ export function RenovacionesPendientes() {
               Confirma en tu app de Yape que el pago llego, por el monto correcto, antes de aprobar.
             </p>
             {error && <p className="aviso-mal">{error}</p>}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <button className="boton-riesgo" disabled={ocupado} onClick={rechazar}>
                 Rechazar
               </button>

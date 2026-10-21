@@ -25,7 +25,7 @@ export function cerrarSesion(tipo: Sesion) {
 }
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(public status: number, message: string, public readonly codigo?: string, public readonly datos?: Record<string, any>) {
     super(message);
   }
 }
@@ -49,13 +49,15 @@ export async function api<T = any>(
 
   if (!res.ok) {
     let mensaje = `Error ${res.status}`;
+    let datos: Record<string, any> | undefined;
     try {
       const data = await res.json();
+      if (data && typeof data === 'object' && !Array.isArray(data)) datos = data;
       mensaje = Array.isArray(data.message) ? data.message.join('. ') : data.message || mensaje;
     } catch {
       /* respuesta sin json */
     }
-    throw new ApiError(res.status, mensaje);
+    throw new ApiError(res.status, mensaje, typeof datos?.codigo === 'string' ? datos.codigo : undefined, datos);
   }
   if (res.status === 204) return null as T;
   // Una consulta opcional (por ejemplo la sesión activa) puede responder 200

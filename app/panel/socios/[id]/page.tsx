@@ -68,7 +68,7 @@ export default function FichaSocio() {
   if (!ficha) return <Esqueleto />;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
       <div className="space-y-6">
         <TarjetaSocio socio={ficha} />
 
@@ -108,15 +108,15 @@ export default function FichaSocio() {
                 <li className="p-4 text-sm text-tenue">Todavia no compro ninguna.</li>
               )}
               {ficha.historial.map((m: any) => (
-                <li key={m.id} className="flex items-center justify-between p-4 text-sm">
-                  <div>
+                <li key={m.id} className="flex flex-wrap items-start justify-between gap-3 p-4 text-sm">
+                  <div className="min-w-0 flex-1 basis-40">
                     <p className="font-medium">{m.planNombre || m.plan.nombre}</p>
                     <p className="text-tenue">
                       {fechaCorta(m.fechaInicio.slice(0, 10))} — {fechaCorta(m.fechaFin.slice(0, 10))}
                     </p>
                     {m.limiteAsistencias != null && <p className="mt-1 text-xs text-secundario">{m.asistenciasUsadas ?? 0} de {m.limiteAsistencias} asistencias utilizadas</p>}
                   </div>
-                  <span className="flex flex-col items-end gap-1.5">
+                  <span className="flex shrink-0 flex-col items-end gap-1.5">
                     <span className={m.estado === 'anulada' ? 'text-vencido' : 'text-secundario'}>
                       {soles(m.precioPagado)}
                     </span>
@@ -140,7 +140,7 @@ export default function FichaSocio() {
                 <li className="p-4 text-sm text-tenue">Sin visitas registradas.</li>
               )}
               {ficha.socio.checkIns.map((c: any) => (
-                <li key={c.id} className="flex items-center gap-3 p-3 text-sm">
+                <li key={c.id} className="flex flex-wrap items-center gap-2 p-3 text-sm">
                   <span
                     className={`h-2 w-2 rounded-full ${
                       c.resultado === 'permitido' ? 'bg-vigente' : 'bg-vencido'
@@ -156,7 +156,7 @@ export default function FichaSocio() {
 
         {/* Pase de invitado: el canal de captacion mas barato del gimnasio */}
         <section className="tarjeta">
-          <div className="flex items-baseline justify-between gap-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h2 className="rotulo">
               Pase de invitado
             </h2>

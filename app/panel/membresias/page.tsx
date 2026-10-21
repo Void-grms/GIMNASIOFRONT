@@ -168,7 +168,7 @@ export default function Membresias() {
                   {visibles.map((plan) => (
                     <article key={plan.id} className={`tarjeta flex min-w-0 flex-col ${!plan.activo ? 'border-dashed' : ''}`}>
                       <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
+                        <div className="min-w-0 flex-1 basis-44">
                           <h3 className="break-words text-lg font-extrabold leading-tight">{plan.nombre}</h3>
                           <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
                             <span className={`rounded-md px-2 py-1 ${plan.activo ? 'bg-vigente/10 text-vigente' : 'bg-neutral/[0.06] text-secundario'}`}>{plan.activo ? 'Activo' : 'Inactivo'}</span>
@@ -195,7 +195,7 @@ export default function Membresias() {
                 </div>
                 {paginas > 1 && <nav aria-label="Páginas de membresías" className="flex flex-wrap items-center justify-between gap-3 border-t border-borde pt-4">
                   <p className="text-sm text-secundario cifra">Página {paginaActual} de {paginas}</p>
-                  <div className="flex gap-2"><button type="button" className="boton-suave" disabled={paginaActual === 1} onClick={() => setPagina(paginaActual - 1)}>Anterior</button><button type="button" className="boton-suave" disabled={paginaActual === paginas} onClick={() => setPagina(paginaActual + 1)}>Siguiente</button></div>
+                  <div className="flex flex-wrap gap-2"><button type="button" className="boton-suave" disabled={paginaActual === 1} onClick={() => setPagina(paginaActual - 1)}>Anterior</button><button type="button" className="boton-suave" disabled={paginaActual === paginas} onClick={() => setPagina(paginaActual + 1)}>Siguiente</button></div>
                 </nav>}
               </>
             )}

@@ -92,19 +92,19 @@ export function PedidosPendientes({
       )}
       {pedidos.map((p) => (
         <div key={p.id} className="tarjeta-acento space-y-3">
-          <div className="flex items-baseline justify-between gap-3">
-            <p className="min-w-0 truncate font-bold">{p.socio?.nombreCompleto}</p>
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <p className="min-w-0 break-words font-bold">{p.socio?.nombreCompleto}</p>
             <p className="shrink-0 text-sm text-tenue cifra">
               #{p.codigo} · {hora(p.creado)}
             </p>
           </div>
           <ul className="text-sm text-secundario">
             {p.items.map((i: any) => (
-              <li key={i.productId} className="flex justify-between">
-                <span>
+              <li key={i.productId} className="flex items-start justify-between gap-3 py-1">
+                <span className="min-w-0 flex-1 break-words">
                   {i.cantidad}x {i.producto}
                 </span>
-                <span className="cifra text-tenue">{soles(i.cantidad * i.precioUnitario)}</span>
+                <span className="shrink-0 cifra text-tenue">{soles(i.cantidad * i.precioUnitario)}</span>
               </li>
             ))}
           </ul>
@@ -138,12 +138,12 @@ export function PedidosPendientes({
               );
             })}
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
             <span className="mr-auto text-xl font-black cifra">{soles(p.total)}</span>
-            <button className="boton py-2" disabled={ocupado === p.id} onClick={() => entregar(p)}>
+            <button className="boton min-w-0 max-w-full whitespace-normal py-2" disabled={ocupado === p.id} onClick={() => entregar(p)}>
               {ocupado === p.id ? 'Cobrando…' : 'Cobrar y entregar'}
             </button>
-            <button className="boton-suave py-2" onClick={() => cancelar(p)}>
+            <button className="boton-suave min-w-0 max-w-full whitespace-normal py-2" onClick={() => cancelar(p)}>
               Cancelar
             </button>
           </div>

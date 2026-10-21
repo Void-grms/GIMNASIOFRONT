@@ -68,6 +68,9 @@ export default function PanelLayout({ children }: { children: ReactNode }) {
   const [menuMovil, setMenuMovil] = useState(false);
   const [usuario, setUsuario] = useState<{ nombre?: string; rol?: string } | null>(null);
   const dialogo = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
+  const encabezado = useRef<HTMLElement>(null);
+  const barraMovil = useRef<HTMLElement>(null);
   const gruposVisibles = GRUPOS.map((grupo) => ({ ...grupo, items: grupo.items.filter((item) => !item.soloAdmin || usuario?.rol === 'admin') }));
   const accesosRapidos = [GRUPOS[0].items[0], GRUPOS[0].items[1], GRUPOS[0].items[2], GRUPOS[1].items[0]];
   const masActivo = !accesosRapidos.some((item) => item.href === seccion?.href);
@@ -80,6 +83,20 @@ export default function PanelLayout({ children }: { children: ReactNode }) {
     setUsuario(sesionActual('staff'));
     setListo(true);
   }, [router]);
+
+  useEffect(() => {
+    const elemento = encabezado.current;
+    if (!elemento) return;
+    const medir = () => {
+      panel.current?.style.setProperty('--panel-header-height', `${elemento.getBoundingClientRect().height}px`);
+      panel.current?.style.setProperty('--panel-nav-height', `${barraMovil.current?.getBoundingClientRect().height ?? 0}px`);
+    };
+    medir();
+    const observador = new ResizeObserver(medir);
+    observador.observe(elemento);
+    if (barraMovil.current) observador.observe(barraMovil.current);
+    return () => observador.disconnect();
+  }, [listo]);
 
   // El menú conserva el foco dentro del diálogo y lo devuelve al control de apertura.
   useEffect(() => {
@@ -110,7 +127,7 @@ export default function PanelLayout({ children }: { children: ReactNode }) {
 
   if (!listo) return <div className={s.cargando} role="status" aria-label="Cargando el panel"><div className={s.esqueletoBarra} /><div className={s.esqueletoContenido}><div /><div /><div /></div></div>;
 
-  return <div className={s.panel}>
+  return <div className={s.panel} ref={panel}>
     <a href="#contenido-panel" className={s.saltar}>Ir al contenido</a>
     <aside className={s.sidebar} aria-label="Panel de administración">
       <Link href="/panel/recepcion" className={s.marca} aria-label="Forces Gym, recepción">
@@ -137,7 +154,7 @@ export default function PanelLayout({ children }: { children: ReactNode }) {
     </aside>
 
     <main className={s.principal} id="contenido-panel" tabIndex={-1}>
-      <header className={s.encabezado}>
+      <header className={s.encabezado} ref={encabezado}>
         <Link href="/panel/recepcion" className={s.marcaMovil} aria-label="Forces Gym, recepción"><span className={s.monograma} aria-hidden="true">F</span></Link>
         <div className={s.titulo}><p>Panel de administración</p><h1>{titulo}</h1></div>
         <SelectorTema compacto className={s.tema} />
@@ -146,7 +163,7 @@ export default function PanelLayout({ children }: { children: ReactNode }) {
       <div className={s.contenido}>{children}</div>
     </main>
 
-    <nav className={s.barraMovil} aria-label="Accesos rápidos del panel">
+    <nav className={s.barraMovil} ref={barraMovil} aria-label="Accesos rápidos del panel">
       {accesosRapidos.map((item) => <Link key={item.href} href={item.href} aria-current={seccion?.href === item.href ? 'page' : undefined}><span>{item.icono}</span>{item.texto}</Link>)}
       <button type="button" onClick={() => setMenuMovil(true)} aria-controls="menu-panel" aria-expanded={menuMovil} data-activo={masActivo}><span><I d="M4 6h16M4 12h16M4 18h16" /></span>Más</button>
     </nav>
@@ -156,6 +173,7 @@ export default function PanelLayout({ children }: { children: ReactNode }) {
       <div ref={dialogo} id="menu-panel" className={s.menu} role="dialog" aria-modal="true" aria-labelledby="titulo-menu-panel">
         <header className={s.cabeceraMenu}><div><p>FORCES GYM</p><h2 id="titulo-menu-panel">Menú del panel</h2></div><button type="button" onClick={() => setMenuMovil(false)} aria-label="Cerrar menú"><I d="m6 6 12 12M6 18 18 6" /></button></header>
         <div className={s.cuerpoMenu}>
+          <div className={s.temaMenu}><SelectorTema compacto /></div>
           {gruposVisibles.map((grupo) => <div key={grupo.titulo} className={s.grupoMenu}><p>{grupo.titulo}</p><div>{grupo.items.map((item) => <Link key={item.href} href={item.href} aria-current={seccion?.href === item.href ? 'page' : undefined}>{item.icono}<span>{item.texto}</span></Link>)}</div></div>)}
           <div className={s.accionesMenu}><Link href="/quiosco"><I d="M4 8V4h4M16 4h4v4M4 16v4h4M16 20h4v-4" />Modo quiosco</Link><button type="button" onClick={salir}><I d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />Cerrar sesión</button></div>
           <p className={s.sesionMenu}>{usuario?.nombre || 'Personal'} · {rol}</p>

@@ -86,7 +86,7 @@ export default function Rutinas() {
             {activas.map((a) => (
               <li key={a.id} className="flex flex-wrap items-center gap-3 p-4">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{a.socio.nombreCompleto}</p>
+                  <p className="break-words font-medium">{a.socio.nombreCompleto}</p>
                   <p className="text-sm text-tenue">
                     {a.rutina?.nombre} · hasta {fechaCorta(a.hasta?.slice(0, 10))}
                   </p>
@@ -108,7 +108,7 @@ export default function Rutinas() {
       </section>
 
       <section className="space-y-3">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="rotulo">Plantillas</h2>
           <button
             className="boton-suave py-2"
@@ -220,7 +220,7 @@ function Asignar({
           {asignacion.nota && <p className="mt-1 text-sm italic text-secundario">“{asignacion.nota}”</p>}
         </div>
       )}
-      <div className="grid gap-3 sm:grid-cols-[1fr_1.4fr_7rem_auto] sm:items-end">
+      <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_7rem_auto] sm:items-end">
         {!asignacion && (
           <div>
             <label className="etiqueta">DNI</label>
@@ -326,7 +326,7 @@ function EditorPlantilla({
         const sugeridos = d.grupos.length ? ejercicios.filter((e) => d.grupos.includes(e.grupo)) : ejercicios;
         return (
           <div key={i} className="space-y-3 rounded-2xl border border-borde bg-fondo/70 p-4">
-            <div className="grid gap-3 sm:grid-cols-[10rem_1fr_auto] sm:items-end">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[10rem_minmax(0,1fr)_auto] sm:items-end">
               <div>
                 <label className="etiqueta">Dia</label>
                 <select
@@ -385,24 +385,24 @@ function EditorPlantilla({
             <div className="space-y-2">
               <p className="etiqueta">Ejercicios</p>
               {d.ejercicios.map((e: any, k: number) => (
-                <div key={k} className="grid grid-cols-[1fr_4rem_5rem_auto] items-center gap-2">
-                  <span className="truncate text-sm">{porId.get(e.exerciseId)?.nombre ?? 'Ejercicio'}</span>
-                  <input
+                <div key={k} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] items-end gap-2 rounded-xl border border-borde p-3 lg:grid-cols-[minmax(0,1fr)_5rem_6rem_2.75rem]">
+                  <span className="col-span-3 min-w-0 break-words text-sm font-semibold lg:col-span-1 lg:self-center">{porId.get(e.exerciseId)?.nombre ?? 'Ejercicio'}</span>
+                  <label className="min-w-0 text-xs text-secundario">Series<input
                     type="number"
                     min={1}
                     max={10}
                     aria-label="Series"
-                    className="campo px-2 py-2 text-sm"
+                    className="campo mt-1 px-2 py-2 text-sm"
                     value={e.series}
                     onChange={(ev) =>
                       cambiarDia(i, {
                         ejercicios: d.ejercicios.map((x: any, j: number) => (j === k ? { ...x, series: Number(ev.target.value) } : x)),
                       })
                     }
-                  />
-                  <input
+                  /></label>
+                  <label className="min-w-0 text-xs text-secundario">Reps<input
                     aria-label="Repeticiones"
-                    className="campo px-2 py-2 text-sm"
+                    className="campo mt-1 px-2 py-2 text-sm"
                     maxLength={20}
                     value={e.repeticiones}
                     onChange={(ev) =>
@@ -410,9 +410,9 @@ function EditorPlantilla({
                         ejercicios: d.ejercicios.map((x: any, j: number) => (j === k ? { ...x, repeticiones: ev.target.value } : x)),
                       })
                     }
-                  />
+                  /></label>
                   <button
-                    className="px-2 text-tenue hover:text-vencido"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg text-tenue hover:bg-vencido/10 hover:text-vencido"
                     aria-label="Quitar ejercicio"
                     onClick={() => cambiarDia(i, { ejercicios: d.ejercicios.filter((_: any, j: number) => j !== k) })}
                   >

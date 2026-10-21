@@ -1,0 +1,45 @@
+.recepcion { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+.recepcion > * { min-width: 0; }
+.alerta { position: sticky; top: calc(var(--panel-header-height, 76px) + 8px); z-index: 20; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 12px; border: 1px solid #e0b81c; border-radius: 14px; background: #fad234; color: #191c21; box-shadow: 0 5px 20px rgb(0 0 0 / .12); }
+.alertaIcono { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.alerta > span:nth-child(2) { min-width: 0; flex: 1; }
+.alerta strong { display: block; font-size: 13px; font-weight: 800; overflow-wrap: anywhere; }
+.alerta small { display: block; margin-top: 3px; font-size: 11px; line-height: 1.45; }
+.alerta button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 6px; padding: 8px 10px; border: 1px solid rgb(25 28 33 / .28); border-radius: 9px; font-size: 12px; font-weight: 700; }
+.alerta button:focus-visible { outline-color: #191c21; }
+.llegadas { display: grid; align-content: start; gap: 13px; scroll-margin-top: calc(var(--panel-header-height, 76px) + 120px); }
+.sinLlegadas { display: none; }
+.tituloLlegadas { display: flex; align-items: center; gap: 10px; }
+.tituloLlegadas h2 { min-width: 0; font-size: 17px; font-weight: 800; letter-spacing: -.025em; }
+.tituloLlegadas > span { display: grid; min-width: 26px; min-height: 26px; place-items: center; padding: 4px 7px; border-radius: 8px; background: rgb(250 210 52 / .16); color: rgb(var(--color-acento-texto)); font-size: 12px; font-weight: 700; }
+.llegada { min-width: 0; display: grid; gap: 10px; }
+.accionesLlegada { display: flex; flex-wrap: wrap; gap: 8px; }
+.accionesLlegada > button { min-width: 0; overflow-wrap: anywhere; }
+.accionesLlegada > button:first-child { flex: 1 1 160px; }
+.accionesLlegada > button:last-child { flex: 1 1 90px; }
+.lector { display: grid; align-content: start; gap: 20px; }
+.paseDiario { min-width: 0; }
+.quiosco { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.quiosco > p { min-width: 0; flex: 1 1 190px; }
+.quiosco > a { font-size: 13px; }
+.historial, .pendientes { min-width: 0; }
+.pendientes { display: grid; align-content: start; gap: 24px; }
+.movimiento { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 13px 12px; }
+.movimientoDatos { min-width: 0; }
+.movimientoDatos strong { display: block; font-size: 13px; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
+.movimientoDatos small { display: block; margin-top: 2px; font-size: 11px; line-height: 1.5; color: rgb(var(--color-tenue)); overflow-wrap: anywhere; }
+.movimiento time { white-space: nowrap; }
+.presencia { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; gap: 9px; padding: 13px 12px; }
+.presenciaNombre { min-width: 0; flex: 1 1 130px; font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+.presencia time { margin-left: auto; }
+@media (min-width: 1180px) {
+  .recepcion { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-areas: 'pase pase' 'lector llegadas' 'historial pendientes'; align-items: start; }
+  .alerta { display: none; }
+  .llegadas { grid-area: llegadas; scroll-margin-top: calc(var(--panel-header-height, 90px) + 20px); }
+  .sinLlegadas { display: grid; }
+  .lector { grid-area: lector; }
+  .paseDiario { grid-area: pase; }
+  .historial { grid-area: historial; }
+  .pendientes { grid-area: pendientes; }
+}
+@media print { .alerta { display: none; } }

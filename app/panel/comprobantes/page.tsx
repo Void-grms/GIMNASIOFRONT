@@ -78,15 +78,15 @@ export default function Comprobantes() {
         )}
         {lista.map((c) => (
           <li key={c.id} className={`tarjeta p-4 ${c.anulado ? 'opacity-50' : ''}`}>
-            <div className="flex items-baseline justify-between gap-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
               <Link
                 href={`/panel/comprobantes/${c.id}`}
                 target="_blank"
-                className="font-semibold capitalize hover:underline"
+                className="min-w-0 break-words font-semibold capitalize hover:underline"
               >
                 {esInterno(c) ? 'Recibo interno' : c.tipo} {c.serie}-{String(c.numero).padStart(6, '0')}
               </Link>
-              <span className="font-black cifra">{soles(c.total)}</span>
+              <span className="shrink-0 font-black cifra">{soles(c.total)}</span>
             </div>
             <p className="mt-1 text-sm text-tenue">
               {c.clienteNombre} · <span className="cifra">{hora(c.emitidoAt)}</span> ·{' '}
@@ -98,8 +98,8 @@ export default function Comprobantes() {
         ))}
       </ul>
 
-      <div className="tarjeta hidden p-0 sm:block">
-        <table className="w-full text-sm">
+      <div className="tarjeta hidden overflow-x-auto p-0 sm:block" role="region" aria-label="Comprobantes, tabla desplazable" tabIndex={0}>
+        <table className="w-full min-w-[640px] text-sm">
           <thead className="text-left text-tenue">
             <tr>
               <th className="p-3 font-medium">Comprobante</th>

@@ -95,12 +95,12 @@ export default function Productos() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
       <input ref={archivo} type="file" accept="image/*" className="hidden" onChange={subirFoto} />
       <div className="space-y-5">
         <PedidosPendientes ocultarVacio onCobrado={() => cargar().catch(() => {})} />
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">Catalogo</h2>
           <button className="boton-suave" onClick={() => setNuevo((v) => !v)}>
             {nuevo ? 'Cerrar' : 'Nuevo producto'}
@@ -159,7 +159,7 @@ export default function Productos() {
 
                   {/* En el celular los controles bajan a su propia fila: a la
                       izquierda el inventario, a la derecha lo que se vende. */}
-                  <div className="flex w-full items-center justify-between gap-2 sm:ml-auto sm:w-auto sm:justify-end sm:gap-4">
+                  <div className="flex w-full flex-wrap items-center justify-between gap-3 sm:ml-auto sm:w-auto sm:justify-end">
                   {!p.esServicio ? (
                     <div className="flex items-center gap-1" role="group" aria-label="Ajustar inventario">
                       <span className="mr-1 text-xs text-tenue sm:hidden">Stock</span>
@@ -220,9 +220,9 @@ export default function Productos() {
               )}
               {ventas.map((v) => (
                 <li key={v.id} className="p-3 text-sm">
-                  <div className="flex justify-between">
-                    <span>{v.socio}</span>
-                    <span className="font-medium">{soles(v.total)}</span>
+                  <div className="flex flex-wrap justify-between gap-2">
+                    <span className="min-w-0 break-words">{v.socio}</span>
+                    <span className="shrink-0 font-medium">{soles(v.total)}</span>
                   </div>
                   <p className="text-tenue">
                     {hora(v.fecha)} · {v.metodo} ·{' '}
@@ -239,13 +239,13 @@ export default function Productos() {
       {hayCarrito && (
         <a
           href="#venta-rapida"
-          className="boton fixed inset-x-4 bottom-[calc(72px+env(safe-area-inset-bottom))] z-30 lg:hidden"
+          className="boton fixed left-[calc(var(--panel-sidebar-width,0px)+1rem)] right-4 bottom-[calc(var(--panel-nav-height,72px)+.75rem)] z-30 xl:hidden"
         >
-          Ir a cobrar · <span className="cifra">{soles(total)}</span>
+          <span className="min-w-0">Ir a cobrar</span><span className="shrink-0 whitespace-nowrap cifra">{soles(total)}</span>
         </a>
       )}
 
-      <aside id="venta-rapida" className="tarjeta-acento h-fit scroll-mt-20 space-y-4">
+      <aside id="venta-rapida" className="tarjeta-acento h-fit scroll-mt-[calc(var(--panel-header-height,76px)+16px)] space-y-4">
         <h2 className="text-lg font-semibold">Venta rapida</h2>
 
         {!hayCarrito ? (
@@ -258,11 +258,11 @@ export default function Productos() {
             {productos
               .filter((p) => carrito[p.id] > 0)
               .map((p) => (
-                <li key={p.id} className="flex justify-between">
-                  <span>
+                <li key={p.id} className="flex items-start justify-between gap-3">
+                  <span className="min-w-0 flex-1 break-words">
                     {carrito[p.id]}x {p.nombre}
                   </span>
-                  <span>{soles(carrito[p.id] * p.precio)}</span>
+                  <span className="shrink-0">{soles(carrito[p.id] * p.precio)}</span>
                 </li>
               ))}
           </ul>
