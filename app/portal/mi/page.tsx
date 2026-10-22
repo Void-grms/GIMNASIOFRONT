@@ -7,6 +7,7 @@ import QRCode from 'qrcode';
 import { api, cerrarSesion, fechaCorta, leerToken, soles, urlArchivo } from '@/lib/api';
 import { Esqueleto } from '@/components/Esqueleto';
 import { ConfirmarSalida } from '@/components/ConfirmarSalida';
+import { CuentasDelSocio } from '@/components/CuentasDelSocio';
 
 const COLOR: Record<string, string> = {
   vigente: 'text-vigente',
@@ -123,7 +124,7 @@ export default function MiCredencial() {
   return (
     <main className="mx-auto max-w-md space-y-5 px-4 py-8">
       <header className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           <Link
             href="/portal/perfil"
             className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-superficie"
@@ -135,13 +136,13 @@ export default function MiCredencial() {
               <span className="font-bold text-tenue">{panel.nombres?.[0]}</span>
             )}
           </Link>
-          <div>
+          <div className="min-w-0">
             <p className="text-sm text-secundario">Hola,</p>
-            <h1 className="text-2xl font-bold leading-tight">{panel.nombres}</h1>
+            <h1 className="break-words text-2xl font-bold leading-tight">{panel.nombres}</h1>
           </div>
         </div>
         <button
-          className="text-sm text-tenue hover:text-tinta"
+          className="min-h-11 shrink-0 text-sm text-tenue hover:text-tinta"
           onClick={() => {
             cerrarSesion('socio');
             router.replace('/portal');
@@ -176,10 +177,14 @@ export default function MiCredencial() {
       </div>
 
       <div className="tarjeta">
-        <div className="flex items-baseline justify-between">
-          <span className="text-sm text-secundario">{panel.plan ?? 'Sin membresia'}</span>
-          <span className={`text-sm font-semibold ${COLOR[panel.estado]}`}>
-            {panel.diasRestantes === null
+        <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-2">
+          <span className="min-w-0 break-words text-sm text-secundario">{panel.plan ?? 'Sin membresia'}</span>
+          <span className={`text-sm font-semibold ${panel.inicioProgramado || panel.pausaActualmente ? 'text-porvencer' : COLOR[panel.estado]}`}>
+            {panel.inicioProgramado
+              ? `Empieza el ${fechaCorta(panel.inicio)}`
+              : panel.pausaActualmente
+              ? 'En pausa'
+              : panel.diasRestantes === null
               ? 'Acercate a recepcion'
               : panel.diasRestantes >= 0
               ? `Quedan ${panel.diasRestantes} dia(s)`
@@ -187,6 +192,9 @@ export default function MiCredencial() {
           </span>
         </div>
         {panel.vence && <p className="mt-1 text-sm text-tenue">Vence el {fechaCorta(panel.vence)}</p>}
+        {panel.pausaActualmente && <p className="aviso-ojo mt-3" role="status">
+          Tu membresía tiene una pausa autorizada{panel.pausaHasta ? ` hasta el ${fechaCorta(panel.pausaHasta)}` : ''}. Puedes revisar las fechas más abajo o consultar en recepción.
+        </p>}
         {panel.limiteAsistencias != null && <div className="mt-4 border-t border-borde pt-3">
           <p className="font-bold cifra">{panel.asistenciasRestantes ?? Math.max(0, panel.limiteAsistencias - (panel.asistenciasUsadas ?? 0))} de {panel.limiteAsistencias} asistencias disponibles</p>
           <p className="mt-1 text-xs leading-relaxed text-secundario">Válidas durante esta membresía. Se descuenta una por día; salir y volver el mismo día no descuenta otra.</p>
@@ -218,8 +226,8 @@ export default function MiCredencial() {
           </button>
         </div>
       ) : (
-        <button className="boton-grande" onClick={alternarPresencia} disabled={vencido}>
-          Estoy entrando
+        <button className="boton-grande" onClick={alternarPresencia} disabled={vencido || panel.pausaActualmente || panel.inicioProgramado}>
+          {panel.pausaActualmente ? 'Membresía en pausa' : panel.inicioProgramado ? 'Tu membresía empieza pronto' : 'Estoy entrando'}
         </button>
       )}
       {panel.dentro && (
@@ -263,6 +271,8 @@ export default function MiCredencial() {
       </div>
 
 
+      <CuentasDelSocio />
+
       {panel.pagos.length > 0 && (
         <section>
           <h2 className="rotulo mb-2">
@@ -271,7 +281,7 @@ export default function MiCredencial() {
           <div className="tarjeta p-0">
             <ul className="divide-y divide-borde">
               {panel.pagos.map((p: any) => (
-                <li key={p.id} className="flex justify-between p-3 text-sm">
+                <li key={p.id} className="flex min-w-0 flex-wrap justify-between gap-2 p-3 text-sm">
                   <span>{fechaCorta(p.fecha)}</span>
                   <span className="text-tenue">{p.metodo}</span>
                   <span className="font-semibold cifra">{soles(p.monto)}</span>

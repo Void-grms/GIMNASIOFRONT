@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { SelectorTema } from '@/components/tema/SelectorTema';
 import s from './Panel.module.css';
 import { cerrarSesion, iniciales, leerToken, sesionActual } from '@/lib/api';
+import { RecuperacionMembresia } from '@/components/OperacionMembresia';
 
 type Item = { href: string; texto: string; icono: ReactNode; insignia?: number; soloAdmin?: boolean };
 
@@ -160,7 +161,7 @@ export default function PanelLayout({ children }: { children: ReactNode }) {
         <SelectorTema compacto className={s.tema} />
         <button type="button" onClick={() => setMenuMovil(true)} aria-label="Abrir menú" aria-controls="menu-panel" aria-expanded={menuMovil} className={s.abrirMenu}><I d="M4 6h16M4 12h16M4 18h16" /></button>
       </header>
-      <div className={s.contenido}>{children}</div>
+      <div className={s.contenido}><RecuperacionMembresia />{children}</div>
     </main>
 
     <nav className={s.barraMovil} ref={barraMovil} aria-label="Accesos rápidos del panel">
