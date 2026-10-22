@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api, leerToken, reducirImagen, soles } from '@/lib/api';
 import { Esqueleto } from '@/components/Esqueleto';
+import { TIPOS_FOTO } from '@/lib/imagenes';
 
 /**
  * Renovar desde el celular: elegir plan, yapear al numero del gimnasio y subir
@@ -20,6 +21,7 @@ export default function Renovar() {
   const [acepta, setAcepta] = useState(false);
   const [verTerminos, setVerTerminos] = useState(false);
   const [enviando, setEnviando] = useState(false);
+  const [preparandoImagen, setPreparandoImagen] = useState(false);
   const [copiado, setCopiado] = useState(false);
   const [listo, setListo] = useState(false);
   const [error, setError] = useState('');
@@ -29,6 +31,7 @@ export default function Renovar() {
   const archivo = useRef<HTMLInputElement>(null);
   const solicitudEnCurso = useRef(false);
   const cambioDetectado = useRef(false);
+  const imagenEnCurso = useRef(false);
 
   useEffect(() => {
     if (!leerToken('socio')) {
@@ -55,12 +58,20 @@ export default function Renovar() {
 
   async function elegirArchivo(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
-    if (!f) return;
+    e.target.value = '';
+    if (!f || imagenEnCurso.current || solicitudEnCurso.current) return;
+    imagenEnCurso.current = true;
+    setPreparandoImagen(true);
+    setImagen('');
     setError('');
     try {
-      setImagen(await reducirImagen(f, 1600, 0.85));
+      // El comprobante conserva su resolución y calidad de lectura actuales.
+      setImagen(await reducirImagen(f, 1600, 0.85, 'image/jpeg'));
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      imagenEnCurso.current = false;
+      setPreparandoImagen(false);
     }
   }
 
@@ -75,7 +86,7 @@ export default function Renovar() {
   }
 
   async function enviar() {
-    if (solicitudEnCurso.current || enviando || ofertaCambio || cargandoPlanes || !plan?.versionOferta || !imagen || !acepta) return;
+    if (solicitudEnCurso.current || imagenEnCurso.current || enviando || ofertaCambio || cargandoPlanes || !plan?.versionOferta || !imagen || !acepta) return;
     solicitudEnCurso.current = true;
     setEnviando(true);
     setError('');
@@ -193,12 +204,13 @@ export default function Renovar() {
 
           <section className="tarjeta space-y-3">
             <p className="rotulo">3 · Sube la captura del pago</p>
-            <input ref={archivo} type="file" accept="image/*" className="hidden" onChange={elegirArchivo} disabled={enviando || ofertaCambio} />
+            <input ref={archivo} type="file" accept={TIPOS_FOTO} className="hidden" onChange={elegirArchivo} disabled={preparandoImagen || enviando || ofertaCambio} />
+            {preparandoImagen && <p role="status" className="text-sm text-tenue">Preparando captura…</p>}
             {imagen ? (
               <div className="space-y-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={imagen} alt="Captura del Yape" className="max-h-80 w-full rounded-xl object-contain" />
-                <button type="button" className="boton-suave w-full" disabled={enviando || ofertaCambio} onClick={() => archivo.current?.click()}>
+                <button type="button" className="boton-suave w-full" disabled={preparandoImagen || enviando || ofertaCambio} onClick={() => archivo.current?.click()}>
                   Cambiar captura
                 </button>
               </div>
@@ -206,6 +218,7 @@ export default function Renovar() {
               <button
                 type="button"
                 className="flex h-32 w-full flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-bordeFuerte text-sm text-secundario"
+                disabled={preparandoImagen || enviando || ofertaCambio}
                 onClick={() => archivo.current?.click()}
               >
                 <span className="text-2xl">＋</span>
@@ -240,7 +253,7 @@ export default function Renovar() {
             </pre>
           )}
 
-          <button className="boton-grande" disabled={!plan?.versionOferta || !imagen || !acepta || enviando || cargandoPlanes || ofertaCambio} onClick={enviar}>
+          <button className="boton-grande" disabled={!plan?.versionOferta || !imagen || !acepta || preparandoImagen || enviando || cargandoPlanes || ofertaCambio} onClick={enviar}>
             {enviando ? 'Enviando…' : 'Enviar para revision'}
           </button>
           {ofertaCambio && <Link href="/portal/mi" className="boton-suave w-full">Volver a mi credencial</Link>}

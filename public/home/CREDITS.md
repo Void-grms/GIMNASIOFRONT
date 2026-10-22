@@ -6,9 +6,9 @@ Las páginas de origen identifican las tres fotografías como gratuitas bajo la 
 
 | Archivo | Fotógrafo | Fotografía original | Optimización |
 | --- | --- | --- | --- |
-| `hero.webp` | Arthur Edelmans | [Man lifting barbell](https://unsplash.com/photos/man-lifting-barbell-qfjuh4OLdxw) | WebP, ancho 1600 px, calidad 80 |
-| `training.webp` | Cyan Cooper | [Man lifting barbell in gym](https://unsplash.com/photos/man-lifting-barbell-in-gym-zFmorSIqLHw) | WebP, ancho 900 px, calidad 80 |
-| `community.webp` | jahir martinez | [Woman exercising with dumbbell inside gym](https://unsplash.com/photos/woman-exercising-with-dumbbell-inside-gym-YFJn6-GZVuw) | WebP, ancho 900 px, calidad 80 |
+| `hero.webp` | Arthur Edelmans | [Man lifting barbell](https://unsplash.com/photos/man-lifting-barbell-qfjuh4OLdxw) | WebP, 1600 × 1067 px, calidad 78, 70 946 bytes |
+| `training.webp` | Cyan Cooper | [Man lifting barbell in gym](https://unsplash.com/photos/man-lifting-barbell-in-gym-zFmorSIqLHw) | WebP, 900 × 610 px, calidad 78, 27 916 bytes |
+| `community.webp` | jahir martinez | [Woman exercising with dumbbell inside gym](https://unsplash.com/photos/woman-exercising-with-dumbbell-inside-gym-YFJn6-GZVuw) | WebP, 900 × 786 px, calidad 78, 31 182 bytes |
 
 ## Archivos de origen
 
@@ -17,3 +17,9 @@ Las páginas de origen identifican las tres fotografías como gratuitas bajo la 
 - [Comunidad, imagen optimizada](https://images.unsplash.com/photo-1561402811-8cf986c35eec?fit=max&fm=webp&q=80&w=900)
 
 Se conserva la composición completa de cada fotografía; los recortes de presentación se realizan en la interfaz. El atleta del hero está centrado, adecuado para una columna visual a la derecha con `object-position: center`.
+
+## Optimización local
+
+El 22 de octubre de 2026 se recomprimieron los archivos locales con Sharp/libwebp (esfuerzo 6 y submuestreo inteligente), manteniendo sus dimensiones y composición. El peso conjunto de estas tres fotografías pasó de 317 480 a 130 044 bytes (59,0 % menos). Las imágenes se sirven con `next/image` y tamaños adaptados al espacio disponible.
+
+La fachada real, independiente de estas fotografías editoriales, se convirtió desde su JPEG a WebP de 1280 × 885 px, calidad 76 y 120 974 bytes. El archivo `/fachada.webp` mantiene su URL. El JPEG duplicado, sin referencias de la interfaz, se retiró del directorio público.

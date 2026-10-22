@@ -106,13 +106,19 @@ Dos reglas al escribir pantallas nuevas:
 - El boton del portal cambia con el estado: fuera avisa la llegada a recepcion,
   dentro registra la salida. Entrar necesita confirmacion de recepcion; salir no
   necesita permiso de nadie.
-- La captura de foto recorta cuadrado y comprime a JPEG antes de subir, con
-  opcion de subir un archivo cuando no hay camara.
+- La captura de foto recorta a 480 × 480 y comprime a WebP antes de subir,
+  con alternativa JPEG si el navegador no codifica WebP. Archivo y cámara
+  comparten orientación, límites y protección contra envíos duplicados.
+  Los productos se reducen a 900 px. El servidor vuelve a validar y normalizar
+  las fotos; los comprobantes privados conservan su calidad de lectura.
 - `Revelar` queda disponible como componente auxiliar; el home usa
   `HomeMotion` para sus animaciones y mantiene el contenido **visible** en el
   servidor.
-- La foto de la fachada esta en `public/fachada.webp` (157 KB) con
-  `fachada.jpg` de respaldo. El PNG original de 2 MB no entra al repositorio.
+- Las cuatro fotografías públicas están optimizadas en WebP y se sirven con
+  `next/image`: fachada a 1280 px y fotografías del inicio a 900–1600 px.
+  Pesan 251 018 bytes en conjunto, frente a los 478 594 anteriores (47,6 % menos).
+  El JPEG duplicado de la fachada se retiró de `public`; el original sigue
+  disponible en el historial de Git. Detalles y licencias en `public/home/CREDITS.md`.
 
 ### Movil y accesibilidad
 
