@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, hora, reducirImagen, soles, urlArchivo } from '@/lib/api';
 import { PedidosPendientes } from '@/components/PedidosPendientes';
 import { GrillaCasilleros, SelectorCasillero } from '@/components/Casilleros';
+import { TIPOS_FOTO } from '@/lib/imagenes';
 
 const METODOS = ['efectivo', 'yape', 'plin', 'tarjeta', 'transferencia'];
 
@@ -16,6 +17,8 @@ export default function Productos() {
   const [nuevo, setNuevo] = useState(false);
   const [casillero, setCasillero] = useState<number | null>(null);
   const [fotoDe, setFotoDe] = useState('');
+  const [subiendoFoto, setSubiendoFoto] = useState(false);
+  const fotoEnCurso = useRef(false);
   const archivo = useRef<HTMLInputElement>(null);
   const [aviso, setAviso] = useState('');
   const [error, setError] = useState('');
@@ -80,23 +83,29 @@ export default function Productos() {
   async function subirFoto(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     e.target.value = '';
-    if (!f || !fotoDe) return;
+    if (!f || !fotoDe || fotoEnCurso.current) return;
+    const productoId = fotoDe;
+    fotoEnCurso.current = true;
+    setSubiendoFoto(true);
     setError('');
+    setAviso('');
     try {
-      const imagen = await reducirImagen(f, 900, 0.82);
-      await api(`/products/${fotoDe}/foto`, { metodo: 'POST', cuerpo: { imagen } });
+      const imagen = await reducirImagen(f, 900, 0.8);
+      await api(`/products/${productoId}/foto`, { metodo: 'POST', cuerpo: { imagen } });
       setAviso('Foto actualizada. Ya se ve en la tienda del portal.');
-      cargar();
+      await cargar();
     } catch (err: any) {
       setError(err.message);
     } finally {
+      fotoEnCurso.current = false;
+      setSubiendoFoto(false);
       setFotoDe('');
     }
   }
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-      <input ref={archivo} type="file" accept="image/*" className="hidden" onChange={subirFoto} />
+      <input ref={archivo} type="file" accept={TIPOS_FOTO} disabled={subiendoFoto} className="hidden" onChange={subirFoto} />
       <div className="space-y-5">
         <PedidosPendientes ocultarVacio onCobrado={() => cargar().catch(() => {})} />
 
@@ -129,6 +138,8 @@ export default function Productos() {
                     type="button"
                     title={p.fotoUrl ? 'Cambiar foto' : 'Subir foto'}
                     aria-label={`Foto de ${p.nombre}`}
+                    aria-busy={subiendoFoto && fotoDe === p.id}
+                    disabled={subiendoFoto}
                     onClick={() => {
                       setFotoDe(p.id);
                       archivo.current?.click();
@@ -143,7 +154,7 @@ export default function Productos() {
                         <path d="M4 8h3l2-3h6l2 3h3v11H4zM12 16.5a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z" />
                       </svg>
                     )}
-                    {fotoDe === p.id && <span className="absolute inset-0 animate-pulse bg-acento/30" />}
+                    {subiendoFoto && fotoDe === p.id && <span className="absolute inset-0 animate-pulse bg-acento/30" />}
                   </button>
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">
